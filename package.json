@@ -38,6 +38,7 @@
 	"type": "module",
 	"dependencies": {
 		"dexie": "^4.0.1-alpha.25",
-		"marked": "^6.0.0"
+		"marked": "^6.0.0",
+		"unsplash-js": "^7.0.18"
 	}
 }

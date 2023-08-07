@@ -9,6 +9,7 @@
 	let title = data?.article?.title ?? '';
 	let content = data?.article?.content ?? '';
     let loading = false;
+    let imageSearch = "";
 	$: renderedContent = marked.parse(content);
 
     async function handleSave() {
@@ -24,7 +25,7 @@
                 content,
                 tags: []
             });
-            redirect(302, `/write/${id}`);
+            data.article.id = id;
         }
     }
 </script>
@@ -41,6 +42,12 @@
     
     {#if source}
     <div class="w-full h-full flex flex-col">
+        <form method="POST">
+        <label for="image" class="label">
+            <span>image</span>
+            <input required type="search" name="image" class="input">
+        </label>
+        </form>
         <label for="title" class="label">
             <span>title</span>
             <input bind:value={title} type="text" class="input" name="title" placeholder="the title of the article goes here" />
