@@ -1,6 +1,5 @@
 import { UNSPLASH_ACCESS } from "$env/static/private";
 import { json, type RequestHandler } from "@sveltejs/kit";
-import { createApi } from "unsplash-js";
 
 export const GET: RequestHandler = async({request, url}) => {
     if(url.searchParams.get("search")) {

@@ -9,7 +9,6 @@
 	let title = data?.article?.title ?? '';
 	let content = data?.article?.content ?? '';
     let loading = false;
-    let imageSearch = "";
 	$: renderedContent = marked.parse(content);
 
     async function handleSave() {
@@ -43,10 +42,10 @@
     {#if source}
     <div class="w-full h-full flex flex-col">
         <form method="POST">
-        <label for="image" class="label">
-            <span>image</span>
-            <input required type="search" name="image" class="input">
-        </label>
+<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
+	<input type="search" placeholder="Search..." class="col-span-2" name="search" />
+	<button class="variant-filled-secondary" type="submit">Submit</button>
+</div>
         </form>
         <label for="title" class="label">
             <span>title</span>
