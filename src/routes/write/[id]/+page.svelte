@@ -17,6 +17,7 @@
             await db.articles.update(data.article.id, {
                 title,
                 content,
+                published: false
             });
         } else {
             const id = await db.articles.put({
