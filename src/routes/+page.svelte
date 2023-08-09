@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { db } from "$lib/storage/db";
 	import {generateArticleBlob} from "$lib/articles/download"
+	import {publish} from "$lib/articles/publish"
  	import { ProgressBar } from '@skeletonlabs/skeleton';
 
 	export let data;
@@ -19,6 +20,12 @@
 		document.body.removeChild(a);
 		loading = false;
 	}
+	const handlePublish = async(id: string) => {
+		loading = true;
+				const article = await db.articles.get(id);
+				await publish(article);
+		loading = false;
+	}
 </script>
 {#if loading}
 <ProgressBar />
@@ -32,5 +39,6 @@
 		<h2>{article.title}</h2>
 		<a href={`/write/${article.id}`}>Edit</a>
 		<button class="btn" on:click={() => handleDownload(article.id)}>Download</button>
+		<button class="btn" on:click={() => handlePublish(article.id)} >Publish</button>
 	</div>
 {/each}
