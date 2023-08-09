@@ -1,8 +1,0 @@
-{
-	"/": [
-		"src/routes/+page.ts"
-	],
-	"/write/[id]": [
-		"src/routes/write/[id]/+page.ts"
-	]
-}
