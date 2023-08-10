@@ -1,4 +1,4 @@
-import Dexie, { type Table } from 'dexie';
+import Dexie, { type Table,  } from 'dexie';
 
 export interface Article {
 	id?: number;
@@ -24,8 +24,17 @@ export class MagiEditDB extends Dexie {
 		super('MagiEdit');
 		this.version(1).stores({
 			articles: '++id, title, content, tags, createdAt, published',
-            settings: '++id, name, value',
+            settings: '&name, value',
 		});
+	}
+
+	async updateOrCreateSettings({name, value}: {name: string, value: string}) {
+		const data = await this.settings.get({name})
+		if (data) {
+			await this.settings.update(name, {value})
+		} else {
+			await this.settings.put({name, value})
+		}
 	}
 }
 

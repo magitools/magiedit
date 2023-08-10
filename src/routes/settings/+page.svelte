@@ -6,17 +6,29 @@ let dev_token = "";
 let hashnode_token = "";
 let hashnode_publication_id = "";
 
+data.settings.forEach((setting) => {
+    switch(setting.name) {
+        case "dev_token":
+            dev_token = setting.value;
+            break
+        case "hashnode_token":
+            hashnode_token = setting.value;
+            break
+        case "hashnode_publication_id":
+            hashnode_publication_id = setting.value;
+            break
+    }
+})
+
+
+
+
 const handleSave = async() => {
-    if (dev_token) {
-        await db.settings.put({name:"dev_token", value: dev_token})
-    }
-    if (hashnode_token) {
-        await db.settings.put({name:"hashnode_token", value: hashnode_token})
-    }
-    if (hashnode_publication_id) {
-        await db.settings.put({name:"hashnode_publication_id", value: hashnode_publication_id});
-    }
+    await db.updateOrCreateSettings({name:"dev_token", value: dev_token})
+    await db.updateOrCreateSettings({name:"hashnode_token", value: hashnode_token})
+    await db.updateOrCreateSettings({name:"hashnode_publication_id", value: hashnode_publication_id});
 }
+
 </script>
 
 <div>
