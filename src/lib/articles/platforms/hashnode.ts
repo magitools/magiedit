@@ -4,6 +4,7 @@ import type { BasePlatform } from "./base";
 export class HashnodePlatform implements BasePlatform {
     public async publish(article: Article) {
         const token = await db.settings.where("name").equals("hashnode_token").toArray();
+        const publication = await db.settings.where("name").equals("hashnode_publication_id").toArray();
 
         await fetch("https://api.hashnode.com", {
             headers: {
@@ -19,7 +20,9 @@ export class HashnodePlatform implements BasePlatform {
                         title: article.title,
                         contentMarkdown: article.content,
                         tags: [],
-
+                        isPartOfPublication: {
+                            publicationId: publication[0].value
+                        }
                     }
                 }
             })
