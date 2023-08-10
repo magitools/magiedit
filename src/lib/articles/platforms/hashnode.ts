@@ -8,12 +8,12 @@ export class HashnodePlatform implements IBasePlatform {
     }
 
     public async publish(article: Article) {
-        const token = await db.settings.where("name").equals("hashnode_token").toArray();
-        const publication = await db.settings.where("name").equals("hashnode_publication_id").toArray();
-
+        const token = await db.settings.get({name: "hashnode_token"});
+        const publication = await db.settings.get({name: "hashnode_publication_id"});
+        if (!token || !publication) return;
         await fetch("https://api.hashnode.com", {
             headers: {
-                "Authorization": token[0].value,
+                "Authorization": token.value,
                 "Content-Type": "application/json"
             },
             method: "POST",
@@ -26,7 +26,7 @@ export class HashnodePlatform implements IBasePlatform {
                         contentMarkdown: article.content,
                         tags: [],
                         isPartOfPublication: {
-                            publicationId: publication[0].value
+                            publicationId: publication.value
                         }
                     }
                 }
