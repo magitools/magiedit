@@ -34,4 +34,4 @@ const handleSave = async() => {
     </label>
 </div>
 
-<button class="btn" on:click={handleSave}>Save</button>
+<button class="btn variant-filled-primary" on:click={handleSave}>Save</button>
