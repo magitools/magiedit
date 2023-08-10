@@ -2,6 +2,11 @@ import  { db, type Article } from "$lib/storage/db";
 import type { BasePlatform } from "./base";
 
 export class HashnodePlatform implements BasePlatform {
+
+    public getRequiredSettings(): string[] {
+        return ["hashnode_token", "hashnode_publication_id"]
+    }
+
     public async publish(article: Article) {
         const token = await db.settings.where("name").equals("hashnode_token").toArray();
         const publication = await db.settings.where("name").equals("hashnode_publication_id").toArray();

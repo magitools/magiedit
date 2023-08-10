@@ -3,6 +3,11 @@ import type { BasePlatform } from "./base";
 
 
 export class DevPlatform implements BasePlatform {
+
+    public getRequiredSettings(): string[] {
+        return ["dev_token"];
+    }
+
     public async publish(article: Article) {
         const token = await db.settings.where("name").equals("dev_token").toArray();
         if (!token) return;
