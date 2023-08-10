@@ -4,12 +4,19 @@
 	import { SlideToggle } from '@skeletonlabs/skeleton';
 	import { redirect } from '@sveltejs/kit';
 	import { marked } from 'marked';
+    import hljs from 'highlight.js';
+	import 'highlight.js/styles/nord.css';
+
 	export let data;
 	let source = true;
 	let title = data?.article?.title ?? '';
 	let content = data?.article?.content ?? '';
     let loading = false;
+
 	$: renderedContent = marked.parse(content);
+    $: if (!source) {
+        hljs.highlightAll();
+    }
 
     async function handleSave() {
         loading = true;
