@@ -1,8 +1,6 @@
 import type { Article } from "$lib/storage/db";
 
-export abstract class BasePlatform {
-
-    public abstract publish(article: Article): void
-
-    public abstract getRequiredSettings(): string[]
+export interface IBasePlatform {
+    publish(article: Article): void
+    getRequiredSettings(): string[]
 }

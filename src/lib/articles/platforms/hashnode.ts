@@ -1,7 +1,7 @@
 import  { db, type Article } from "$lib/storage/db";
-import type { BasePlatform } from "./base";
+import type { IBasePlatform } from "./base";
 
-export class HashnodePlatform implements BasePlatform {
+export class HashnodePlatform implements IBasePlatform {
 
     public getRequiredSettings(): string[] {
         return ["hashnode_token", "hashnode_publication_id"]

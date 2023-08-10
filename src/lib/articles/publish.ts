@@ -7,9 +7,9 @@ export const publish = async (id: string) => {
     if (!article) return;
     const settings = await db.settings.toArray();
 
-/*     if (settings.find((e) => e.name === "dev_token")) {
+    if (settings.find((e) => e.name === "dev_token")) {
         await new DevPlatform().publish(article)
-    } */
+    }
     if (settings.find((e) => e.name === "hashnode_token")) {
         await new HashnodePlatform().publish(article)
     }
