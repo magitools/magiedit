@@ -1,21 +1,30 @@
-<script>
+<script lang="ts">
 	import { enhance } from '$app/forms';
 	import { db } from '$lib/storage/db';
-	import { SlideToggle } from '@skeletonlabs/skeleton';
-	import { marked } from 'marked';
-    import hljs from 'highlight.js';
-	import 'highlight.js/styles/nord.css';
-
+	import type { IParagraph } from '$lib/articles/types';
+	import { unified } from 'unified';
+	import remarkParse from 'remark-parse';
+	import remarkRehype from 'remark-rehype';
+    import remarkGfm from 'remark-gfm'
+	import rehypeSanitize from 'rehype-sanitize';
+	import rehypeStringify from 'rehype-stringify';
+	const parser = unified()
+		.use(remarkParse)
+        .use(remarkGfm)
+		.use(remarkRehype)
+		.use(rehypeSanitize)
+		.use(rehypeStringify);
 	export let data;
 	export let form;
-	let source = true;
 	let title = data?.article?.title ?? '';
 	let content = data?.article?.content ?? '';
 	let loading = false;
-	$: renderedContent = marked.parse(content);
-    $: if (!source) {
-        hljs.highlightAll();
-    }
+    let renderedContent = '';
+
+	$: parser.process(content).then((data) => {
+        renderedContent = data.toString();
+    })
+
 
 	async function handleSave() {
 		loading = true;
@@ -33,9 +42,25 @@
 			data.article.id = id;
 		}
 	}
+
+	function handleKeyDown(event) {
+		if (event.key === 'Enter') {
+		}
+	}
 </script>
 
-<div class="flex flex-col h-full w-full">
+<div class="flex h-full w-full space-x-4 justify-evenly">
+	<div
+		class="prose w-full min-h-full text-black dark:text-white"
+		contenteditable="true"
+		bind:innerText={content}
+	/>
+	<div class="w-full prose text-black dark:text-white">
+		{@html renderedContent}
+	</div>
+</div>
+
+<!-- <div class="flex flex-col h-full w-full">
 	<SlideToggle on:change={() => (source = !source)} name="view-source" checked={source}
 		>View {source ? 'rendered' : 'source'}</SlideToggle
 	>
@@ -80,4 +105,4 @@
 		<h1>{title}</h1>
 		{@html renderedContent}
 	{/if}
-</div>
+</div> -->
