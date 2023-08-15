@@ -1,44 +1,43 @@
 <script lang="ts">
-	import { db } from "$lib/storage/db";
-	import {generateArticleBlob} from "$lib/articles/download"
-	import {publish} from "$lib/articles/publish"
- 	import { ProgressBar } from '@skeletonlabs/skeleton';
+	import { db } from '$lib/storage/db';
+	import { generateArticleBlob } from '$lib/articles/download';
+	import { publish } from '$lib/articles/publish';
+	import { ProgressBar } from '@skeletonlabs/skeleton';
 
 	export let data;
 	let loading = false;
 
-	const handleDownload = async(id: string) => {
+	const handleDownload = async (id: string) => {
 		loading = true;
 		const article = await db.articles.get(id);
 		const data = await generateArticleBlob(id);
-		const link = window.URL.createObjectURL(data)
-		let a = document.createElement("a");
-		a.setAttribute("download", `${article.title}.md`);
-		a.setAttribute("href", link);
+		const link = window.URL.createObjectURL(data);
+		let a = document.createElement('a');
+		a.setAttribute('download', `${article.title}.md`);
+		a.setAttribute('href', link);
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
 		loading = false;
-	}
-	const handlePublish = async(id: string) => {
+	};
+	const handlePublish = async (id: string) => {
 		loading = true;
-				const article = await db.articles.get(id);
-				await publish(article);
+		await publish(id);
 		loading = false;
-	}
+	};
 </script>
+
 {#if loading}
-<ProgressBar />
+	<ProgressBar />
 {/if}
 
 <a href="/write/new">New Article</a>
-
 
 {#each data?.articles as article}
 	<div>
 		<h2>{article.title}</h2>
 		<a href={`/write/${article.id}`}>Edit</a>
 		<button class="btn" on:click={() => handleDownload(article.id)}>Download</button>
-		<button class="btn" on:click={() => handlePublish(article.id)} >Publish</button>
+		<button class="btn" on:click={() => handlePublish(article.id)}>Publish</button>
 	</div>
 {/each}
