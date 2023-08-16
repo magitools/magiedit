@@ -20,13 +20,14 @@
         .use(addClasses, {
             'pre': 'hljs',
             table: "table",
+			//'ul': 'list'
         })
         .use(rehypeHighlight)
 		.use(rehypeStringify);
 	export let data;
 	export let form;
 	let title = data?.article?.title ?? '';
-	let content = data?.article?.content ?? '';
+	let content = data?.article?.content ?? 'here goes your markdown content';
 	let loading = false;
     let renderedContent = '';
 
@@ -53,18 +54,21 @@
 	}
 
 	function handleKeyDown(event) {
-		if (event.key === 'Enter') {
+		if (event.keyCode === 9) {
+			event.preventDefault();
+			content += "\t"
 		}
 	}
 </script>
 
-<div class="flex h-full w-full space-x-4 justify-evenly">
+<div class="flex h-full w-full space-x-4 py-2">
 	<div
-		class="prose w-full min-h-full text-black dark:text-white"
+		class="prose w-full min-h-full text-black dark:text-white card"
 		contenteditable="true"
+		on:keydown={handleKeyDown}
 		bind:innerText={content}
 	/>
-	<div class="w-full prose text-black dark:text-white">
+	<div class="w-full prose text-black dark:text-white card">
 		{@html renderedContent}
 	</div>
 </div>
