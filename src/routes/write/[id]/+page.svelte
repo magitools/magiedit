@@ -10,6 +10,7 @@
 	import rehypeStringify from 'rehype-stringify';
     import addClasses from 'rehype-add-classes';
     import rehypeHighlight from 'rehype-highlight'
+	import { toastStore } from '@skeletonlabs/skeleton';
 
 
 	const parser = unified()
@@ -38,6 +39,7 @@
 
 	async function handleSave() {
 		loading = true;
+		const toast = toastStore.trigger({message:"saving your article...", })
 		if (data?.article?.id) {
 			await db.articles.update(data.article.id, {
 				title,
@@ -49,8 +51,12 @@
 				content,
 				tags: []
 			});
-			data.article.id = id;
+			// TODO fix this
+			//data.?article.id = id;
 		}
+		toastStore.close(toast);
+		toastStore.trigger({message:"article saved!"})
+		loading = false;
 	}
 
 	function handleKeyDown(event) {
@@ -61,15 +67,34 @@
 	}
 </script>
 
-<div class="flex h-full w-full space-x-4 py-2">
-	<div
-		class="prose w-full min-h-full text-black dark:text-white card"
-		contenteditable="true"
-		on:keydown={handleKeyDown}
-		bind:innerText={content}
-	/>
-	<div class="w-full prose text-black dark:text-white card">
-		{@html renderedContent}
+<div class="flex h-full w-full flex-col">
+	<div class="w-full card p-4 my-2">
+		<button class="btn variant-filled-primary" on:click={handleSave}>
+			{loading ? 'Saving...' : 'Save'}
+		</button>
+	</div>
+	<div>
+		<label for="title" class="label">
+			<span>title</span>
+			<input
+				bind:value={title}
+				type="text"
+				class="input"
+				name="title"
+				placeholder="the title of the article goes here"
+			/>
+		</label>
+	</div>
+	<div class="h-full w-full space-x-4 py-2 flex justify-evenly">
+		<div
+			class="prose w-full min-h-full text-black dark:text-white card"
+			contenteditable="true"
+			on:keydown={handleKeyDown}
+			bind:innerText={content}
+		/>
+		<div class="w-full prose text-black dark:text-white card">
+			{@html renderedContent}
+		</div>
 	</div>
 </div>
 
