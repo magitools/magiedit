@@ -8,11 +8,20 @@
     import remarkGfm from 'remark-gfm'
 	import rehypeSanitize from 'rehype-sanitize';
 	import rehypeStringify from 'rehype-stringify';
+    import addClasses from 'rehype-add-classes';
+    import rehypeHighlight from 'rehype-highlight'
+
+
 	const parser = unified()
 		.use(remarkParse)
         .use(remarkGfm)
 		.use(remarkRehype)
 		.use(rehypeSanitize)
+        .use(addClasses, {
+            'pre': 'hljs',
+            table: "table",
+        })
+        .use(rehypeHighlight)
 		.use(rehypeStringify);
 	export let data;
 	export let form;
