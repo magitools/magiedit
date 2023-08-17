@@ -19,6 +19,7 @@
 		.use(remarkRehype)
         .use(addClasses, {
             table: "table",
+			"p,h1,h2,h3,h4,h5,h6,th": "text-black dark:text-white"
 			//'ul': 'list'
         })
         .use(rehypeHighlight)
@@ -89,10 +90,10 @@
 			<button class={`uppercase btn variant-${source ? "ghost" : "filled"}`} on:click={() => source = false} >Preview</button>
 		</div>
 	</div>
-	<div class="h-full w-full space-x-4 py-2 flex justify-evenly">
+	<div class="h-full w-full py-2 flex justify-center">
 	{#if source}
 		<div
-			class="prose w-full min-h-full text-black dark:text-white card"
+			class="prose w-full min-h-full text-black dark:text-white card caret-red-500 focus:border-none focus-visible:border-none"
 			contenteditable="true"
 			on:keydown={handleKeyDown}
 			bind:innerText={content}
