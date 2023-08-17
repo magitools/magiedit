@@ -48,16 +48,15 @@
 		if (data?.article?.id) {
 			await db.articles.update(data.article.id, {
 				title: renderedContent?.frontmatter?.title ?? Date.now().toString() ,
-				content
+				content,
+				tags: renderedContent?.frontmatter?.tags ?? []
 			});
 		} else {
 			id = await db.articles.put({
 				title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
 				content,
-				tags: []
+				tags: renderedContent?.frontmatter?.tags ?? []
 			});
-			// TODO fix this
-			//data.?article.id = id;
 		}
 		toastStore.trigger({message:"article saved!"})
 		loading = false;
