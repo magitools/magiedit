@@ -5,16 +5,21 @@
 	import { unified } from 'unified';
 	import remarkParse from 'remark-parse';
 	import remarkRehype from 'remark-rehype';
+	import remarkFrontmatter from "remark-frontmatter"
+	import remarkExtractFrontmatter from 'remark-extract-frontmatter'
     import remarkGfm from 'remark-gfm'
 	import rehypeStringify from 'rehype-stringify';
     import addClasses from 'rehype-add-classes';
     import rehypeHighlight from 'rehype-highlight'
 	import { toastStore } from '@skeletonlabs/skeleton';
-	import "highlight.js/styles/nord.css"	
+	import "highlight.js/styles/nord.css"
+	import {parse} from "yaml"
 	let source = true;
 
 	const parser = unified()
 		.use(remarkParse)
+		.use(remarkFrontmatter)
+		.use(remarkExtractFrontmatter, {yaml: parse, name: "frontmatter"})
         .use(remarkGfm)
 		.use(remarkRehype)
         .use(addClasses, {
@@ -26,28 +31,28 @@
 		.use(rehypeStringify);
 	export let data;
 	export let form;
-	let title = data?.article?.title ?? '';
 	let content = data?.article?.content ?? 'here goes your markdown content';
 	let loading = false;
-    let renderedContent = '';
+    let renderedContent = {frontmatter: {}, data: ""};
 
 	$: parser.process(content).then((data) => {
-        renderedContent = data.toString();
-		console.log(renderedContent)
+        renderedContent = {frontmatter: {...data.data.frontmatter}, data: data.toString()}
+		console.log(data)
     })
 
 
 	async function handleSave() {
 		loading = true;
 		toastStore.trigger({message:"saving your article...", })
+		console.log(renderedContent)
 		if (data?.article?.id) {
 			await db.articles.update(data.article.id, {
-				title,
+				title: renderedContent?.frontmatter?.title ?? Date.now().toString() ,
 				content
 			});
 		} else {
 			const id = await db.articles.put({
-				title,
+				title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
 				content,
 				tags: []
 			});
@@ -72,18 +77,6 @@
 			{loading ? 'Saving...' : 'Save'}
 		</button>
 	</div>
-	<div>
-		<label for="title" class="label">
-			<span>title</span>
-			<input
-				bind:value={title}
-				type="text"
-				class="input"
-				name="title"
-				placeholder="the title of the article goes here"
-			/>
-		</label>
-	</div>
 	<div class="w-full flex justify-end">
 		<div class="flex space-x-2">
 			<button class={`uppercase btn variant-${source ? "filled" : "ghost"}`} on:click={() => source = true} >Source</button>
@@ -100,7 +93,7 @@
 		/>
 	{:else}
 		<div class="w-full prose text-black dark:text-white card">
-			{@html renderedContent}
+			{@html renderedContent.data}
 		</div>
 	{/if}
 	</div>

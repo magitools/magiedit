@@ -42,10 +42,13 @@
 		"rehype-add-classes": "^1.0.0",
 		"rehype-highlight": "^6.0.0",
 		"rehype-stringify": "^9.0.3",
+		"remark-extract-frontmatter": "^3.2.0",
+		"remark-frontmatter": "^4.0.1",
 		"remark-gfm": "^3.0.1",
 		"remark-parse": "^10.0.2",
 		"remark-rehype": "^10.1.0",
 		"unified": "^11.0.0",
-		"unsplash-js": "^7.0.18"
+		"unsplash-js": "^7.0.18",
+		"yaml": "^2.3.1"
 	}
 }
