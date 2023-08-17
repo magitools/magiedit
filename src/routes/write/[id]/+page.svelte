@@ -102,13 +102,13 @@
 	<div class="h-full w-full py-2 flex justify-center">
 	{#if source}
 		<div
-			class="prose w-full min-h-full text-black dark:text-white card p-4"
+			class="prose max-w-[70%] w-full min-h-full text-black dark:text-white card p-4"
 			contenteditable="true"
 			on:keydown={handleKeyDown}
 			bind:innerText={content}
 		/>
 	{:else}
-		<div class="w-full prose text-black dark:text-white card">
+		<div class="w-full max-w-[70%] prose text-black dark:text-white card p-4">
 			{@html renderedContent.data}
 		</div>
 	{/if}
