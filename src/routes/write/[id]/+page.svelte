@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { db } from '$lib/storage/db';
 	import type { IParagraph } from '$lib/articles/types';
+	import {generateArticleBlob} from "$lib/articles/download"
 	import { unified } from 'unified';
 	import remarkParse from 'remark-parse';
 	import remarkRehype from 'remark-rehype';
@@ -31,13 +32,13 @@
 		.use(rehypeStringify);
 	export let data;
 	export let form;
+	let id = data?.article?.id ?? null
 	let content = data?.article?.content ?? 'here goes your markdown content';
 	let loading = false;
     let renderedContent = {frontmatter: {}, data: ""};
 
 	$: parser.process(content).then((data) => {
         renderedContent = {frontmatter: {...data.data.frontmatter}, data: data.toString()}
-		console.log(data)
     })
 
 
@@ -51,7 +52,7 @@
 				content
 			});
 		} else {
-			const id = await db.articles.put({
+			id = await db.articles.put({
 				title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
 				content,
 				tags: []
@@ -60,6 +61,20 @@
 			//data.?article.id = id;
 		}
 		toastStore.trigger({message:"article saved!"})
+		loading = false;
+	}
+
+	async function handleDownload() {
+		await handleSave()
+		const article = await db.articles.get(id);
+		const data = await generateArticleBlob(id);
+		const link = window.URL.createObjectURL(data)
+		let a = document.createElement("a");
+		a.setAttribute("download", `${article.title}.md`);
+		a.setAttribute("href", link);
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
 		loading = false;
 	}
 
@@ -75,6 +90,9 @@
 	<div class="w-full card p-4 my-2">
 		<button class="btn variant-filled" on:click={handleSave}>
 			{loading ? 'Saving...' : 'Save'}
+		</button>
+		<button class="btn variant-filled" on:click={handleDownload}>
+			Download
 		</button>
 	</div>
 	<div class="w-full flex justify-end">
