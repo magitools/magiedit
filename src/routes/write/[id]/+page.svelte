@@ -102,7 +102,7 @@
 	<div class="h-full w-full py-2 flex justify-center">
 	{#if source}
 		<div
-			class="prose w-full min-h-full text-black dark:text-white card caret-red-500 focus:border-none focus-visible:border-none"
+			class="prose w-full min-h-full text-black dark:text-white card p-4"
 			contenteditable="true"
 			on:keydown={handleKeyDown}
 			bind:innerText={content}
