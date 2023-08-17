@@ -19,7 +19,7 @@
 		.use(remarkRehype)
         .use(addClasses, {
             table: "table",
-			"p,h1,h2,h3,h4,h5,h6,th": "text-black dark:text-white"
+			"p,h1,h2,h3,h4,h5,h6,th, strong, a, blockquote, :not(pre) > code": "text-current"
 			//'ul': 'list'
         })
         .use(rehypeHighlight)
