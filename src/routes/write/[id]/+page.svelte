@@ -6,20 +6,18 @@
 	import remarkParse from 'remark-parse';
 	import remarkRehype from 'remark-rehype';
     import remarkGfm from 'remark-gfm'
-	import rehypeSanitize from 'rehype-sanitize';
 	import rehypeStringify from 'rehype-stringify';
     import addClasses from 'rehype-add-classes';
     import rehypeHighlight from 'rehype-highlight'
 	import { toastStore } from '@skeletonlabs/skeleton';
-
+	import "highlight.js/styles/nord.css"	
+	let source = true;
 
 	const parser = unified()
 		.use(remarkParse)
         .use(remarkGfm)
 		.use(remarkRehype)
-		.use(rehypeSanitize)
         .use(addClasses, {
-            'pre': 'hljs',
             table: "table",
 			//'ul': 'list'
         })
@@ -34,12 +32,13 @@
 
 	$: parser.process(content).then((data) => {
         renderedContent = data.toString();
+		console.log(renderedContent)
     })
 
 
 	async function handleSave() {
 		loading = true;
-		const toast = toastStore.trigger({message:"saving your article...", })
+		toastStore.trigger({message:"saving your article...", })
 		if (data?.article?.id) {
 			await db.articles.update(data.article.id, {
 				title,
@@ -54,7 +53,6 @@
 			// TODO fix this
 			//data.?article.id = id;
 		}
-		toastStore.close(toast);
 		toastStore.trigger({message:"article saved!"})
 		loading = false;
 	}
@@ -69,7 +67,7 @@
 
 <div class="flex h-full w-full flex-col">
 	<div class="w-full card p-4 my-2">
-		<button class="btn variant-filled-primary" on:click={handleSave}>
+		<button class="btn variant-filled" on:click={handleSave}>
 			{loading ? 'Saving...' : 'Save'}
 		</button>
 	</div>
@@ -85,16 +83,25 @@
 			/>
 		</label>
 	</div>
+	<div class="w-full flex justify-end">
+		<div class="flex space-x-2">
+			<button class={`uppercase btn variant-${source ? "filled" : "ghost"}`} on:click={() => source = true} >Source</button>
+			<button class={`uppercase btn variant-${source ? "ghost" : "filled"}`} on:click={() => source = false} >Preview</button>
+		</div>
+	</div>
 	<div class="h-full w-full space-x-4 py-2 flex justify-evenly">
+	{#if source}
 		<div
 			class="prose w-full min-h-full text-black dark:text-white card"
 			contenteditable="true"
 			on:keydown={handleKeyDown}
 			bind:innerText={content}
 		/>
+	{:else}
 		<div class="w-full prose text-black dark:text-white card">
 			{@html renderedContent}
 		</div>
+	{/if}
 	</div>
 </div>
 
