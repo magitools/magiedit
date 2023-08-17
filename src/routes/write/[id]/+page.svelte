@@ -45,7 +45,6 @@
 	async function handleSave() {
 		loading = true;
 		toastStore.trigger({message:"saving your article...", })
-		console.log(renderedContent)
 		if (data?.article?.id) {
 			await db.articles.update(data.article.id, {
 				title: renderedContent?.frontmatter?.title ?? Date.now().toString() ,
