@@ -20,17 +20,27 @@
 		loading = false;
 	}
 </script>
+
+<div class="w-full h-full flex flex-col">
 {#if loading}
 <ProgressBar />
 {/if}
-
-<a href="/write/new">New Article</a>
-
-
+<div>
+<a class="btn variant-filled" href="/write/new">New</a>
+</div>
+<div class="w-full flex flex-wrap mt-4 px-4">
 {#each data?.articles as article}
-	<div>
-		<h2>{article.title}</h2>
-		<a href={`/write/${article.id}`}>Edit</a>
-		<button class="btn" on:click={() => handleDownload(article.id)}>Download</button>
+	<div class="card min-w-[300px]">
+		<h2 class="card-header">{article.title}</h2>
+		<section class="p-4">
+		</section>
+		<div class="card-footer">
+		<a class="btn variant-filled" href={`/write/${article.id}`}>Edit</a>
+		<button class="btn variant-filled" on:click={() => handleDownload(article.id)}>Download</button>
+		</div>
 	</div>
 {/each}
+</div>
+</div>
+
+
