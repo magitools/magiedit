@@ -15,8 +15,8 @@
 	import { toastStore } from '@skeletonlabs/skeleton';
 	import "highlight.js/styles/nord.css"
 	import {parse} from "yaml"
-	let source = true;
 
+	let source = true;
 	const parser = unified()
 		.use(remarkParse)
 		.use(remarkFrontmatter)
@@ -31,7 +31,6 @@
         .use(rehypeHighlight)
 		.use(rehypeStringify);
 	export let data;
-	export let form;
 	let id = data?.article?.id ?? null
 	let content = data?.article?.content ?? 'here goes your markdown content';
 	let loading = false;
@@ -115,49 +114,11 @@
 	</div>
 </div>
 
-<!-- <div class="flex flex-col h-full w-full">
-	<SlideToggle on:change={() => (source = !source)} name="view-source" checked={source}
-		>View {source ? 'rendered' : 'source'}</SlideToggle
-	>
-
-	<button class="btn variant-filled-primary" on:click={handleSave}> Save </button>
-
-	{#if source}
-		{#if form?.photos}
-        <div class="w-full flex flex-wrap">
-			{#each form.photos as photo}
-				<img alt={photo.description} src={photo.urls.small} on:click={() => {
-                    content += `\n![${photo.alt_description}](${photo.urls.regular})\n`
-                }} />
-			{/each}
-
-        </div>
-		{/if}
-		<div class="w-full h-full flex flex-col">
-			<form method="post" use:enhance>
-				<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
-					<input type="search" placeholder="Search..." class="col-span-2" name="search" />
-					<button class="variant-filled-secondary" type="submit">Submit</button>
-				</div>
-			</form>
-			<label for="title" class="label">
-				<span>title</span>
-				<input
-					bind:value={title}
-					type="text"
-					class="input"
-					name="title"
-					placeholder="the title of the article goes here"
-				/>
-			</label>
-			<textarea
-				bind:value={content}
-				class="textarea flex-1"
-				placeholder="Enter your article here."
-			/>
-		</div>
-	{:else}
-		<h1>{title}</h1>
-		{@html renderedContent}
-	{/if}
-</div> -->
+<style lang="scss">
+	[contenteditable] {
+		@apply outline-0 transition-all duration-500;
+		&:focus {
+			@apply scale-105 shadow-lg
+		}
+	}
+</style>
