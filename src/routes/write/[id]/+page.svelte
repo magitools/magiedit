@@ -49,7 +49,7 @@
 				title: renderedContent?.frontmatter?.title ?? Date.now().toString() ,
 				content,
 				tags: renderedContent?.frontmatter?.tags ?? [],
-				frontmatter: renderedContent?.frontmatter?.toString() ?? null
+				frontmatter: renderedContent?.frontmatter ? JSON.stringify(renderedContent?.frontmatter) : undefined
 			});
 		} else {
 			id = await db.articles.put({
