@@ -6,6 +6,7 @@ export interface Article {
 	content?: string;
 	tags: string[];
 	createdAt?: Date;
+	frontmatter?: string;
 }
 
 export interface Settings {
@@ -22,7 +23,7 @@ export class MagiEditDB extends Dexie {
 	constructor() {
 		super('MagiEdit');
 		this.version(1).stores({
-			articles: '++id, title, content, tags, createdAt',
+			articles: '++id, title, content, tags, createdAt, frontmatter',
             settings: '++id, name, value',
 		});
 	}

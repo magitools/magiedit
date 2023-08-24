@@ -48,13 +48,15 @@
 			await db.articles.update(data.article.id, {
 				title: renderedContent?.frontmatter?.title ?? Date.now().toString() ,
 				content,
-				tags: renderedContent?.frontmatter?.tags ?? []
+				tags: renderedContent?.frontmatter?.tags ?? [],
+				frontmatter: renderedContent?.frontmatter?.toString() ?? null
 			});
 		} else {
 			id = await db.articles.put({
 				title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
 				content,
-				tags: renderedContent?.frontmatter?.tags ?? []
+				tags: renderedContent?.frontmatter?.tags ?? [],
+				frontmatter: renderedContent?.frontmatter ? JSON.stringify(renderedContent?.frontmatter)  : undefined
 			});
 		}
 		toastStore.trigger({message:"article saved!"})
