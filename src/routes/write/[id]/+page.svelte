@@ -80,7 +80,6 @@
 	let ctrlDown = false;
 	let shiftDown = false;
 	function handleKeyDown(event) {
-		console.log(event);
 		if (event.repeat) return;
 		switch (event.key) {
 			case "Control":
@@ -97,6 +96,16 @@
 				if (ctrlDown) {
 					event.preventDefault()	
 					source = !source
+				}
+				break;
+			case "[":
+				if (window.getSelection().type === "Range") {
+					event.preventDefault();
+					const selection = window.getSelection()
+					console.log(window.getSelection())
+					const node = selection.focusNode.parentNode;
+					const textToReplace = selection.baseNode.wholeText.replace(selection.baseNode.wholeText.substr(selection.baseOffset, selection.extentOffset), `[${selection.baseNode.wholeText.substr(selection.baseOffset, selection.extentOffset)}]`)
+					content = content.replace(selection.baseNode.wholeText, textToReplace)
 				}
 				break;
 		}
