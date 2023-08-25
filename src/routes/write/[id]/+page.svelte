@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { db } from '$lib/storage/db';
+	import {onMount} from "svelte"
 	import type { IParagraph } from '$lib/articles/types';
 	import {generateArticleBlob} from "$lib/articles/download"
 	import { unified } from 'unified';
@@ -76,13 +77,36 @@
 		document.body.removeChild(a);
 		loading = false;
 	}
-
+	let ctrlDown = false;
+	let shiftDown = false;
 	function handleKeyDown(event) {
-		if (event.keyCode === 9) {
-			event.preventDefault();
-			content += "\t"
+		console.log(event);
+		if (event.repeat) return;
+		switch (event.key) {
+			case "Control":
+				event.preventDefault();
+				ctrlDown = true;
+				break;
+			case "s":
+				if (ctrlDown) {
+					event.preventDefault()
+					handleSave();
+				}
+				break;
+			case "l":
+				if (ctrlDown) {
+					event.preventDefault()	
+					source = !source
+				}
+				break;
 		}
 	}
+	onMount(() => {
+		window.addEventListener("keydown", handleKeyDown)
+		return (() => {
+			window.removeEventListener("keydown", handleKeyDown)
+		})
+	})
 </script>
 
 <div class="flex h-full w-full flex-col">
@@ -105,7 +129,6 @@
 		<div
 			class="prose max-w-[70%] w-full min-h-full text-black dark:text-white card p-4"
 			contenteditable="true"
-			on:keydown={handleKeyDown}
 			bind:innerText={content}
 		/>
 	{:else}
