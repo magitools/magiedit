@@ -32,13 +32,13 @@
         .use(rehypeHighlight)
 		.use(rehypeStringify);
 	export let data;
-	let id = data?.article?.id ?? null
+	let id = data?.article?.id ?? null;
 	let content = data?.article?.content ?? 'here goes your markdown content';
 	let loading = false;
     let renderedContent = {frontmatter: {}, data: ""};
 
 	$: parser.process(content).then((data) => {
-        renderedContent = {frontmatter: {...data.data.frontmatter}, data: data.toString()}
+        renderedContent = {frontmatter: {...data.data.frontmatter}, data: data.toString()};
     })
 
 
@@ -60,12 +60,12 @@
 				frontmatter: renderedContent?.frontmatter ? JSON.stringify(renderedContent?.frontmatter)  : undefined
 			});
 		}
-		toastStore.trigger({message:"article saved!"})
+		toastStore.trigger({message:"article saved!"});
 		loading = false;
 	}
 
 	async function handleDownload() {
-		await handleSave()
+		await handleSave();
 		const article = await db.articles.get(id);
 		const data = await generateArticleBlob(id);
 		const link = window.URL.createObjectURL(data)
@@ -94,26 +94,30 @@
 				break;
 			case "l":
 				if (ctrlDown) {
-					event.preventDefault()	
-					source = !source
+					event.preventDefault();
+					source = !source;
 				}
 				break;
 			case "[":
 				if (window.getSelection().type === "Range") {
 					event.preventDefault();
-					const selection = window.getSelection()
-					console.log(window.getSelection())
+					const selection = window.getSelection();
+					console.log(window.getSelection());
 					const node = selection.focusNode.parentNode;
-					const textToReplace = selection.baseNode.wholeText.replace(selection.baseNode.wholeText.substr(selection.baseOffset, selection.extentOffset), `[${selection.baseNode.wholeText.substr(selection.baseOffset, selection.extentOffset)}]`)
-					content = content.replace(selection.baseNode.wholeText, textToReplace)
+					//TODO fix with backwards selection and reselcting text
+					const textToReplace = selection.baseNode.wholeText.replace(selection.baseNode.wholeText.substr(selection.baseOffset, selection.extentOffset), `[${selection.baseNode.wholeText.substr(selection.baseOffset, selection.extentOffset)}]`);
+					content = content.replace(selection.baseNode.wholeText, textToReplace);
 				}
+				break;
+			case "\"":
+				// TODO same thing than for [
 				break;
 		}
 	}
 	onMount(() => {
-		window.addEventListener("keydown", handleKeyDown)
+		window.addEventListener("keydown", handleKeyDown);
 		return (() => {
-			window.removeEventListener("keydown", handleKeyDown)
+			window.removeEventListener("keydown", handleKeyDown);
 		})
 	})
 </script>
