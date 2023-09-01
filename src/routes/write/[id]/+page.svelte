@@ -82,6 +82,11 @@
 	}
 	let ctrlDown = false;
 	let shiftDown = false;
+	function handleKeyUp(event) {
+		if (event.key === "Control") {
+				ctrlDown = false
+			}
+	}
 	function handleKeyDown(event) {
 		if (event.repeat || $modalStore[0]) return;
 		switch (event.key) {
@@ -119,8 +124,10 @@
 	}
 	onMount(() => {
 		window.addEventListener("keydown", handleKeyDown);
+		window.addEventListener("keyup", handleKeyUp)
 		return (() => {
 			window.removeEventListener("keydown", handleKeyDown);
+			window.removeEventListener("keydown", handleKeyUp)
 		})
 	})
 
@@ -130,8 +137,10 @@
     title: "Add GIF",
     subTitle: "Search Giphy for gifs",
     onRun: () => {
-        modalStore.trigger({component: "giphyModal", type: "component"})
-    }
+        modalStore.trigger({component: "giphyModal", type: "component", response: (r: string) => {
+			content += `\n${r}\n`
+		}})
+    },
 }
 	])
 </script>
