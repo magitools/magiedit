@@ -1,5 +1,8 @@
 import { GIPHY_TOKEN } from "$env/static/private";
+import { GiphyFetch } from "@giphy/js-fetch-api";
 import { json, type RequestHandler } from "@sveltejs/kit";
+
+const client = new GiphyFetch(GIPHY_TOKEN)
 
 export const GET: RequestHandler = async({fetch, request, url}) => {
     const query = url.searchParams.get("query")
@@ -7,12 +10,9 @@ export const GET: RequestHandler = async({fetch, request, url}) => {
     if (!query) {
         throw "Invalid url format"
     }
-    const requestUrl = new URL("https://api.giphy.com/v1/gifs/search")
-    requestUrl.searchParams.append("api_key", GIPHY_TOKEN)
-    requestUrl.searchParams.append("q", query)
-    requestUrl.searchParams.append("page", (page * 25).toString())
-
-    const results = await (await fetch(requestUrl)).json()
-    console.log(results)
+    const results = await client.search(query, {
+        type: "gifs",
+        offset: page * 25
+    })
     return json({data: results.data})
 }
