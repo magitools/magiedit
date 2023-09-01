@@ -42,6 +42,7 @@
 
 	$: parser.process(content).then((data) => {
         renderedContent = {frontmatter: {...data.data.frontmatter}, data: data.toString()};
+		console.log(content)
     })
 
 
@@ -81,14 +82,13 @@
 		loading = false;
 	}
 	let ctrlDown = false;
-	let shiftDown = false;
 	function handleKeyUp(event) {
 		if (event.key === "Control") {
 				ctrlDown = false
 			}
 	}
 	function handleKeyDown(event) {
-		if (event.repeat || $modalStore[0]) return;
+		if (event.repeat) return;
 		switch (event.key) {
 			case "Control":
 				event.preventDefault();

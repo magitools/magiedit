@@ -10,7 +10,8 @@
     }
     const handleImageSelected = (idx: number) => {
         if ($modalStore[0].response) {
-            $modalStore[0].response(`![${results[idx].alt_text}](${results[idx].images.original.url})`)
+            $modalStore[0].response(`![${results[idx].alt_text || results[idx].title}](${results[idx].images.original.url})`)
+            modalStore.close();
         }
     }
 
