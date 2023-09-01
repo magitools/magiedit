@@ -13,7 +13,7 @@
 	import rehypeStringify from 'rehype-stringify';
     import addClasses from 'rehype-add-classes';
     import rehypeHighlight from 'rehype-highlight'
-	import { toastStore } from '@skeletonlabs/skeleton';
+	import { getToastStore } from '@skeletonlabs/skeleton';
 	import "highlight.js/styles/nord.css"
 	import {parse} from "yaml"
 
@@ -44,7 +44,7 @@
 
 	async function handleSave() {
 		loading = true;
-		toastStore.trigger({message:"saving your article...", })
+		getToastStore().trigger({message:"saving your article...", })
 		if (data?.article?.id) {
 			await db.articles.update(data.article.id, {
 				title: renderedContent?.frontmatter?.title ?? Date.now().toString() ,
@@ -60,7 +60,7 @@
 				frontmatter: renderedContent?.frontmatter ? JSON.stringify(renderedContent?.frontmatter)  : undefined
 			});
 		}
-		toastStore.trigger({message:"article saved!"});
+		getToastStore().trigger({message:"article saved!"});
 		loading = false;
 	}
 
