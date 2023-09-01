@@ -13,9 +13,10 @@
 	import rehypeStringify from 'rehype-stringify';
     import addClasses from 'rehype-add-classes';
     import rehypeHighlight from 'rehype-highlight'
-	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import "highlight.js/styles/nord.css"
 	import {parse} from "yaml"
+	import CommandPalette, { defineActions } from "svelte-command-palette"
 
 	let source = true;
 	const parser = unified()
@@ -31,6 +32,8 @@
         })
         .use(rehypeHighlight)
 		.use(rehypeStringify);
+	const modalStore = getModalStore()
+	const toastStore = getToastStore()
 	export let data;
 	let id = data?.article?.id ?? null;
 	let content = data?.article?.content ?? 'here goes your markdown content';
@@ -44,7 +47,7 @@
 
 	async function handleSave() {
 		loading = true;
-		getToastStore().trigger({message:"saving your article...", })
+		toastStore.trigger({message:"saving your article...", })
 		if (data?.article?.id) {
 			await db.articles.update(data.article.id, {
 				title: renderedContent?.frontmatter?.title ?? Date.now().toString() ,
@@ -60,7 +63,7 @@
 				frontmatter: renderedContent?.frontmatter ? JSON.stringify(renderedContent?.frontmatter)  : undefined
 			});
 		}
-		getToastStore().trigger({message:"article saved!"});
+		toastStore.trigger({message:"article saved!"});
 		loading = false;
 	}
 
@@ -80,7 +83,7 @@
 	let ctrlDown = false;
 	let shiftDown = false;
 	function handleKeyDown(event) {
-		if (event.repeat) return;
+		if (event.repeat || $modalStore[0]) return;
 		switch (event.key) {
 			case "Control":
 				event.preventDefault();
@@ -120,7 +123,19 @@
 			window.removeEventListener("keydown", handleKeyDown);
 		})
 	})
+
+	const commands = defineActions([
+		{
+    id: "1",
+    title: "Add GIF",
+    subTitle: "Search Giphy for gifs",
+    onRun: () => {
+        modalStore.trigger({component: "giphyModal", type: "component"})
+    }
+}
+	])
 </script>
+<CommandPalette commands={commands} />
 
 <div class="flex h-full w-full flex-col">
 	<div class="w-full card p-4 my-2">
