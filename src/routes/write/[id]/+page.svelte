@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { db } from '$lib/storage/db';
 	import {onMount} from "svelte"
-	import type { IParagraph } from '$lib/articles/types';
 	import {generateArticleBlob} from "$lib/articles/download"
 	import { unified } from 'unified';
 	import remarkParse from 'remark-parse';
@@ -189,12 +187,6 @@
 		@apply outline-0 transition-all duration-500;
 		&:focus {
 			@apply scale-105 shadow-lg
-		}
-	}
-	.paletteWrapperInner {
-		@apply bg-white ;
-		&.dark {
-			@apply bg-black;
 		}
 	}
 </style>
