@@ -42,7 +42,6 @@
 
 	$: parser.process(content).then((data) => {
         renderedContent = {frontmatter: {...data.data.frontmatter}, data: data.toString()};
-		console.log(content)
     })
 
 
@@ -89,6 +88,7 @@
 	}
 	function handleKeyDown(event) {
 		if (event.repeat) return;
+		console.log(event)
 		switch (event.key) {
 			case "Control":
 				event.preventDefault();
@@ -117,8 +117,13 @@
 					content = content.replace(selection.baseNode.wholeText, textToReplace);
 				}
 				break;
+			case "Enter":
+				content += "\n";
+				break;
 			case "\"":
 				// TODO same thing than for [
+				break;
+			default:
 				break;
 		}
 	}
@@ -130,6 +135,9 @@
 			window.removeEventListener("keydown", handleKeyUp)
 		})
 	})
+	function appendToContent(text: string) {
+		content += `${text}`;
+	}
 
 	const commands = defineActions([
 		{
@@ -138,13 +146,14 @@
     subTitle: "Search Giphy for gifs",
     onRun: () => {
         modalStore.trigger({component: "giphyModal", type: "component", response: (r: string) => {
-			content += `\n${r}\n`
+			if (!r) return;
+			appendToContent(r)
 		}})
     },
 }
 	])
 </script>
-<CommandPalette commands={commands} />
+<CommandPalette commands={commands} inputClass="text-black dark:text-white" inputStyle={{color:"black"}} titleStyle={{color:"black"}} />
 
 <div class="flex h-full w-full flex-col">
 	<div class="w-full card p-4 my-2">
@@ -163,10 +172,9 @@
 	</div>
 	<div class="h-full w-full py-2 flex justify-center">
 	{#if source}
-		<div
-			class="prose max-w-[70%] w-full min-h-full text-black dark:text-white card p-4"
-			contenteditable="true"
-			bind:innerText={content}
+		<textarea
+			class="prose textarea max-w-[70%] w-full min-h-full text-black dark:text-white card p-4"
+			bind:value={content}
 		/>
 	{:else}
 		<div class="w-full max-w-[70%] prose text-black dark:text-white card p-4">
@@ -181,6 +189,12 @@
 		@apply outline-0 transition-all duration-500;
 		&:focus {
 			@apply scale-105 shadow-lg
+		}
+	}
+	.paletteWrapperInner {
+		@apply bg-white ;
+		&.dark {
+			@apply bg-black;
 		}
 	}
 </style>
