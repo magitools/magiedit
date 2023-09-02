@@ -9,8 +9,9 @@ export class DevPlatform implements IBasePlatform {
     }
 
     public async publish(article: Article) {
-        const token = await db.settings.get({name: "dev_token"});
-        if (!token) return;
+        const settings = await db.settings.toArray();
+        const setting = settings.find((e) => e.name === "dev_token" && e.value)
+        if (!setting) return;
         await fetch("https://dev.to/api/articles", {
             method: "post",
             body: JSON.stringify({
@@ -21,8 +22,8 @@ export class DevPlatform implements IBasePlatform {
                 }
             }),
             headers: {
-                "Content-Type": "application/json",
-                "api-Key": token.value,
+                "accept": "application/vnd.forem.api-v1+json",
+                "api-Key": setting.value,
             }
         })
     }
