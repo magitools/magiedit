@@ -25,7 +25,9 @@
     <button class="btn variant-filled" on:click={handleSearch} >Search</button>
     <div class="grid grid-cols-3 gap-4 overflow-y-auto h-full">
         {#each results as result, idx}
-            <img src={result.images.downsized_medium.url} alt={result.alt_text} class="cursor-pointer" on:click={() => handleImageSelected(idx)} />
+            <button on:click={() => handleImageSelected(idx)}>
+                <img src={result.images.downsized_medium.url} alt={result.alt_text} class="cursor-pointer"  />
+            </button>
         {/each}
     </div>
 </div>
