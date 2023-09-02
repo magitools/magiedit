@@ -1,11 +1,12 @@
-<script lang='ts'>
+<script lang="ts">
 	import '../app.postcss';
 	import { AppShell, Modal, Toast, initializeStores } from '@skeletonlabs/skeleton';
 	import Footer from '$lib/components/footer.svelte';
 	import Header from '$lib/components/header.svelte';
 	import { modalRegistry } from '$lib/modals';
-	initializeStores()
+	initializeStores();
 </script>
+
 <Modal components={modalRegistry} />
 <Toast />
 <AppShell>
@@ -15,4 +16,3 @@
 		<Footer />
 	</svelte.fragment>
 </AppShell>
-

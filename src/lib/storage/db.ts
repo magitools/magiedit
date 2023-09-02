@@ -24,7 +24,7 @@ export class MagiEditDB extends Dexie {
 		super('MagiEdit');
 		this.version(1).stores({
 			articles: '++id, title, content, tags, createdAt, frontmatter',
-            settings: '++id, name, value',
+			settings: '++id, name, value'
 		});
 	}
 }

@@ -1,12 +1,12 @@
-import { db } from "$lib/storage/db";
-import type { PageLoad } from "./$types";
+import { db } from '$lib/storage/db';
+import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {
-    const articles = await db.articles.toArray();
+	const articles = await db.articles.toArray();
 
-    return {
-        articles
-    }
+	return {
+		articles
+	};
 };
 
-export const ssr = false
+export const ssr = false;

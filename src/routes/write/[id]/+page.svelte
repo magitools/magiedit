@@ -112,7 +112,7 @@
 					event.preventDefault();
 					const selection = window.getSelection();
 					console.log(window.getSelection());
-					const node = selection.focusNode.parentNode;
+					//const node = selection.focusNode.parentNode;
 					//TODO fix with backwards selection and reselcting text
 					const textToReplace = selection.baseNode.wholeText.replace(
 						selection.baseNode.wholeText.substr(selection.baseOffset, selection.extentOffset),
@@ -204,22 +204,16 @@
 	<div class="h-full w-full py-2 flex justify-center">
 		{#if source}
 			<textarea
-				class="prose textarea max-w-[70%] w-full min-h-full text-black dark:text-white card p-4"
+				class="prose textarea max-w-[70%] w-full min-h-full max-h-full overflow-y-auto text-black dark:text-white card p-4"
 				bind:value={content}
 			/>
 		{:else}
-			<div class="w-full max-w-[70%] prose text-black dark:text-white card p-4">
+			<div
+				class="w-full max-w-[70%] prose h-full overflow-y-auto text-black dark:text-white card p-4"
+			>
+				<!-- ts-ignore-svelte/no-at-html-tags -->
 				{@html renderedContent.data}
 			</div>
 		{/if}
 	</div>
 </div>
-
-<style lang="scss">
-	[contenteditable] {
-		@apply outline-0 transition-all duration-500;
-		&:focus {
-			@apply scale-105 shadow-lg;
-		}
-	}
-</style>
