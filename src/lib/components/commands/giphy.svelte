@@ -26,7 +26,7 @@
     <div class="grid grid-cols-3 gap-4 overflow-y-auto h-full">
         {#each results as result, idx}
             <button on:click={() => handleImageSelected(idx)}>
-                <img src={result.images.downsized_medium.url} alt={result.alt_text} class="cursor-pointer"  />
+                <img src={result.images.downsized_medium.url} alt={result.alt_text}  />
             </button>
         {/each}
     </div>
