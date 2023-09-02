@@ -1,6 +1,5 @@
 # MagiEdit
 
-
 ## Build your own
 
 In order to have image search, provide as environment variables
