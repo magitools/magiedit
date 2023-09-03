@@ -1,3 +1,6 @@
 node_modules
 .svelte-kit
 .env
+/test-results/
+/playwright-report/
+/playwright/.cache/
