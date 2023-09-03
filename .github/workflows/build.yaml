@@ -20,6 +20,6 @@ jobs:
         with:
           node-version: 18
       - name: Install dependencies
-        run: pnpm ci
+        run: pnpm install
       - name: Build
         run: node ci/build.mjs
