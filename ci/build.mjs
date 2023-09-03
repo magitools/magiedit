@@ -11,7 +11,7 @@ connect(
 
 		const runner = node.withWorkdir('/app').withExec(['npm', 'install']);
 		const out = await runner
-			.withEnvVariable('NODE_BUILD', 'y')
+			.withEnvVariable('BUILD_ON_NODE', 'y')
 			.withEnvVariable('GIPHY_TOKEN', 'giphy_token')
 			.withEnvVariable('UNSPLASH_TOKEN', 'unsplash_token')
 			.withExec(['npm', 'run', 'build'])
