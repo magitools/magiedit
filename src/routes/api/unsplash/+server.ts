@@ -1,7 +1,7 @@
-import { UNSPLASH_ACCESS } from '$env/static/private';
+import { UNSPLASH_TOKEN } from '$env/static/private';
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { createApi } from 'unsplash-js';
-const client = createApi({ accessKey: UNSPLASH_ACCESS });
+const client = createApi({ accessKey: UNSPLASH_TOKEN });
 
 export const GET: RequestHandler = async ({ url }) => {
 	const query = url.searchParams.get('query');
