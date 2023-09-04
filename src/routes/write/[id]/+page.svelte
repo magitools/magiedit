@@ -33,7 +33,6 @@
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	export let data;
-	let id = data?.article?.id ?? null;
 	let content = data?.article?.content ?? 'here goes your markdown content';
 	let loading = false;
 	let renderedContent = { frontmatter: {}, data: '' };
@@ -45,25 +44,14 @@
 	async function handleSave() {
 		loading = true;
 		toastStore.trigger({ message: 'saving your article...' });
-		if (data?.article?.id) {
-			await db.articles.update(data.article.id, {
-				title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
-				content,
-				tags: renderedContent?.frontmatter?.tags ?? [],
-				frontmatter: renderedContent?.frontmatter
-					? JSON.stringify(renderedContent?.frontmatter)
-					: undefined
-			});
-		} else {
-			id = await db.articles.put({
-				title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
-				content,
-				tags: renderedContent?.frontmatter?.tags ?? [],
-				frontmatter: renderedContent?.frontmatter
-					? JSON.stringify(renderedContent?.frontmatter)
-					: undefined
-			});
-		}
+		await db.articles.update(data.article.id, {
+			title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
+			content,
+			tags: renderedContent?.frontmatter?.tags ?? [],
+			frontmatter: renderedContent?.frontmatter
+				? JSON.stringify(renderedContent?.frontmatter)
+				: undefined
+		});
 		toastStore.trigger({ message: 'article saved!' });
 		loading = false;
 	}
