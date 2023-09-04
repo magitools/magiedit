@@ -58,8 +58,8 @@
 
 	async function handleDownload() {
 		await handleSave();
-		const article = await db.articles.get(id);
-		const data = await generateArticleBlob(id);
+		const article = await db.articles.get(data.article.id);
+		const data = await generateArticleBlob(data.article.id);
 		const link = window.URL.createObjectURL(data);
 		let a = document.createElement('a');
 		a.setAttribute('download', `${article.title}.md`);
