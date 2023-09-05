@@ -68,9 +68,9 @@ export default defineConfig({
 		// },
 	],
 	webServer: {
-		command: 'npm run preview',
+		command: 'npm run dev',
 		reuseExistingServer: true,
-		port: 4173
+		port: 5173
 	}
 
 	/* Run your local dev server before starting the tests */

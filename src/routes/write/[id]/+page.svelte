@@ -196,6 +196,7 @@
 				on:click={() => (source = true)}>Source</button
 			>
 			<button
+				data-testid="preview-button"
 				class={`uppercase btn variant-${source ? 'ghost' : 'filled'}`}
 				on:click={() => (source = false)}>Preview</button
 			>
