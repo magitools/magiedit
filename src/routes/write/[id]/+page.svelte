@@ -184,6 +184,7 @@
 				on:click={() => (source = true)}>Source</button
 			>
 			<button
+				data-testid="preview-button"
 				class={`uppercase btn variant-${source ? 'ghost' : 'filled'}`}
 				on:click={() => (source = false)}>Preview</button
 			>
@@ -192,11 +193,13 @@
 	<div class="h-full w-full py-2 flex justify-center">
 		{#if source}
 			<textarea
+				data-testid="source"
 				class="prose textarea max-w-[70%] w-full min-h-full max-h-full overflow-y-auto text-black dark:text-white card p-4"
 				bind:value={content}
 			/>
 		{:else}
 			<div
+				data-testid="preview"
 				class="w-full max-w-[70%] prose h-full overflow-y-auto text-black dark:text-white card p-4"
 			>
 				<!-- ts-ignore-svelte/no-at-html-tags -->
