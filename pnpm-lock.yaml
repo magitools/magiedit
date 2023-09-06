@@ -11,6 +11,9 @@ dependencies:
   dexie:
     specifier: ^4.0.1-alpha.25
     version: 4.0.1-alpha.25
+  file-system-access:
+    specifier: ^1.0.4
+    version: 1.0.4
   highlight.js:
     specifier: ^11.8.0
     version: 11.8.0
@@ -808,6 +811,10 @@ packages:
 
   /@types/unist@3.0.0:
     resolution: {integrity: sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==}
+    dev: false
+
+  /@types/wicg-file-system-access@2020.9.6:
+    resolution: {integrity: sha512-6hogE75Hl2Ov/jgp8ZhDaGmIF/q3J07GtXf8nCJCwKTHq7971po5+DId7grft09zG7plBwpF6ZU0yx9Du4/e1A==}
     dev: false
 
   /@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.48.0)(typescript@5.2.2):
@@ -1611,7 +1618,7 @@ packages:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 3.2.1
-    dev: true
+    dev: false
 
   /file-entry-cache@6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
@@ -1619,6 +1626,17 @@ packages:
     dependencies:
       flat-cache: 3.1.0
     dev: true
+
+  /file-system-access@1.0.4:
+    resolution: {integrity: sha512-JDlhH+gJfZu/oExmtN4/6VX+q1etlrbJbR5uzoBa4BzfTRQbEXGFuGIBRk3ZcPocko3WdEclZSu+d/SByjG6Rg==}
+    engines: {node: '>=14'}
+    dependencies:
+      '@types/wicg-file-system-access': 2020.9.6
+      fetch-blob: 3.2.0
+      node-domexception: 1.0.0
+    optionalDependencies:
+      web-streams-polyfill: 3.2.1
+    dev: false
 
   /fill-range@7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}

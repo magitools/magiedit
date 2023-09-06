@@ -14,6 +14,7 @@
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import 'highlight.js/styles/nord.css';
 	import { parse } from 'yaml';
+	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
 	import CommandPalette, { defineActions } from 'svelte-command-palette';
 
 	let source = true;
@@ -33,10 +34,10 @@
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	export let data;
-	let id = data?.article?.id ?? null;
 	let content = data?.article?.content ?? 'here goes your markdown content';
 	let loading = false;
 	let renderedContent = { frontmatter: {}, data: '' };
+	let fileHandle: FileSystemFileHandle;
 
 	$: parser.process(content).then((data) => {
 		renderedContent = { frontmatter: { ...data.data.frontmatter }, data: data.toString() };
@@ -45,33 +46,22 @@
 	async function handleSave() {
 		loading = true;
 		toastStore.trigger({ message: 'saving your article...' });
-		if (data?.article?.id) {
-			await db.articles.update(data.article.id, {
-				title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
-				content,
-				tags: renderedContent?.frontmatter?.tags ?? [],
-				frontmatter: renderedContent?.frontmatter
-					? JSON.stringify(renderedContent?.frontmatter)
-					: undefined
-			});
-		} else {
-			id = await db.articles.put({
-				title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
-				content,
-				tags: renderedContent?.frontmatter?.tags ?? [],
-				frontmatter: renderedContent?.frontmatter
-					? JSON.stringify(renderedContent?.frontmatter)
-					: undefined
-			});
-		}
+		await db.articles.update(data.article.id, {
+			title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
+			content,
+			tags: renderedContent?.frontmatter?.tags ?? [],
+			frontmatter: renderedContent?.frontmatter
+				? JSON.stringify(renderedContent?.frontmatter)
+				: undefined
+		});
 		toastStore.trigger({ message: 'article saved!' });
 		loading = false;
 	}
 
 	async function handleDownload() {
 		await handleSave();
-		const article = await db.articles.get(id);
-		const data = await generateArticleBlob(id);
+		const article = await db.articles.get(data.article.id);
+		const data = await generateArticleBlob(data.article.id);
 		const link = window.URL.createObjectURL(data);
 		let a = document.createElement('a');
 		a.setAttribute('download', `${article.title}.md`);
@@ -143,6 +133,26 @@
 		content += `${text}`;
 	}
 
+	async function handleSaveToDisk() {
+		await handleSave();
+		if (!fileHandle) {
+			fileHandle = await showSaveFilePicker({
+				types: [
+					{
+						accept: {
+							'text/markdown': ['.md']
+						}
+					}
+				]
+			});
+			await fileHandle.requestPermission({ mode: 'readwrite' });
+		}
+		toastStore.trigger({ message: 'saving to disk...' });
+		const writable = await fileHandle.createWritable({ keepExistingData: false });
+		await writable.write(content);
+		await writable.close();
+	}
+
 	const commands = defineActions([
 		{
 			title: 'Add GIF',
@@ -188,6 +198,7 @@
 			{loading ? 'Saving...' : 'Save'}
 		</button>
 		<button class="btn variant-filled" on:click={handleDownload}> Download </button>
+		<button class="btn variant-filled" on:click={handleSaveToDisk}>Save to file</button>
 	</div>
 	<div class="w-full flex justify-end">
 		<div class="flex space-x-2">
