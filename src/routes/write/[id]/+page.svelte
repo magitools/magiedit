@@ -14,6 +14,7 @@
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import 'highlight.js/styles/nord.css';
 	import { parse } from 'yaml';
+	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
 	import CommandPalette, { defineActions } from 'svelte-command-palette';
 
 	let source = true;
@@ -36,6 +37,7 @@
 	let content = data?.article?.content ?? 'here goes your markdown content';
 	let loading = false;
 	let renderedContent = { frontmatter: {}, data: '' };
+	let fileHandle: FileSystemFileHandle;
 
 	$: parser.process(content).then((data) => {
 		renderedContent = { frontmatter: { ...data.data.frontmatter }, data: data.toString() };
@@ -131,6 +133,26 @@
 		content += `${text}`;
 	}
 
+	async function handleSaveToDisk() {
+		await handleSave();
+		if (!fileHandle) {
+			fileHandle = await showSaveFilePicker({
+				types: [
+					{
+						accept: {
+							'text/markdown': ['.md']
+						}
+					}
+				]
+			});
+			await fileHandle.requestPermission({ mode: 'readwrite' });
+		}
+		toastStore.trigger({ message: 'saving to disk...' });
+		const writable = await fileHandle.createWritable({ keepExistingData: false });
+		await writable.write(content);
+		await writable.close();
+	}
+
 	const commands = defineActions([
 		{
 			title: 'Add GIF',
@@ -176,6 +198,7 @@
 			{loading ? 'Saving...' : 'Save'}
 		</button>
 		<button class="btn variant-filled" on:click={handleDownload}> Download </button>
+		<button class="btn variant-filled" on:click={handleSaveToDisk}>Save to file</button>
 	</div>
 	<div class="w-full flex justify-end">
 		<div class="flex space-x-2">
