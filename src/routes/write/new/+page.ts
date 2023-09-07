@@ -6,3 +6,5 @@ export const load: PageLoad = async () => {
 	const id = await db.articles.add({ tags: [], title: Date.now().toString() });
 	throw redirect(302, `/write/${id}`);
 };
+
+export const ssr = false;
