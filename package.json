@@ -11,11 +11,15 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"prepare": "husky install",
-		"test": "playwright test"
+		"test": "playwright test",
+		"db:push": "drizzle-kit push:sqlite",
+		"db:generate": "drizzle-kit generate:sqlite --schema=./src/lib/server/drizzle.ts"
 	},
 	"devDependencies": {
 		"@dagger.io/dagger": "^0.8.4",
 		"@floating-ui/dom": "^1.5.1",
+		"@iconify-json/devicon": "^1.1.15",
+		"@iconify-json/mdi": "^1.1.54",
 		"@playwright/test": "^1.37.1",
 		"@skeletonlabs/skeleton": "^2.0.0",
 		"@skeletonlabs/tw-plugin": "^0.1.0",
@@ -30,6 +34,7 @@
 		"@typescript-eslint/parser": "^5.45.0",
 		"autoprefixer": "^10.4.14",
 		"dotenv": "^16.3.1",
+		"drizzle-kit": "^0.19.13",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.26.0",
@@ -48,9 +53,14 @@
 	"type": "module",
 	"dependencies": {
 		"@giphy/js-fetch-api": "^5.1.0",
+		"@libsql/client": "^0.3.2",
+		"@lucia-auth/adapter-sqlite": "^2.0.0",
+		"@lucia-auth/oauth": "^3.0.0",
 		"dexie": "^4.0.1-alpha.25",
+		"drizzle-orm": "^0.28.6",
 		"file-system-access": "^1.0.4",
 		"highlight.js": "^11.8.0",
+		"lucia": "^2.4.2",
 		"rehype-add-classes": "^1.0.0",
 		"rehype-highlight": "^6.0.0",
 		"rehype-stringify": "^9.0.3",
@@ -61,6 +71,7 @@
 		"remark-rehype": "^10.1.0",
 		"svelte-command-palette": "^1.2.1",
 		"unified": "^11.0.0",
+		"unplugin-icons": "^0.17.0",
 		"unsplash-js": "^7.0.18",
 		"yaml": "^2.3.1"
 	}
