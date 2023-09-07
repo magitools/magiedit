@@ -8,8 +8,8 @@
 
 <h1>Profile</h1>
 <p>User id: {data.userId}</p>
-<p>Github username: {data.username}</p>
-<p>Github email: {data.email}</p>
+<p>username: {data.username}</p>
+<p>email: {data.email}</p>
 <form method="post" action="?/logout" use:enhance>
-	<input type="submit" value="Sign out" />
+	<button class="btn variant-filled-error" type="submit">Sign Out</button>
 </form>
