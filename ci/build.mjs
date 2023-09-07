@@ -16,6 +16,8 @@ connect(
 			.withEnvVariable('BUILD_ON_NODE', 'y')
 			.withEnvVariable('GIPHY_TOKEN', 'giphy_token')
 			.withEnvVariable('UNSPLASH_TOKEN', 'unsplash_token')
+			.withEnvVariable('GITHUB_CLIENT_ID', 'id')
+			.withEnvVariable('GITHUB_CLIENT_SECRET', 'secret')
 			.withExec(['npm', 'run', 'build'])
 			.stderr();
 	},
