@@ -14,6 +14,9 @@ dependencies:
   '@lucia-auth/adapter-sqlite':
     specifier: ^2.0.0
     version: 2.0.0(@libsql/client@0.3.2)(lucia@2.4.2)
+  '@lucia-auth/oauth':
+    specifier: ^3.0.0
+    version: 3.0.0(lucia@2.4.2)
   dexie:
     specifier: ^4.0.1-alpha.25
     version: 4.0.1-alpha.25
@@ -602,6 +605,14 @@ packages:
         optional: true
     dependencies:
       '@libsql/client': 0.3.2
+      lucia: 2.4.2
+    dev: false
+
+  /@lucia-auth/oauth@3.0.0(lucia@2.4.2):
+    resolution: {integrity: sha512-InjJ8ntwp3HB7tPCg7zfG3xxHgsMREq0ojT8IUuUS0UNdGFlk6ZJAymL+3P8o/U1fJgJA5kY1NxwNnYU+SuA3g==}
+    peerDependencies:
+      lucia: ^2.0.0
+    dependencies:
       lucia: 2.4.2
     dev: false
 
