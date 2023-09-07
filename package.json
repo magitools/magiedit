@@ -18,6 +18,8 @@
 	"devDependencies": {
 		"@dagger.io/dagger": "^0.8.4",
 		"@floating-ui/dom": "^1.5.1",
+		"@iconify-json/devicon": "^1.1.15",
+		"@iconify-json/mdi": "^1.1.54",
 		"@playwright/test": "^1.37.1",
 		"@skeletonlabs/skeleton": "^2.0.0",
 		"@skeletonlabs/tw-plugin": "^0.1.0",
@@ -69,6 +71,7 @@
 		"remark-rehype": "^10.1.0",
 		"svelte-command-palette": "^1.2.1",
 		"unified": "^11.0.0",
+		"unplugin-icons": "^0.17.0",
 		"unsplash-js": "^7.0.18",
 		"yaml": "^2.3.1"
 	}
