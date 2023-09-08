@@ -195,6 +195,20 @@
 					}
 				});
 			}
+		},
+		{
+			title: 'Get Saved images',
+			subTitle: 'Use one of your previously generated images',
+			onRun: () => {
+				modalStore.trigger({
+					component: 'savedImages',
+					type: 'component',
+					response: (r: string) => {
+						if (!r) return;
+						appendToContent(r);
+					}
+				});
+			}
 		}
 	]);
 </script>

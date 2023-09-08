@@ -15,9 +15,7 @@
 	<button class="btn variant-filled-error" type="submit">Sign Out</button>
 </form>
 
-<form action="?/recharge" method="post" use:enhance>
-	<button type="submit">Recharge</button>
-</form>
+<a href="/profile/recharge" class="btn variant-filled">Recharge</a>
 
 <div class="">
 	<p>you have saved these images</p>
