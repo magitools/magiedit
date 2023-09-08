@@ -28,6 +28,12 @@ connect(
 			.withEnvVariable('CLOUDFLARE_TOKEN', 'secret')
 			.withEnvVariable('CLOUDFLARE_BUCKET_NAME', 'secret')
 			.withEnvVariable('CLOUDFLARE_BUCKET_URL', 'secret')
+			.withEnvVariable('STRIPE_KEY', 'secret')
+			.withEnvVariable('STRIPE_PRODUCT_ID', 'secret')
+			.withEnvVariable('STRIPE_PRICE_ID', 'secret')
+			.withEnvVariable('STRIPE_SUCCESS_URL', 'secret')
+			.withEnvVariable('STRIPE_CANCEL_URL', 'secret')
+			.withEnvVariable('STRIPE_CHECKOUT_HOOK_SIGNATURE', 'secret')
 			.withExec(['npm', 'run', 'build'])
 			.stderr();
 	},
