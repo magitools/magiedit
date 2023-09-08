@@ -181,6 +181,20 @@
 					}
 				});
 			}
+		},
+		{
+			title: 'Generate Image',
+			subTitle: 'Generate an image using DALL-E 2',
+			onRun: () => {
+				modalStore.trigger({
+					component: 'openAiImageModal',
+					type: 'component',
+					response: (r: string) => {
+						if (!r) return;
+						appendToContent(r);
+					}
+				});
+			}
 		}
 	]);
 </script>

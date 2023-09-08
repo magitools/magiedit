@@ -19,6 +19,7 @@ declare global {
 		type DatabaseUserAttributes = {
 			username: string;
 			email: string;
+			aiCredits: number;
 		};
 		type DatabaseSessionAttributes = object;
 	}
