@@ -20,6 +20,14 @@ connect(
 			.withEnvVariable('DATABASE_TOKEN', 'token')
 			.withEnvVariable('GITHUB_CLIENT_ID', 'id')
 			.withEnvVariable('GITHUB_CLIENT_SECRET', 'secret')
+			.withEnvVariable('OPENAI_TOKEN', 'secret')
+			.withEnvVariable('OPENAI_ORG', 'secret')
+			.withEnvVariable('CLOUDFLARE_SECRET_ACCESS_KEY', 'secret')
+			.withEnvVariable('CLOUDFLARE_ACCESS_KEY_ID', 'secret')
+			.withEnvVariable('CLOUDFLARE_ACCOUNT_ID', 'secret')
+			.withEnvVariable('CLOUDFLARE_TOKEN', 'secret')
+			.withEnvVariable('CLOUDFLARE_BUCKET_NAME', 'secret')
+			.withEnvVariable('CLOUDFLARE_BUCKET_URL', 'secret')
 			.withExec(['npm', 'run', 'build'])
 			.stderr();
 	},
