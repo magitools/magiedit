@@ -1,19 +1,11 @@
-import {
-	OPENAI_TOKEN,
-	OPENAI_ORG,
-	CLOUDFLARE_ACCOUNT_ID,
-	CLOUDFLARE_ACCESS_KEY_ID,
-	CLOUDFLARE_SECRET_ACCESS_KEY,
-	CLOUDFLARE_BUCKET_NAME,
-	CLOUDFLARE_BUCKET_URL
-} from '$env/static/private';
+import { OPENAI_TOKEN, OPENAI_ORG } from '$env/static/private';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import OpenAI from 'openai';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '$lib/server/db';
 import { user, userImages } from '$lib/server/drizzle';
 import { eq } from 'drizzle-orm';
+import { saveToBucket } from '$lib/server/r2';
 
 export const GET: RequestHandler = async ({ locals, url }) => {
 	const session = await locals.auth.validate();
@@ -57,28 +49,13 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	}
 	const arrayBuffer = await (await fetch(content.toString())).arrayBuffer();
 	const data = Buffer.from(new Uint8Array(arrayBuffer));
-	console.log('+ base64 generated and buffer initialize');
-	const S3 = new S3Client({
-		region: 'auto',
-		endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-		credentials: {
-			accessKeyId: CLOUDFLARE_ACCESS_KEY_ID,
-			secretAccessKey: CLOUDFLARE_SECRET_ACCESS_KEY
-		}
-	});
 	const key = `${session?.user?.userId}_${uuidv4()}`;
-	await S3.send(
-		new PutObjectCommand({
-			ACL: 'public-read',
-			Key: key,
-			Body: data,
-			Bucket: CLOUDFLARE_BUCKET_NAME
-		})
-	);
+	const url = await saveToBucket(data, key);
+	// get data from function
 	await db.insert(userImages).values({
-		url: `${CLOUDFLARE_BUCKET_URL}/${key}`,
+		url,
 		userId: session?.user.userId,
 		description: description?.toString()
 	});
-	return json({ message: 'ok', url: `${CLOUDFLARE_BUCKET_URL}/${key}` });
+	return json({ message: 'ok', url });
 };
