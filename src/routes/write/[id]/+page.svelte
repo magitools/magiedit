@@ -18,6 +18,7 @@
 	import CommandPalette, { defineActions } from 'svelte-command-palette';
 
 	let source = true;
+	let sourceElement: HTMLTextAreaElement;
 	const parser = unified()
 		.use(remarkParse)
 		.use(remarkFrontmatter)
@@ -77,9 +78,8 @@
 			ctrlDown = false;
 		}
 	}
-	function handleKeyDown(event) {
+	function handleKeyDown(event: KeyboardEvent) {
 		if (event.repeat) return;
-		console.log(event);
 		switch (event.key) {
 			case 'Control':
 				event.preventDefault();
@@ -99,20 +99,18 @@
 				break;
 			case '[':
 				if (window.getSelection().type === 'Range') {
-					event.preventDefault();
-					const selection = window.getSelection();
-					console.log(window.getSelection());
-					//const node = selection.focusNode.parentNode;
-					//TODO fix with backwards selection and reselcting text
-					const textToReplace = selection.baseNode.wholeText.replace(
-						selection.baseNode.wholeText.substr(selection.baseOffset, selection.extentOffset),
-						`[${selection.baseNode.wholeText.substr(selection.baseOffset, selection.extentOffset)}]`
-					);
-					content = content.replace(selection.baseNode.wholeText, textToReplace);
+					// TODO reimplement for textarea
 				}
 				break;
 			case 'Enter':
-				content += '\n';
+				event.preventDefault();
+				content =
+					content.substring(0, sourceElement.selectionStart) +
+					'\n' +
+					content.substring(sourceElement.selectionStart);
+				sourceElement.focus();
+				sourceElement.selectionStart = sourceElement.selectionEnd;
+				sourceElement.selectionEnd = sourceElement.selectionEnd;
 				break;
 			case '"':
 				// TODO same thing than for [
@@ -216,6 +214,7 @@
 	<div class="h-full w-full py-2 flex justify-center">
 		{#if source}
 			<textarea
+				bind:this={sourceElement}
 				data-testid="source"
 				class="prose textarea max-w-[70%] w-full min-h-full max-h-full overflow-y-auto text-black dark:text-white card p-4"
 				bind:value={content}
