@@ -23,12 +23,11 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 			{
 				role: 'system',
 				content:
-					'you are an engineer tasked with writing prompts for dall-e 2 from an article. You may not describe texts or logos in the output prompt'
+					"you resume articles by generating a prompt for dall-e' image generation. You will answer only with the generated prompt and your answer will only be 1 sentence. The generated prompt must include as much detail as possible and be eye-catching"
 			},
 			{ role: 'user', content: `generate a prompt for dall-e using the following article: ${text}` }
 		]
 	});
-	console.log(response.choices[0]);
 	const answer = response.choices[0].message.content;
 	if (!answer) {
 		throw fail(500, { message: 'invalid response' });
