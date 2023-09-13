@@ -98,8 +98,36 @@
 				}
 				break;
 			case '[':
-				if (window.getSelection().type === 'Range') {
-					// TODO reimplement for textarea
+				if (window.getSelection()?.type === 'Range') {
+					event.preventDefault();
+					content =
+						content.substring(0, sourceElement.selectionStart) +
+						'[' +
+						content.substring(sourceElement.selectionStart, sourceElement.selectionEnd) +
+						']' +
+						content.substring(sourceElement.selectionEnd);
+				}
+				break;
+			case '(':
+				if (window.getSelection()?.type === 'Range') {
+					event.preventDefault();
+					content =
+						content.substring(0, sourceElement.selectionStart) +
+						'(' +
+						content.substring(sourceElement.selectionStart, sourceElement.selectionEnd) +
+						')' +
+						content.substring(sourceElement.selectionEnd);
+				}
+				break;
+			case '"':
+				if (window.getSelection()?.type === 'Range') {
+					event.preventDefault();
+					content =
+						content.substring(0, sourceElement.selectionStart) +
+						'"' +
+						content.substring(sourceElement.selectionStart, sourceElement.selectionEnd) +
+						'"' +
+						content.substring(sourceElement.selectionEnd);
 				}
 				break;
 			case 'Enter':
@@ -111,9 +139,6 @@
 				sourceElement.focus();
 				sourceElement.selectionStart = sourceElement.selectionEnd;
 				sourceElement.selectionEnd = sourceElement.selectionEnd;
-				break;
-			case '"':
-				// TODO same thing than for [
 				break;
 			default:
 				break;
