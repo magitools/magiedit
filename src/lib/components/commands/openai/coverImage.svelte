@@ -64,6 +64,14 @@
 </script>
 
 <div class="w-modal-wide max-h-[50%]">
+	<aside class="alert variant-filled-error">
+		<div class="alert-message">
+			<h3 class="h3">Attention</h3>
+			<p>
+				Summary generation is currently not perfected. You can use it, but expect weird results!
+			</p>
+		</div>
+	</aside>
 	<label for="query" class="label"
 		><span>Article Summary</span>
 		<input
