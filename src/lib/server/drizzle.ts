@@ -4,7 +4,8 @@ const user = sqliteTable('user', {
 	id: text('id').notNull().primaryKey(),
 	email: text('email').notNull(),
 	username: text('username').notNull(),
-	customerId: text('customer_id')
+	customerId: text('customer_id'),
+	aiCredits: integer('ai_credits').default(0)
 });
 
 const userKey = sqliteTable('user_key', {
@@ -24,4 +25,13 @@ const userSession = sqliteTable('user_session', {
 	idleExpires: integer('idle_expires').notNull()
 });
 
-export { user, userKey, userSession };
+const userImages = sqliteTable('user_image', {
+	id: integer('id').primaryKey({ autoIncrement: true }).notNull(),
+	url: text('url').notNull(),
+	description: text('description').notNull().default('no description provided, sorry'),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id)
+});
+
+export { user, userKey, userSession, userImages };

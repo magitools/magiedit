@@ -204,6 +204,45 @@
 					}
 				});
 			}
+		},
+		{
+			title: 'Generate Image',
+			subTitle: 'Generate an image using DALL-E 2',
+			onRun: () => {
+				modalStore.trigger({
+					component: 'openAiImageModal',
+					type: 'component',
+					response: (r: string) => {
+						if (!r) return;
+						appendToContent(r);
+					}
+				});
+			}
+		},
+		{
+			title: 'Get Saved images',
+			subTitle: 'Use one of your previously generated images',
+			onRun: () => {
+				modalStore.trigger({
+					component: 'savedImages',
+					type: 'component',
+					response: (r: string) => {
+						if (!r) return;
+						appendToContent(r);
+					}
+				});
+			}
+		},
+		{
+			title: 'Generate Cover Image',
+			subTitle: 'Use or generate a summary of your article to create a cover image',
+			onRun: () => {
+				modalStore.trigger({
+					component: 'openAiCoverModal',
+					type: 'component',
+					meta: { content }
+				});
+			}
 		}
 	]);
 </script>
