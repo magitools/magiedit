@@ -58,7 +58,7 @@
 	};
 	$: token = encode($modalStore[0].meta.content);
 	$: tokenCount = token.length ?? 0;
-	$: cost = (tokenCount / 1000) * 0.1;
+	$: cost = (tokenCount / 1000) * 0.6;
 	$: creditCost = Math.ceil(cost / 0.5);
 	let results: string[] = [];
 </script>

@@ -1,5 +1,8 @@
 import { OPENAI_ORG, OPENAI_TOKEN } from '$env/static/private';
+import { user } from '$lib/server/drizzle';
+import { db } from '$lib/server/db';
 import { fail, type RequestHandler, json } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 import { decode } from 'gpt-tokenizer';
 import { OpenAI } from 'openai';
 
@@ -17,6 +20,10 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		organization: OPENAI_ORG,
 		apiKey: OPENAI_TOKEN
 	});
+	const tokenCost = Math.ceil(((content.length / 1000) * 0.6) / 0.5);
+	if (tokenCost > session?.user?.aiCredits) {
+		throw fail(500, { message: 'not enough credits' });
+	}
 	const response = await openai.chat.completions.create({
 		model: 'gpt-4',
 		messages: [
@@ -32,5 +39,9 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	if (!answer) {
 		throw fail(500, { message: 'invalid response' });
 	}
+	await db
+		.update(user)
+		.set({ aiCredits: session?.user?.aiCredits - tokenCost })
+		.where(eq(user.id, session?.user?.userId));
 	return json({ answer: answer });
 };
