@@ -1,0 +1,41 @@
+{
+	"version": "5",
+	"dialect": "sqlite",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "5",
+			"when": 1694074821396,
+			"tag": "0000_lying_aaron_stack",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "5",
+			"when": 1694077862032,
+			"tag": "0001_even_lockjaw",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "5",
+			"when": 1694162317863,
+			"tag": "0002_mushy_post",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "5",
+			"when": 1694173967329,
+			"tag": "0003_low_famine",
+			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "5",
+			"when": 1694174542140,
+			"tag": "0004_shocking_black_panther",
+			"breakpoints": true
+		}
+	]
+}

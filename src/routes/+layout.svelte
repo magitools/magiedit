@@ -1,22 +1,22 @@
-<script lang='ts'>
-	// The ordering of these imports is critical to your app working properly
-	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
-	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
-	import '@skeletonlabs/skeleton/styles/skeleton.css';
-	// Most of your app wide CSS should be put in this file
+<script lang="ts">
 	import '../app.postcss';
-	import { AppShell, Toast } from '@skeletonlabs/skeleton';
+	import { AppShell, Modal, Toast, initializeStores } from '@skeletonlabs/skeleton';
 	import Footer from '$lib/components/footer.svelte';
 	import Header from '$lib/components/header.svelte';
+	import { modalRegistry } from '$lib/modals';
+	initializeStores();
 
+	export let data;
 </script>
 
+<Modal components={modalRegistry} />
 <Toast />
 <AppShell>
-	<svelte.fragment slot="header"><Header /></svelte.fragment>
+	<svelte.fragment slot="header"
+		><Header username={data.username} authed={data.authed} /></svelte.fragment
+	>
 	<slot />
 	<svelte.fragment slot="pageFooter">
 		<Footer />
 	</svelte.fragment>
 </AppShell>
-

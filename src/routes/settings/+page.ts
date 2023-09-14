@@ -1,14 +1,10 @@
-import { db } from "$lib/storage/db";
-import type { PageLoad } from "./$types";
-
+import { db } from '$lib/storage/db';
+import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {
+	const settings = await db.settings.toArray();
 
-    const settings = await db.settings.toArray();
-
-
-    return {settings}
+	return { settings };
 };
 
-
-export const ssr = false
+export const ssr = false;

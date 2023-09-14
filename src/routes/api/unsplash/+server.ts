@@ -1,18 +1,15 @@
-import { UNSPLASH_ACCESS } from "$env/static/private";
-import { json, type RequestHandler } from "@sveltejs/kit";
+import { UNSPLASH_TOKEN } from '$env/static/private';
+import { json, type RequestHandler } from '@sveltejs/kit';
+import { createApi } from 'unsplash-js';
+const client = createApi({ accessKey: UNSPLASH_TOKEN });
 
-export const GET: RequestHandler = async({request, url}) => {
-    if(url.searchParams.get("search")) {
-        const data = await (await (fetch(`https://api.unsplash.com/search/photos?query=${url.searchParams.get("search")}&page=${url.searchParams.get("page") ?? 1}`, {
-            headers: {
-                "Authorization":`Client-ID ${UNSPLASH_ACCESS}`
-            }
-        }))).json()
-        if (data) {
-            return json({
-                photos: data.results
-            })
-        }
-        throw new Error("No data")
-    }
-}
+export const GET: RequestHandler = async ({ url }) => {
+	const query = url.searchParams.get('query');
+	const page = url.searchParams.has('page') ? parseInt(url.searchParams.get('page')) : 1;
+	if (query) {
+		const res = await client.search.getPhotos({ query, page });
+		return json({ photos: res.response?.results || [] });
+	} else {
+		throw new Error('Malformed request');
+	}
+};
