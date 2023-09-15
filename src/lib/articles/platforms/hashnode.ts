@@ -1,6 +1,8 @@
-import { db, type Article } from '$lib/storage/db';
-import type { IBasePlatform } from './base';
+import type { UserPreferences } from '$lib/server/drizzle';
+import type { Article } from '$lib/storage/db';
+import { RegisterPlatform, type IBasePlatform } from './base';
 
+@RegisterPlatform
 export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 	settings: Record<string, string> = {};
 
@@ -8,18 +10,22 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 		return ['hashnode_token', 'hashnode_publication_id'];
 	}
 
-	setSettings(settings: Record<string, string>) {
-		this.settings = settings;
+	setSettings(settings: UserPreferences[]) {
+		settings.forEach((e) => {
+			if (this.getRequiredSettings().includes(e.key.split(':')[1])) {
+				this.settings[e.key.split(':')[1]] = e.value;
+			}
+		});
 		return this;
 	}
 
 	public async publish(article: Article) {
-		const token = await db.settings.get({ name: 'hashnode_token' });
-		const publication = await db.settings.get({ name: 'hashnode_publication_id' });
+		const token = this.settings['hasnode_token'];
+		const publication = this.settings['hashnode_publication_id'];
 		if (!token || !publication) return;
 		await fetch('https://api.hashnode.com', {
 			headers: {
-				Authorization: token.value,
+				Authorization: token,
 				'Content-Type': 'application/json'
 			},
 			method: 'POST',
@@ -32,7 +38,7 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 						contentMarkdown: article.content,
 						tags: [],
 						isPartOfPublication: {
-							publicationId: publication.value
+							publicationId: publication
 						}
 					}
 				}

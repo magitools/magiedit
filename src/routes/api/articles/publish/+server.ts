@@ -1,5 +1,5 @@
-import { DevPlatform } from '$lib/articles/platforms/dev';
-import { HashnodePlatform } from '$lib/articles/platforms/hashnode';
+import { supportedPlatforms } from '$lib/articles/platforms/base';
+import '$lib/articles/platforms';
 import { db } from '$lib/server/db';
 import { userPreferences } from '$lib/server/drizzle';
 import { fail, json, type RequestHandler } from '@sveltejs/kit';
@@ -21,18 +21,13 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	if (!tokens) {
 		return json({ message: 'no publishing outlets provided' });
 	}
-	const devPlatform = new DevPlatform();
-	const hashnodePlatform = new HashnodePlatform();
-	if (tokens.some((e) => e.key.split(':')[1] === devPlatform.getRequiredSettings()[0])) {
-		await devPlatform
-			.setSettings({ dev: tokens.find((e) => e.key.split(':')[1] === 'dev')!.value! })
-			.publish({
-				title: title.toString(),
-				content: content.toString(),
-				tags: [],
-				published: published !== null ? Boolean(published) : false
-			});
+	console.log(supportedPlatforms);
+	for (const platform of supportedPlatforms) {
+		await new platform().setSettings(tokens).publish({
+			content: content.toString(),
+			title: title.toString(),
+			published: Boolean(published)
+		});
 	}
-
 	return json({ message: 'ok' });
 };

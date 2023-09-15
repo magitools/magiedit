@@ -1,14 +1,20 @@
+import type { UserPreferences } from '$lib/server/drizzle';
 import type { Article } from '$lib/storage/db';
-import type { IBasePlatform } from './base';
+import { RegisterPlatform, type IBasePlatform } from './base';
 
+@RegisterPlatform
 export class DevPlatform implements IBasePlatform<DevPlatform> {
 	settings: Record<string, string> = {};
 	public getRequiredSettings(): string[] {
 		return ['dev'];
 	}
 
-	public setSettings(settings: Record<string, string>) {
-		this.settings = settings;
+	setSettings(settings: UserPreferences[]) {
+		settings.forEach((e) => {
+			if (this.getRequiredSettings().includes(e.key.split(':')[1])) {
+				this.settings[e.key.split(':')[1]] = e.value;
+			}
+		});
 		return this;
 	}
 

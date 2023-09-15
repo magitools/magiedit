@@ -1,4 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import type { InferSelectModel } from 'drizzle-orm';
 
 const user = sqliteTable('user', {
 	id: text('id').notNull().primaryKey(),
@@ -40,4 +41,7 @@ const userPreferences = sqliteTable('user_preference', {
 	value: text('value').notNull()
 });
 
+type UserPreferences = InferSelectModel<typeof userPreferences>;
+
 export { user, userKey, userSession, userImages, userPreferences };
+export type { UserPreferences };
