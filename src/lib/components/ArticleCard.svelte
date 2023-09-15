@@ -6,7 +6,7 @@
 
 	let frontmatter = article.frontmatter ? JSON.parse(article.frontmatter) : {};
 
-	const handleDownload = async (id: string) => {
+	const handleDownload = async (id: number) => {
 		loading = true;
 		const article = await db.articles.get(id);
 		const data = await generateArticleBlob(id);
@@ -18,6 +18,15 @@
 		a.click();
 		document.body.removeChild(a);
 		loading = false;
+	};
+	const handlePublish = async () => {
+		const data = new FormData();
+		data.append('content', article.content || '');
+		data.append('title', article.title || '');
+		await fetch('/api/articles/publish', {
+			method: 'POST',
+			body: data
+		});
 	};
 	console.log(article);
 </script>
@@ -35,5 +44,7 @@
 			disabled={loading}
 			on:click={() => handleDownload(article.id)}>Download</button
 		>
+		<a class="btn variant-filled-error" href={`/api/articles/${article.id}/delete`}>Delete</a>
+		<button class="btn variant-filled" disabled={loading} on:click={handlePublish} />
 	</div>
 </div>

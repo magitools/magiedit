@@ -36,6 +36,13 @@
 			"when": 1694174542140,
 			"tag": "0004_shocking_black_panther",
 			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "5",
+			"when": 1694764074780,
+			"tag": "0005_shocking_adam_warlock",
+			"breakpoints": true
 		}
 	]
 }

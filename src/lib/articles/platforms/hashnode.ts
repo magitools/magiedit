@@ -1,9 +1,16 @@
 import { db, type Article } from '$lib/storage/db';
 import type { IBasePlatform } from './base';
 
-export class HashnodePlatform implements IBasePlatform {
-	public getRequiredSettings(): string[] {
+export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
+	settings: Record<string, string> = {};
+
+	getRequiredSettings(): string[] {
 		return ['hashnode_token', 'hashnode_publication_id'];
+	}
+
+	setSettings(settings: Record<string, string>) {
+		this.settings = settings;
+		return this;
 	}
 
 	public async publish(article: Article) {

@@ -1,16 +1,22 @@
-import { db, type Article } from '$lib/storage/db';
+import type { Article } from '$lib/storage/db';
 import type { IBasePlatform } from './base';
 
-export class DevPlatform implements IBasePlatform {
+export class DevPlatform implements IBasePlatform<DevPlatform> {
+	settings: Record<string, string> = {};
 	public getRequiredSettings(): string[] {
-		return ['dev_token'];
+		return ['dev'];
+	}
+
+	public setSettings(settings: Record<string, string>) {
+		this.settings = settings;
+		return this;
 	}
 
 	public async publish(article: Article) {
-		const settings = await db.settings.toArray();
-		const setting = settings.find((e) => e.name === 'dev_token' && e.value);
+		const setting = this.settings['dev'];
+		console.log(this.settings);
 		if (!setting) return;
-		await fetch('https://dev.to/api/articles', {
+		const res = await fetch('https://dev.to/api/articles', {
 			method: 'post',
 			body: JSON.stringify({
 				article: {
@@ -21,8 +27,12 @@ export class DevPlatform implements IBasePlatform {
 			}),
 			headers: {
 				accept: 'application/vnd.forem.api-v1+json',
-				'api-Key': setting.value
+				'content-type': 'application/json',
+				'api-key': setting
 			}
 		});
+		if (!res.ok) {
+			console.log(res.statusText);
+		}
 	}
 }

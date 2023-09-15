@@ -1,52 +1,45 @@
 <script lang="ts">
-	import { db } from '$lib/storage/db';
-
 	export let data;
 	let dev_token = '';
 	let hashnode_token = '';
 	let hashnode_publication_id = '';
 
-	data.settings.forEach((setting) => {
-		switch (setting.name) {
-			case 'dev_token':
-				dev_token = setting.value;
+	data.preferences.forEach((e) => {
+		switch (e.key.split(':')[1]) {
+			case 'dev':
+				dev_token = e.value;
 				break;
-			case 'hashnode_token':
-				hashnode_token = setting.value;
+			case 'hash_token':
+				hashnode_token = e.value;
 				break;
-			case 'hashnode_publication_id':
-				hashnode_publication_id = setting.value;
-				break;
+			case 'hash_publication':
+				hashnode_publication_id = e.value;
 		}
 	});
-
-	const handleSave = async () => {
-		await db.updateOrCreateSettings({ name: 'dev_token', value: dev_token });
-		await db.updateOrCreateSettings({ name: 'hashnode_token', value: hashnode_token });
-		await db.updateOrCreateSettings({
-			name: 'hashnode_publication_id',
-			value: hashnode_publication_id
-		});
-	};
 </script>
 
-<div>
-	<label class="label">
+<form method="post">
+	<label class="label" for="dev">
 		<span>Dev.to</span>
-		<input bind:value={dev_token} class="input" placeholder="dev.to api key" />
+		<input bind:value={dev_token} name="dev" class="input" placeholder="dev.to api key" />
 	</label>
-	<label class="label">
+	<label class="label" for="hash_token">
 		<span>Hashnode</span>
-		<input bind:value={hashnode_token} class="input" placeholder="hashnode personal token" />
+		<input
+			name="hash_token"
+			bind:value={hashnode_token}
+			class="input"
+			placeholder="hashnode personal token"
+		/>
 	</label>
-	<label class="label">
+	<label class="label" for="hash_publication">
 		<span>Hashnode Publication Id</span>
 		<input
 			bind:value={hashnode_publication_id}
 			class="input"
+			name="hash_publication"
 			placeholder="hashnode publication id"
 		/>
 	</label>
-</div>
-
-<button class="btn variant-filled-primary" on:click={handleSave}>Save</button>
+	<button type="submit" class="btn variant-filled-primary">Save</button>
+</form>

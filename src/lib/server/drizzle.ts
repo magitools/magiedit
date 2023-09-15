@@ -34,4 +34,10 @@ const userImages = sqliteTable('user_image', {
 		.references(() => user.id)
 });
 
-export { user, userKey, userSession, userImages };
+const userPreferences = sqliteTable('user_preference', {
+	id: integer('id').primaryKey({ autoIncrement: true }).notNull(),
+	key: text('key').notNull().unique(),
+	value: text('value').notNull()
+});
+
+export { user, userKey, userSession, userImages, userPreferences };
