@@ -6,6 +6,7 @@ export interface Article {
 	content?: string;
 	tags: string[];
 	createdAt?: Date;
+	published: boolean;
 	frontmatter?: string;
 }
 
@@ -23,9 +24,18 @@ export class MagiEditDB extends Dexie {
 	constructor() {
 		super('MagiEdit');
 		this.version(1).stores({
-			articles: '++id, title, content, tags, createdAt, frontmatter',
-			settings: '++id, name, value'
+			articles: '++id, title, content, tags, createdAt, published, frontmatter',
+			settings: '&name, value'
 		});
+	}
+
+	async updateOrCreateSettings({ name, value }: { name: string; value: string }) {
+		const data = await this.settings.get({ name });
+		if (data) {
+			await this.settings.update(name, { value });
+		} else {
+			await this.settings.put({ name, value });
+		}
 	}
 }
 

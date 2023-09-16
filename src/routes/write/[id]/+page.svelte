@@ -47,6 +47,7 @@
 	async function handleSave() {
 		loading = true;
 		toastStore.trigger({ message: 'saving your article...' });
+		if (!data?.article?.id) return;
 		await db.articles.update(data.article.id, {
 			title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
 			content,
@@ -61,9 +62,10 @@
 
 	async function handleDownload() {
 		await handleSave();
+		if (!data?.article?.id) return;
 		const article = await db.articles.get(data.article.id);
-		const data = await generateArticleBlob(data.article.id);
-		const link = window.URL.createObjectURL(data);
+		const blob = await generateArticleBlob(data.article.id);
+		const link = window.URL.createObjectURL(blob);
 		let a = document.createElement('a');
 		a.setAttribute('download', `${article.title}.md`);
 		a.setAttribute('href', link);
@@ -73,7 +75,7 @@
 		loading = false;
 	}
 	let ctrlDown = false;
-	function handleKeyUp(event) {
+	function handleKeyUp(event: KeyboardEvent) {
 		if (event.key === 'Control') {
 			ctrlDown = false;
 		}

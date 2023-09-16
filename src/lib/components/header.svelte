@@ -5,10 +5,11 @@
 </script>
 
 <AppBar>
-	<svelte.fragment slot="lead">MagiEdit</svelte.fragment>
+	<svelte.fragment slot="lead"><a href="/">MagiEdit</a></svelte.fragment>
 	<svelte.fragment slot="trail">
 		{#if authed}
 			<a href="/profile">{username}</a>
+			<a href="/settings">settings</a>
 		{:else}
 			<a href="/login">Sign In</a>
 		{/if}
