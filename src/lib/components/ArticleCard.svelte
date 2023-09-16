@@ -4,6 +4,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	let loading = false;
 	export let article: Article;
+	export let userId: string | undefined;
 
 	let frontmatter = article.frontmatter ? JSON.parse(article.frontmatter) : {};
 	const modalStore = getModalStore();
@@ -52,7 +53,9 @@
 			disabled={loading}
 			on:click={() => handleDownload(article.id)}>Download</button
 		>
-		<a class="btn variant-filled-error" href={`/api/articles/${article.id}/delete`}>Delete</a>
-		<button class="btn variant-filled" disabled={loading} on:click={handlePublish}>Publish</button>
+		<!-- <a class="btn variant-filled-error" href={`/api/articles/${article.id}/delete`}>Delete</a> -->
+		<button class="btn variant-filled" disabled={loading || !userId} on:click={handlePublish}
+			>Publish</button
+		>
 	</div>
 </div>
