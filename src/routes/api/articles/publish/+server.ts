@@ -21,13 +21,21 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	if (!tokens) {
 		return json({ message: 'no publishing outlets provided' });
 	}
-	console.log(supportedPlatforms);
+	const res = new Map<string, 'ok' | 'ko'>();
 	for (const platform of supportedPlatforms) {
-		await new platform().setSettings(tokens).publish({
-			content: content.toString(),
-			title: title.toString(),
-			published: Boolean(published)
-		});
+		try {
+			await new platform().setSettings(tokens).publish({
+				content: content.toString(),
+				title: title.toString(),
+				published: Boolean(published)
+			});
+			res.set(new platform().getPlatformName(), 'ok');
+		} catch (error) {
+			res.set(new platform().getPlatformName(), 'ko');
+		}
 	}
-	return json({ message: 'ok' });
+	return json({
+		message: 'finished',
+		status: Array.from(res).map(([key, val]) => `${key}: ${val}`)
+	});
 };

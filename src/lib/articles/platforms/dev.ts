@@ -9,6 +9,10 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 		return ['dev'];
 	}
 
+	getPlatformName(): string {
+		return 'dev.to';
+	}
+
 	setSettings(settings: UserPreferences[]) {
 		settings.forEach((e) => {
 			if (this.getRequiredSettings().includes(e.key.split(':')[1])) {
@@ -20,8 +24,7 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 
 	public async publish(article: Article) {
 		const setting = this.settings['dev'];
-		console.log(this.settings);
-		if (!setting) return;
+		if (!setting) throw new Error('could not find required settings');
 		const res = await fetch('https://dev.to/api/articles', {
 			method: 'post',
 			body: JSON.stringify({
@@ -38,7 +41,7 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 			}
 		});
 		if (!res.ok) {
-			console.log(res.statusText);
+			throw new Error('something went wrong');
 		}
 	}
 }

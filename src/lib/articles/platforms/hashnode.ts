@@ -7,7 +7,11 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 	settings: Record<string, string> = {};
 
 	getRequiredSettings(): string[] {
-		return ['hashnode_token', 'hashnode_publication_id'];
+		return ['hash_token', 'hash_publication'];
+	}
+
+	getPlatformName(): string {
+		return 'hashnode';
 	}
 
 	setSettings(settings: UserPreferences[]) {
@@ -20,10 +24,10 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 	}
 
 	public async publish(article: Article) {
-		const token = this.settings['hasnode_token'];
-		const publication = this.settings['hashnode_publication_id'];
-		if (!token || !publication) return;
-		await fetch('https://api.hashnode.com', {
+		const token = this.settings['hash_token'];
+		const publication = this.settings['hash_publication'];
+		if (!token || !publication) throw new Error('could not find required settings');
+		const res = await fetch('https://api.hashnode.com', {
 			headers: {
 				Authorization: token,
 				'Content-Type': 'application/json'
@@ -44,5 +48,8 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 				}
 			})
 		});
+		if (!res.ok) {
+			throw new Error('Something went wrong');
+		}
 	}
 }
