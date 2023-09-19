@@ -41,7 +41,16 @@ const userPreferences = sqliteTable('user_preference', {
 	value: text('value').notNull()
 });
 
+const userArticles = sqliteTable('user_article', {
+	id: integer('id').primaryKey({ autoIncrement: true }).notNull(),
+	content: text('content').notNull(),
+	title: text('title').notNull(),
+	author: text('author')
+		.notNull()
+		.references(() => user.id)
+});
+
 type UserPreferences = InferSelectModel<typeof userPreferences>;
 
-export { user, userKey, userSession, userImages, userPreferences };
+export { user, userKey, userSession, userImages, userPreferences, userArticles };
 export type { UserPreferences };
