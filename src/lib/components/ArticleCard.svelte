@@ -47,7 +47,7 @@
 	{/if}
 	<section class="p-4" />
 	<div class="card-footer">
-		<a class="btn variant-filled" href={`/write/${article.id}`}>Edit</a>
+		<a class="btn variant-filled" href={`/app/write/${article.id}`}>Edit</a>
 		<button
 			class="btn variant-filled"
 			disabled={loading}

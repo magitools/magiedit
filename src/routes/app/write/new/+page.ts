@@ -4,7 +4,7 @@ import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {
 	const id = await db.articles.add({ tags: [], title: Date.now().toString() });
-	throw redirect(302, `/write/${id}`);
+	throw redirect(302, `/app/write/${id}`);
 };
 
 export const ssr = false;

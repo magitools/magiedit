@@ -9,7 +9,7 @@
 	<svelte.fragment slot="trail">
 		{#if authed}
 			<a href="/profile">{username}</a>
-			<a href="/settings">settings</a>
+			<a href="/app/settings">settings</a>
 		{:else}
 			<a href="/login">Sign In</a>
 		{/if}
