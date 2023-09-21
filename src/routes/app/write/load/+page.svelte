@@ -31,7 +31,7 @@
 			toastStore.trigger({
 				message: 'file loaded'
 			});
-			await goto(`/write/${id}`);
+			await goto(`/app/write/${id}`);
 		} catch (error) {
 			toastStore.trigger({
 				message: 'could not open file, please try again'
