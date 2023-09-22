@@ -13,12 +13,15 @@
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import 'highlight.js/styles/nord.css';
 	import { parse } from 'yaml';
-	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
-	import CommandPalette, { defineActions } from 'svelte-command-palette';
+	/* 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
+	 */ import CommandPalette, { defineActions } from 'svelte-command-palette';
+	import { fade } from 'svelte/transition';
 
 	export let data;
 	let source = true;
 	let sourceElement: HTMLTextAreaElement;
+	let loading = false;
+	let loadingText = 'loading, please wait...';
 	const parser = unified()
 		.use(remarkParse)
 		.use(remarkFrontmatter)
@@ -35,29 +38,40 @@
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	let content = data?.article?.content ?? 'here goes your markdown content';
-	let loading = false;
 	let renderedContent = { frontmatter: {}, data: '' };
-	let fileHandle: FileSystemFileHandle;
-	console.log(data);
+	//let fileHandle: FileSystemFileHandle;
 
 	$: parser.process(content).then((data) => {
 		renderedContent = { frontmatter: { ...data.data.frontmatter }, data: data.toString() };
 	});
 
 	async function handleSave() {
-		/* 		loading = true;
-		toastStore.trigger({ message: 'saving your article...' });
-		if (!data?.article?.id) return;
-		await db.articles.update(data.article.id, {
-			title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
-			content,
-			tags: renderedContent?.frontmatter?.tags ?? [],
-			frontmatter: renderedContent?.frontmatter
-				? JSON.stringify(renderedContent?.frontmatter)
-				: undefined
+		loading = true;
+		loadingText = 'generating encryption key...';
+		const keyBytes = await window.crypto.subtle.digest(
+			'SHA-256',
+			new TextEncoder().encode(data.key)
+		);
+		const key = await window.crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, [
+			'encrypt'
+		]);
+		const iv = new Uint8Array(data.article.iv.split(',').map((e) => parseInt(e)));
+		loadingText = 'encrypting content...';
+		const encodedContent = await window.crypto.subtle.encrypt(
+			{ name: 'AES-CBC', iv },
+			key,
+			new TextEncoder().encode(content)
+		);
+		loadingText = 'converting to base64...';
+		const base64 = btoa(String.fromCharCode(...new Uint8Array(encodedContent)));
+		const formData = new FormData();
+		formData.append('content', base64);
+		loadingText = 'saving to server...';
+		const res = await fetch(`/api/articles/${data.article.id}`, {
+			method: 'PUT',
+			body: formData
 		});
-		toastStore.trigger({ message: 'article saved!' });
-		loading = false; */
+		loading = false;
 	}
 
 	async function handleDownload() {
@@ -255,6 +269,14 @@
 	inputStyle={{ color: 'black' }}
 	titleStyle={{ color: 'black' }}
 />
+
+{#if loading}
+	<div
+		class="absolute z-10 w-screen h-screen bg-black/70 flex flex-col justify-center items-center"
+	>
+		<p transition:fade>{loadingText}</p>
+	</div>
+{/if}
 
 <div class="flex h-full w-full flex-col">
 	<div class="w-full card p-4 my-2">

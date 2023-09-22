@@ -1,6 +1,7 @@
 export interface IArticle {
+	iv: string;
 	id: number;
-	title: string;
+	title?: string;
 	content: string;
-	frontmatter: Record<string, any>;
+	frontmatter?: Record<string, any>;
 }

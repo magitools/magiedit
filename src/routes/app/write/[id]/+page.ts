@@ -13,8 +13,8 @@ export const load: PageLoad = async ({ data }) => {
 	const iv = new Uint8Array(data.article.iv.split(',').map((e) => parseInt(e)));
 	const decryptedContent = await window.crypto.subtle.decrypt({ name: 'AES-CBC', iv }, key, buffer);
 	const decoded = new TextDecoder().decode(decryptedContent);
-	const res = { content: decoded, id: data.article.id } as IArticle;
-	return { article: res };
+	const res = { ...data.article, content: decoded } as IArticle;
+	return { article: res, key: data.key };
 };
 
 export const ssr = false;
