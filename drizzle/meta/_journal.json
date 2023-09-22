@@ -50,6 +50,20 @@
 			"when": 1695117442830,
 			"tag": "0006_luxuriant_texas_twister",
 			"breakpoints": true
+		},
+		{
+			"idx": 7,
+			"version": "5",
+			"when": 1695369015295,
+			"tag": "0007_dusty_harrier",
+			"breakpoints": true
+		},
+		{
+			"idx": 8,
+			"version": "5",
+			"when": 1695369035738,
+			"tag": "0008_rainy_living_lightning",
+			"breakpoints": true
 		}
 	]
 }

@@ -18,7 +18,8 @@ export const auth = lucia({
 		return {
 			username: data.username,
 			email: data.email,
-			aiCredits: data.ai_credits
+			aiCredits: data.ai_credits,
+			keyHash: data.key_hash
 		};
 	}
 });

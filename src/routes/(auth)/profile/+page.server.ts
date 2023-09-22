@@ -32,11 +32,12 @@ export const actions: Actions = {
 			.where(eq(user.id, session?.user?.userId));
 		return JSON.stringify({ status: 'ok' });
 	},
-	logout: async ({ locals }) => {
+	logout: async ({ locals, cookies }) => {
 		const session = await locals.auth.validate();
 		if (!session) return fail(401);
 		await auth.invalidateSession(session.sessionId); // invalidate session
 		locals.auth.setSession(null); // remove cookie
+		cookies.delete('keyhash');
 		throw redirect(302, '/login'); // redirect to login page
 	}
 };

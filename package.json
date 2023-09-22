@@ -57,6 +57,7 @@
 		"@libsql/client": "^0.3.2",
 		"@lucia-auth/adapter-sqlite": "^2.0.0",
 		"@lucia-auth/oauth": "^3.0.0",
+		"bcrypt": "^5.1.1",
 		"dexie": "^4.0.1-alpha.25",
 		"drizzle-orm": "^0.28.6",
 		"file-system-access": "^1.0.4",
