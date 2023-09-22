@@ -6,7 +6,7 @@
 <form action="" method="post">
 	<label for="passkey">
 		<span>Passkey</span>
-		<input type="text" name="passkey" autocomplete="new-password" class="input" />
+		<input type="password" name="passkey" autocomplete="new-password" class="input" />
 	</label>
 	<button type="submit" class="btn variant-filled">Submit</button>
 </form>

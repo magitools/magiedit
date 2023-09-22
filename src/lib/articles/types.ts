@@ -1,5 +1,6 @@
-export interface IParagraph {
+export interface IArticle {
 	id: number;
-	original: string;
-	markdown?: string;
+	title: string;
+	content: string;
+	frontmatter: Record<string, any>;
 }
