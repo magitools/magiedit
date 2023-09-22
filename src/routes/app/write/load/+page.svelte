@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { db } from '$lib/storage/db';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { showOpenFilePicker } from 'file-system-access';
 	const toastStore = getToastStore();
@@ -21,7 +20,7 @@
 			]
 		});
 		if (!filehandle) return;
-		try {
+		/* 		try {
 			const content = await (await filehandle.getFile()).text();
 			const id = await db.articles.add({
 				title: filehandle.name,
@@ -38,7 +37,7 @@
 			});
 			console.error(error);
 			return;
-		}
+		} */
 	}
 </script>
 
