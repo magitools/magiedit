@@ -1,6 +1,3 @@
-<script>
-</script>
-
 <p>
 	Almost done! you just need to choose a master encryption key; this will be used to securely store
 	articles on our servers. Be careful to not loose it
