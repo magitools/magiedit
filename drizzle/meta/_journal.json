@@ -64,6 +64,20 @@
 			"when": 1695369035738,
 			"tag": "0008_rainy_living_lightning",
 			"breakpoints": true
+		},
+		{
+			"idx": 9,
+			"version": "5",
+			"when": 1695384524070,
+			"tag": "0009_faithful_celestials",
+			"breakpoints": true
+		},
+		{
+			"idx": 10,
+			"version": "5",
+			"when": 1695384547052,
+			"tag": "0010_last_warstar",
+			"breakpoints": true
 		}
 	]
 }

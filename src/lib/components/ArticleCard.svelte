@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { generateArticleBlob } from '$lib/articles/download';
-	import { db, type Article } from '$lib/storage/db';
+	import type { IArticle } from '$lib/articles/types';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	let loading = false;
-	export let article: Article;
+	export let article: IArticle;
 	export let userId: string | undefined;
 
-	let frontmatter = article.frontmatter ? JSON.parse(article.frontmatter) : {};
+	let frontmatter = article.frontmatter ? article.frontmatter : {};
 	const modalStore = getModalStore();
 	const handleDownload = async (id: number) => {
 		loading = true;
-		const article = await db.articles.get(id);
+		//const article = await db.articles.get(id);
 		const data = await generateArticleBlob(id);
 		const link = window.URL.createObjectURL(data);
 		let a = document.createElement('a');
@@ -40,7 +40,7 @@
 	console.log(article);
 </script>
 
-<div class="card min-w-[300px]">
+<div class="card max-w-[300px]">
 	<h2 class="card-header">{article.title}</h2>
 	{#if frontmatter?.cover}
 		<img src={frontmatter.cover} class="w-full h-auto" alt="article cover" />

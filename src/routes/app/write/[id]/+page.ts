@@ -1,12 +1,20 @@
-import { db } from '$lib/storage/db';
+import type { IArticle } from '$lib/articles/types';
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async (event) => {
-	if (event.params.id === 'new') {
-		return {};
-	}
-	const article = await db.articles.get(Number(event.params.id));
-	return { article };
+export const load: PageLoad = async ({ data }) => {
+	const keyBytes = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(data.key));
+	const key = await window.crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['decrypt']);
+	const buffer = new Uint8Array(
+		atob(data.article.content)
+			.split('')
+			.map((c) => c.charCodeAt(0))
+	);
+
+	const iv = new Uint8Array(data.article.iv.split(',').map((e) => parseInt(e)));
+	const decryptedContent = await window.crypto.subtle.decrypt({ name: 'AES-CBC', iv }, key, buffer);
+	const decoded = new TextDecoder().decode(decryptedContent);
+	const res = { content: decoded, id: data.article.id } as IArticle;
+	return { article: res };
 };
 
 export const ssr = false;

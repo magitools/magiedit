@@ -45,6 +45,7 @@ const userPreferences = sqliteTable('user_preference', {
 const userArticles = sqliteTable('user_article', {
 	id: integer('id').primaryKey({ autoIncrement: true }).notNull(),
 	content: text('content').notNull(),
+	iv: text('iv').notNull(),
 	author: text('author')
 		.notNull()
 		.references(() => user.id)

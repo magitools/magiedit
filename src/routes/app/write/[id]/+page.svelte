@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { db } from '$lib/storage/db';
 	import { onMount } from 'svelte';
 	import { generateArticleBlob } from '$lib/articles/download';
 	import { unified } from 'unified';
@@ -17,6 +16,7 @@
 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
 	import CommandPalette, { defineActions } from 'svelte-command-palette';
 
+	export let data;
 	let source = true;
 	let sourceElement: HTMLTextAreaElement;
 	const parser = unified()
@@ -34,18 +34,18 @@
 		.use(rehypeStringify);
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
-	export let data;
 	let content = data?.article?.content ?? 'here goes your markdown content';
 	let loading = false;
 	let renderedContent = { frontmatter: {}, data: '' };
 	let fileHandle: FileSystemFileHandle;
+	console.log(data);
 
 	$: parser.process(content).then((data) => {
 		renderedContent = { frontmatter: { ...data.data.frontmatter }, data: data.toString() };
 	});
 
 	async function handleSave() {
-		loading = true;
+		/* 		loading = true;
 		toastStore.trigger({ message: 'saving your article...' });
 		if (!data?.article?.id) return;
 		await db.articles.update(data.article.id, {
@@ -57,11 +57,11 @@
 				: undefined
 		});
 		toastStore.trigger({ message: 'article saved!' });
-		loading = false;
+		loading = false; */
 	}
 
 	async function handleDownload() {
-		await handleSave();
+		/*  		await handleSave();
 		if (!data?.article?.id) return;
 		const article = await db.articles.get(data.article.id);
 		const blob = await generateArticleBlob(data.article.id);
@@ -72,7 +72,7 @@
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
-		loading = false;
+		loading = false; */
 	}
 	let ctrlDown = false;
 	function handleKeyUp(event: KeyboardEvent) {
@@ -159,7 +159,7 @@
 	}
 
 	async function handleSaveToDisk() {
-		await handleSave();
+		/* 		await handleSave();
 		if (!fileHandle) {
 			fileHandle = await showSaveFilePicker({
 				types: [
@@ -175,7 +175,7 @@
 		toastStore.trigger({ message: 'saving to disk...' });
 		const writable = await fileHandle.createWritable({ keepExistingData: false });
 		await writable.write(content);
-		await writable.close();
+		await writable.close(); */
 	}
 
 	const commands = defineActions([
