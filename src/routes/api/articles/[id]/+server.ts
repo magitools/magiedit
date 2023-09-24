@@ -1,16 +1,10 @@
 import { db } from '$lib/server/db';
 import { userArticles } from '$lib/server/drizzle';
 import { fail, json, type RequestHandler } from '@sveltejs/kit';
-import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 
-export const PUT: RequestHandler = async ({ locals, cookies, params, request }) => {
+export const PUT: RequestHandler = async ({ locals, params, request }) => {
 	const session = await locals.auth.validate();
-	if (!session) throw fail(500, { message: 'not authorized' });
-	const hashKey = cookies.get('keyhash');
-	if (!hashKey) throw fail(500, { message: 'not authorized' });
-	if (!(await bcrypt.compare(hashKey, session.user.keyHash)))
-		throw fail(500, { message: 'not authorized' });
 	const article = await db
 		.select()
 		.from(userArticles)
@@ -20,6 +14,9 @@ export const PUT: RequestHandler = async ({ locals, cookies, params, request }) 
 	if (article.length !== 1) throw fail(500, { message: 'article not found' });
 	const { content } = Object.fromEntries(await request.formData());
 	if (!content) throw fail(500, { message: 'invalid data format' });
-	await db.update(userArticles).set({ content: content.toString() });
+	await db
+		.update(userArticles)
+		.set({ content: content.toString() })
+		.where(eq(userArticles.id, article[0].id));
 	return json({ message: 'saved' });
 };

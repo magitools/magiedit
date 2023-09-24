@@ -17,7 +17,9 @@
 {:else}
 	<div class="flex flex-wrap">
 		{#each data.articles as article}
-			<ArticleCard {article} userId={data.userId} />
+			{#if article}
+				<ArticleCard {article} userId={data.userId} />
+			{/if}
 		{/each}
 	</div>
 {/if}

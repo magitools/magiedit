@@ -30,7 +30,7 @@
 		loadingText = 'generating encryption key...';
 		const keyBytes = await window.crypto.subtle.digest(
 			'SHA-256',
-			new TextEncoder().encode(data.key)
+			new TextEncoder().encode(sessionStorage.getItem('magiedit:key')!)
 		);
 		const key = await window.crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, [
 			'encrypt'
