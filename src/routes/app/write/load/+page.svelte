@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { base } from '$app/paths';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { showOpenFilePicker } from 'file-system-access';
 
