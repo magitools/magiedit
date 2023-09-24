@@ -1,6 +1,6 @@
 import fm from 'front-matter';
 
-export const generateArticleBlob = async (content: string): Promise<Blob> => {
+const generateArticleBlob = async (content: string): Promise<Blob> => {
 	/* 	const article = await db.articles.get(id);
 	
 		const text = `${article?.content}`;

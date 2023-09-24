@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { generateArticleBlob, handleDownload } from '$lib/articles/download';
+	import { handleDownload } from '$lib/articles/download';
 	import type { IArticle } from '$lib/articles/types';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import fm from 'front-matter';

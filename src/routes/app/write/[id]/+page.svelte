@@ -1,40 +1,20 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { handleDownload } from '$lib/articles/download';
-	import { unified } from 'unified';
-	import remarkParse from 'remark-parse';
-	import remarkRehype from 'remark-rehype';
-	import remarkFrontmatter from 'remark-frontmatter';
-	import remarkExtractFrontmatter from 'remark-extract-frontmatter';
-	import remarkGfm from 'remark-gfm';
-	import rehypeStringify from 'rehype-stringify';
-	import addClasses from 'rehype-add-classes';
-	import rehypeHighlight from 'rehype-highlight';
+
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import 'highlight.js/styles/nord.css';
-	import { parse } from 'yaml';
 	/* 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
 	 */ import CommandPalette, { defineActions } from 'svelte-command-palette';
 	import { fade } from 'svelte/transition';
+	import { parser } from '$lib/articles/parser';
 
 	export let data;
 	let source = true;
 	let sourceElement: HTMLTextAreaElement;
 	let loading = false;
 	let loadingText = 'loading, please wait...';
-	const parser = unified()
-		.use(remarkParse)
-		.use(remarkFrontmatter)
-		.use(remarkExtractFrontmatter, { yaml: parse, name: 'frontmatter' })
-		.use(remarkGfm)
-		.use(remarkRehype)
-		.use(addClasses, {
-			table: 'table',
-			'p,h1,h2,h3,h4,h5,h6,th, strong, a, blockquote, :not(pre) > code': 'text-current'
-			//'ul': 'list'
-		})
-		.use(rehypeHighlight)
-		.use(rehypeStringify);
+
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	let content = data?.article?.content ?? 'here goes your markdown content';
@@ -71,6 +51,10 @@
 			method: 'PUT',
 			body: formData
 		});
+		if (!res.ok) {
+			console.error(res);
+			toastStore.trigger({ message: 'something went wrong, check console for full trace' });
+		}
 		loading = false;
 	}
 

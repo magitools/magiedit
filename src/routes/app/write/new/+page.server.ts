@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 	const key = await crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['encrypt']);
 	const iv = new Uint8Array(16);
 	const encodedContent = await crypto.subtle.encrypt(
-		{ name: 'AES-CBC', iv: new Uint8Array(16) },
+		{ name: 'AES-CBC', iv },
 		key,
 		new TextEncoder().encode('write here')
 	);
