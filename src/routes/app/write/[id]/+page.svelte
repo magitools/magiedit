@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { generateArticleBlob } from '$lib/articles/download';
+	import { handleDownload } from '$lib/articles/download';
 	import { unified } from 'unified';
 	import remarkParse from 'remark-parse';
 	import remarkRehype from 'remark-rehype';
@@ -74,19 +74,11 @@
 		loading = false;
 	}
 
-	async function handleDownload() {
-		/*  		await handleSave();
-		if (!data?.article?.id) return;
-		const article = await db.articles.get(data.article.id);
-		const blob = await generateArticleBlob(data.article.id);
-		const link = window.URL.createObjectURL(blob);
-		let a = document.createElement('a');
-		a.setAttribute('download', `${article.title}.md`);
-		a.setAttribute('href', link);
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
-		loading = false; */
+	async function handleFileDownload() {
+		loading = true;
+		await handleSave();
+		await handleDownload(content);
+		loading = false;
 	}
 	let ctrlDown = false;
 	function handleKeyUp(event: KeyboardEvent) {
@@ -283,7 +275,7 @@
 		<button class="btn variant-filled" on:click={handleSave}>
 			{loading ? 'Saving...' : 'Save'}
 		</button>
-		<button class="btn variant-filled" on:click={handleDownload}> Download </button>
+		<button class="btn variant-filled" on:click={handleFileDownload}> Download </button>
 		<button class="btn variant-filled" on:click={handleSaveToDisk}>Save to file</button>
 	</div>
 	<div class="w-full flex justify-end">

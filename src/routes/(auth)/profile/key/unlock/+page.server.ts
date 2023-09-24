@@ -15,7 +15,7 @@ export const actions: Actions = {
 		const { passkey } = Object.fromEntries(await request.formData());
 		if (!passkey) throw fail(500, { message: 'invalid data' });
 		if (!(await bcrypt.compare(passkey.toString(), session.user.keyHash)))
-			throw fail(500, { message: 'invalid credentials' });
+			return fail(500, { message: 'invalid credentials' });
 		cookies.set('keyhash', passkey.toString(), { path: '/' });
 		throw redirect(302, '/app');
 	}

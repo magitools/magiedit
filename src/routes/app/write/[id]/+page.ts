@@ -9,7 +9,6 @@ export const load: PageLoad = async ({ data }) => {
 			.split('')
 			.map((c) => c.charCodeAt(0))
 	);
-
 	const iv = new Uint8Array(data.article.iv.split(',').map((e) => parseInt(e)));
 	const decryptedContent = await window.crypto.subtle.decrypt({ name: 'AES-CBC', iv }, key, buffer);
 	const decoded = new TextDecoder().decode(decryptedContent);
