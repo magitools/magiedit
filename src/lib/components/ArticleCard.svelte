@@ -18,7 +18,6 @@
 	const handlePublish = async () => {
 		const data = new FormData();
 		data.append('content', article.content || '');
-		data.append('title', frontmatter.title || '');
 		const res = await (
 			await fetch('/api/articles/publish', {
 				method: 'POST',
