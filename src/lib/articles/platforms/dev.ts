@@ -5,6 +5,7 @@ import { RegisterPlatform, type IBasePlatform } from './base';
 @RegisterPlatform
 export class DevPlatform implements IBasePlatform<DevPlatform> {
 	settings: Record<string, string> = {};
+	frontmatter: Record<string, any> = {};
 	public getRequiredSettings(): string[] {
 		return ['dev'];
 	}
@@ -22,16 +23,21 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 		return this;
 	}
 
-	public async publish(article: Article) {
+	setFrontmatter(data: Record<string, any>): DevPlatform {
+		this.frontmatter = data;
+		return this;
+	}
+
+	public async publish(content: string) {
 		const setting = this.settings['dev'];
 		if (!setting) throw new Error('could not find required settings');
 		const res = await fetch('https://dev.to/api/articles', {
 			method: 'post',
 			body: JSON.stringify({
 				article: {
-					title: article.title,
-					body_markdown: article.content,
-					published: article.published
+					title: this.frontmatter.title,
+					body_markdown: content,
+					published: this.frontmatter.published || false
 				}
 			}),
 			headers: {

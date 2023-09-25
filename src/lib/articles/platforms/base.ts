@@ -1,5 +1,4 @@
 import type { UserPreferences } from '$lib/server/drizzle';
-import type { Article } from '$lib/storage/db';
 
 export const supportedPlatforms: (new () => IBasePlatform<any>)[] = [];
 export function RegisterPlatform(constructor: new () => IBasePlatform<any>) {
@@ -8,8 +7,10 @@ export function RegisterPlatform(constructor: new () => IBasePlatform<any>) {
 
 export interface IBasePlatform<T> {
 	settings: Record<string, string>;
-	publish(article: Article): void;
+	frontmatter: Record<string, any>;
+	publish(content: string): void;
 	setSettings(settings: UserPreferences[]): T;
 	getRequiredSettings(): string[];
+	setFrontmatter(data: Record<string, any>): T;
 	getPlatformName(): string;
 }

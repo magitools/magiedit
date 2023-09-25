@@ -5,7 +5,7 @@ import { RegisterPlatform, type IBasePlatform } from './base';
 @RegisterPlatform
 export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 	settings: Record<string, string> = {};
-
+	frontmatter: Record<string, any> = {};
 	getRequiredSettings(): string[] {
 		return ['hash_token', 'hash_publication'];
 	}
@@ -23,7 +23,12 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 		return this;
 	}
 
-	public async publish(article: Article) {
+	setFrontmatter(data: Record<string, any>): HashnodePlatform {
+		this.frontmatter = data;
+		return this;
+	}
+
+	public async publish(content: string) {
 		const token = this.settings['hash_token'];
 		const publication = this.settings['hash_publication'];
 		if (!token || !publication) throw new Error('could not find required settings');
@@ -38,8 +43,8 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 					'mutation createStory($input: CreateStoryInput!){ createStory(input: $input){ code success message } }',
 				variables: {
 					input: {
-						title: article.title,
-						contentMarkdown: article.content,
+						title: this.frontmatter.title,
+						contentMarkdown: content,
 						tags: [],
 						isPartOfPublication: {
 							publicationId: publication
