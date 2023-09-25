@@ -6,7 +6,8 @@ const user = sqliteTable('user', {
 	email: text('email').notNull(),
 	username: text('username').notNull(),
 	customerId: text('customer_id'),
-	aiCredits: integer('ai_credits').default(0)
+	aiCredits: integer('ai_credits').default(0),
+	keyHash: text('key_hash')
 });
 
 const userKey = sqliteTable('user_key', {
@@ -41,7 +42,16 @@ const userPreferences = sqliteTable('user_preference', {
 	value: text('value').notNull()
 });
 
+const userArticles = sqliteTable('user_article', {
+	id: integer('id').primaryKey({ autoIncrement: true }).notNull(),
+	content: text('content').notNull(),
+	iv: text('iv').notNull(),
+	author: text('author')
+		.notNull()
+		.references(() => user.id)
+});
+
 type UserPreferences = InferSelectModel<typeof userPreferences>;
 
-export { user, userKey, userSession, userImages, userPreferences };
+export { user, userKey, userSession, userImages, userPreferences, userArticles };
 export type { UserPreferences };

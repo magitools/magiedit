@@ -1,77 +1,70 @@
 <script lang="ts">
-	import { db } from '$lib/storage/db';
 	import { onMount } from 'svelte';
-	import { generateArticleBlob } from '$lib/articles/download';
-	import { unified } from 'unified';
-	import remarkParse from 'remark-parse';
-	import remarkRehype from 'remark-rehype';
-	import remarkFrontmatter from 'remark-frontmatter';
-	import remarkExtractFrontmatter from 'remark-extract-frontmatter';
-	import remarkGfm from 'remark-gfm';
-	import rehypeStringify from 'rehype-stringify';
-	import addClasses from 'rehype-add-classes';
-	import rehypeHighlight from 'rehype-highlight';
+	import { handleDownload } from '$lib/articles/download';
+
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import 'highlight.js/styles/nord.css';
-	import { parse } from 'yaml';
-	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
-	import CommandPalette, { defineActions } from 'svelte-command-palette';
+	/* 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
+	 */ import CommandPalette, { defineActions } from 'svelte-command-palette';
+	import { fade } from 'svelte/transition';
+	import { parser } from '$lib/articles/parser';
 
+	export let data;
 	let source = true;
 	let sourceElement: HTMLTextAreaElement;
-	const parser = unified()
-		.use(remarkParse)
-		.use(remarkFrontmatter)
-		.use(remarkExtractFrontmatter, { yaml: parse, name: 'frontmatter' })
-		.use(remarkGfm)
-		.use(remarkRehype)
-		.use(addClasses, {
-			table: 'table',
-			'p,h1,h2,h3,h4,h5,h6,th, strong, a, blockquote, :not(pre) > code': 'text-current'
-			//'ul': 'list'
-		})
-		.use(rehypeHighlight)
-		.use(rehypeStringify);
+	let loading = false;
+	let loadingText = 'loading, please wait...';
+
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
-	export let data;
 	let content = data?.article?.content ?? 'here goes your markdown content';
-	let loading = false;
 	let renderedContent = { frontmatter: {}, data: '' };
-	let fileHandle: FileSystemFileHandle;
+	//let fileHandle: FileSystemFileHandle;
 
 	$: parser.process(content).then((data) => {
-		renderedContent = { frontmatter: { ...data.data.frontmatter }, data: data.toString() };
+		renderedContent = {
+			frontmatter: { ...(data.data.frontmatter as Record<string, any>) },
+			data: data.toString()
+		};
 	});
 
 	async function handleSave() {
 		loading = true;
-		toastStore.trigger({ message: 'saving your article...' });
-		if (!data?.article?.id) return;
-		await db.articles.update(data.article.id, {
-			title: renderedContent?.frontmatter?.title ?? Date.now().toString(),
-			content,
-			tags: renderedContent?.frontmatter?.tags ?? [],
-			frontmatter: renderedContent?.frontmatter
-				? JSON.stringify(renderedContent?.frontmatter)
-				: undefined
+		loadingText = 'generating encryption key...';
+		const keyBytes = await window.crypto.subtle.digest(
+			'SHA-256',
+			new TextEncoder().encode(sessionStorage.getItem('magiedit:key')!)
+		);
+		const key = await window.crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, [
+			'encrypt'
+		]);
+		const iv = new Uint8Array(data.article.iv.split(',').map((e) => parseInt(e)));
+		loadingText = 'encrypting content...';
+		const encodedContent = await window.crypto.subtle.encrypt(
+			{ name: 'AES-CBC', iv },
+			key,
+			new TextEncoder().encode(content)
+		);
+		loadingText = 'converting to base64...';
+		const base64 = btoa(String.fromCharCode(...new Uint8Array(encodedContent)));
+		const formData = new FormData();
+		formData.append('content', base64);
+		loadingText = 'saving to server...';
+		const res = await fetch(`/api/articles/${data.article.id}`, {
+			method: 'PUT',
+			body: formData
 		});
-		toastStore.trigger({ message: 'article saved!' });
+		if (!res.ok) {
+			console.error(res);
+			toastStore.trigger({ message: 'something went wrong, check console for full trace' });
+		}
 		loading = false;
 	}
 
-	async function handleDownload() {
+	async function handleFileDownload() {
+		loading = true;
 		await handleSave();
-		if (!data?.article?.id) return;
-		const article = await db.articles.get(data.article.id);
-		const blob = await generateArticleBlob(data.article.id);
-		const link = window.URL.createObjectURL(blob);
-		let a = document.createElement('a');
-		a.setAttribute('download', `${article.title}.md`);
-		a.setAttribute('href', link);
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
+		await handleDownload(content);
 		loading = false;
 	}
 	let ctrlDown = false;
@@ -159,7 +152,7 @@
 	}
 
 	async function handleSaveToDisk() {
-		await handleSave();
+		/* 		await handleSave();
 		if (!fileHandle) {
 			fileHandle = await showSaveFilePicker({
 				types: [
@@ -175,7 +168,7 @@
 		toastStore.trigger({ message: 'saving to disk...' });
 		const writable = await fileHandle.createWritable({ keepExistingData: false });
 		await writable.write(content);
-		await writable.close();
+		await writable.close(); */
 	}
 
 	const commands = defineActions([
@@ -256,12 +249,20 @@
 	titleStyle={{ color: 'black' }}
 />
 
+{#if loading}
+	<div
+		class="absolute z-10 w-screen h-screen bg-black/70 flex flex-col justify-center items-center"
+	>
+		<p transition:fade>{loadingText}</p>
+	</div>
+{/if}
+
 <div class="flex h-full w-full flex-col">
 	<div class="w-full card p-4 my-2">
 		<button class="btn variant-filled" on:click={handleSave}>
 			{loading ? 'Saving...' : 'Save'}
 		</button>
-		<button class="btn variant-filled" on:click={handleDownload}> Download </button>
+		<button class="btn variant-filled" on:click={handleFileDownload}> Download </button>
 		<button class="btn variant-filled" on:click={handleSaveToDisk}>Save to file</button>
 	</div>
 	<div class="w-full flex justify-end">

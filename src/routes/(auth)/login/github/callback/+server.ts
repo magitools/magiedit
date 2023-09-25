@@ -33,12 +33,22 @@ export const GET = async ({ url, cookies, locals }) => {
 			attributes: {}
 		});
 		locals.auth.setSession(session);
-		return new Response(null, {
-			status: 302,
-			headers: {
-				Location: '/'
-			}
-		});
+		console.log(session);
+		if (session.user.keyHash) {
+			return new Response(null, {
+				status: 302,
+				headers: {
+					Location: '/profile/key/unlock'
+				}
+			});
+		} else {
+			return new Response(null, {
+				status: 302,
+				headers: {
+					Location: '/profile/key/create'
+				}
+			});
+		}
 	} catch (e) {
 		if (e instanceof OAuthRequestError) {
 			// invalid code

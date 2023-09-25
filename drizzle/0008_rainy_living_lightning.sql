@@ -1,0 +1,1 @@
+ALTER TABLE `user_article` DROP COLUMN `title`;

@@ -4,15 +4,15 @@ import { db } from '$lib/server/db';
 import { userArticles } from '$lib/server/drizzle';
 import { eq } from 'drizzle-orm';
 
-export const load: PageServerLoad = async ({ locals, params }) => {
+export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
 	if (!session) throw redirect(302, '/login');
-	const article = await db
+	const articles = await db
 		.select()
 		.from(userArticles)
-		.where(eq(userArticles.id, parseInt(params.id)))
-		.limit(1);
+		.where(eq(userArticles.author, session.user.userId));
+
 	return {
-		article: article[0]
+		articles
 	};
 };

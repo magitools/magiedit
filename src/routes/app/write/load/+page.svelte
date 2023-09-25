@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { db } from '$lib/storage/db';
+	import { generateIv } from '$lib/articles/crypto.js';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { showOpenFilePicker } from 'file-system-access';
+
+	export let data;
 	const toastStore = getToastStore();
 	async function handleFileLoad() {
 		const [filehandle] = await showOpenFilePicker({
@@ -23,15 +25,29 @@
 		if (!filehandle) return;
 		try {
 			const content = await (await filehandle.getFile()).text();
-			const id = await db.articles.add({
-				title: filehandle.name,
-				content,
-				tags: []
-			});
+
 			toastStore.trigger({
 				message: 'file loaded'
 			});
-			await goto(`/app/write/${id}`);
+			const keyBytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data.key));
+			const key = await crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['encrypt']);
+			const iv = generateIv();
+			const encodedContent = await crypto.subtle.encrypt(
+				{ name: 'AES-CBC', iv: iv },
+				key,
+				new TextEncoder().encode(content)
+			);
+			const base64 = btoa(String.fromCharCode(...new Uint8Array(encodedContent)));
+			const formData = new FormData();
+			formData.append('content', base64);
+			formData.append('iv', iv.toString());
+			const res = await (
+				await fetch('/api/articles', {
+					method: 'POST',
+					body: formData
+				})
+			).json();
+			await goto(`/app/write/${res.id}`);
 		} catch (error) {
 			toastStore.trigger({
 				message: 'could not open file, please try again'
@@ -43,5 +59,6 @@
 </script>
 
 <div>
+	<p>This page allows you to open a file from your browser</p>
 	<button on:click={handleFileLoad}>Load</button>
 </div>
