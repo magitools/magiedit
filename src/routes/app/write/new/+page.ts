@@ -1,12 +1,13 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
+import { generateIv } from '$lib/articles/crypto';
 
 export const load: PageLoad = async () => {
 	const keyData = sessionStorage.getItem('magiedit:key');
 	if (!keyData) throw redirect(302, '/profile/key/unlock');
 	const keyBytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(keyData));
 	const key = await crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['encrypt']);
-	const iv = new Uint8Array(16);
+	const iv = generateIv();
 	const encodedContent = await crypto.subtle.encrypt(
 		{ name: 'AES-CBC', iv },
 		key,

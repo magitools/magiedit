@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { generateIv } from '$lib/articles/crypto.js';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { showOpenFilePicker } from 'file-system-access';
 
@@ -30,7 +31,7 @@
 			});
 			const keyBytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data.key));
 			const key = await crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['encrypt']);
-			const iv = new Uint8Array(16);
+			const iv = generateIv();
 			const encodedContent = await crypto.subtle.encrypt(
 				{ name: 'AES-CBC', iv: iv },
 				key,

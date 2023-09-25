@@ -22,7 +22,10 @@
 	//let fileHandle: FileSystemFileHandle;
 
 	$: parser.process(content).then((data) => {
-		renderedContent = { frontmatter: { ...data.data.frontmatter }, data: data.toString() };
+		renderedContent = {
+			frontmatter: { ...(data.data.frontmatter as Record<string, any>) },
+			data: data.toString()
+		};
 	});
 
 	async function handleSave() {

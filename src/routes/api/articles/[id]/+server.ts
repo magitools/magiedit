@@ -14,9 +14,10 @@ export const PUT: RequestHandler = async ({ locals, params, request }) => {
 	if (article.length !== 1) throw fail(500, { message: 'article not found' });
 	const { content } = Object.fromEntries(await request.formData());
 	if (!content) throw fail(500, { message: 'invalid data format' });
-	await db
+	const res = await db
 		.update(userArticles)
 		.set({ content: content.toString() })
 		.where(eq(userArticles.id, article[0].id));
+	console.log(res);
 	return json({ message: 'saved' });
 };
