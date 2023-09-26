@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { handleDownload } from '$lib/articles/download';
 	import type { IArticle } from '$lib/articles/types';
-	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import fm from 'front-matter';
 	let loading = false;
 	export let article: IArticle;
 	export let userId: string | undefined;
 
 	let frontmatter: Record<string, any> = fm(article.content).attributes as Record<string, any>;
-	console.log(frontmatter);
 	const modalStore = getModalStore();
+	const toastStore = getToastStore();
 	const handleFileDownload = async () => {
 		loading = true;
 		await handleDownload(article.content);
@@ -30,7 +30,25 @@
 			body: res.status.join('\n')
 		});
 	};
-	console.log(article);
+	const handleDelete = async () => {
+		modalStore.trigger({
+			type: 'confirm',
+			title: 'are you sure?',
+			body: 'are you certain you want to delete this article',
+			response: async (r: boolean) => {
+				if (r) {
+					const res = await fetch(`/api/articles/${article.id}`, {
+						method: 'DELETE'
+					});
+					if (!res.ok) {
+						toastStore.trigger({ message: 'could not delete article' });
+					} else {
+						toastStore.trigger({ message: 'article deleted' });
+					}
+				}
+			}
+		});
+	};
 </script>
 
 <div class="card max-w-[300px]">
@@ -44,7 +62,7 @@
 		<button class="btn variant-filled" disabled={loading} on:click={handleFileDownload}
 			>Download</button
 		>
-		<!-- <a class="btn variant-filled-error" href={`/api/articles/${article.id}/delete`}>Delete</a> -->
+		<button on:click={handleDelete} class="btn variant-filled-error">Delete</button>
 		<button class="btn variant-filled" disabled={loading || !userId} on:click={handlePublish}
 			>Publish</button
 		>
