@@ -51,20 +51,22 @@
 	};
 </script>
 
-<div class="card max-w-[300px]">
-	<h2 class="card-header">{frontmatter.title || 'No title set'}</h2>
-	{#if frontmatter?.cover}
-		<img src={frontmatter.cover} class="w-full h-auto" alt="article cover" />
+<div class="card max-w-[500px]">
+	<h2 class="card-header text-xl pb-4">{frontmatter.title || 'No title set'}</h2>
+	{#if frontmatter?.cover_image}
+		<img src={frontmatter.cover_image} class="w-full h-auto" alt="article cover" />
 	{/if}
 	<section class="p-4" />
-	<div class="card-footer">
-		<a class="btn variant-filled" href={`/app/write/${article.id}`}>Edit</a>
-		<button class="btn variant-filled" disabled={loading} on:click={handleFileDownload}
-			>Download</button
-		>
+	<div class="card-footer flex justify-between">
+		<div>
+			<a class="btn variant-filled" href={`/app/write/${article.id}`}>Edit</a>
+			<button class="btn variant-filled" disabled={loading} on:click={handleFileDownload}
+				>Download</button
+			>
+			<button class="btn variant-filled" disabled={loading || !userId} on:click={handlePublish}
+				>Publish</button
+			>
+		</div>
 		<button on:click={handleDelete} class="btn variant-filled-error">Delete</button>
-		<button class="btn variant-filled" disabled={loading || !userId} on:click={handlePublish}
-			>Publish</button
-		>
 	</div>
 </div>
