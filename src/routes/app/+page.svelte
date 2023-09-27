@@ -15,10 +15,12 @@
 		<p>looks like you don't have any articles</p>
 	</div>
 {:else}
-	<div class="flex flex-wrap">
+	<div class="flex flex-wrap items-center gap-4 mx-4">
 		{#each data.articles as article}
 			{#if article}
-				<ArticleCard {article} userId={data.userId} />
+				<div>
+					<ArticleCard {article} userId={data.userId} />
+				</div>
 			{/if}
 		{/each}
 	</div>
