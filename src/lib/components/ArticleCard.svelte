@@ -51,7 +51,7 @@
 	};
 </script>
 
-<div class="card max-w-[500px]">
+<div class="card max-w-[500px] max-h-[500px] h-full">
 	<h2 class="card-header text-xl pb-4">{frontmatter.title || 'No title set'}</h2>
 	{#if frontmatter?.cover_image}
 		<img src={frontmatter.cover_image} class="w-full h-auto" alt="article cover" />
