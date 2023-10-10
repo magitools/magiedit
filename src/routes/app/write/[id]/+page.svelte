@@ -6,8 +6,8 @@
 	import 'highlight.js/styles/nord.css';
 	/* 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
 	 */ import CommandPalette, { defineActions } from 'svelte-command-palette';
-	import { fade } from 'svelte/transition';
 	import { parser } from '$lib/articles/parser';
+	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
 
 	export let data;
 	let source = true;
@@ -249,15 +249,10 @@
 	titleStyle={{ color: 'black' }}
 />
 
-{#if loading}
-	<div
-		class="absolute z-10 w-screen h-screen bg-black/70 flex flex-col justify-center items-center"
-	>
-		<p transition:fade>{loadingText}</p>
-	</div>
-{/if}
-
-<div class="flex h-full w-full flex-col">
+<div class="flex h-full w-full flex-col relative">
+	{#if loading}
+		<LoadingOverlay text={loadingText} />
+	{/if}
 	<div class="w-full card p-4 my-2">
 		<button class="btn variant-filled" on:click={handleSave}>
 			{loading ? 'Saving...' : 'Save'}
