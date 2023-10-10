@@ -6,7 +6,7 @@
 </script>
 
 <div
-	class="absolute w-full h-full flex flex-col justify-center items-center bg-black dark:bg-white"
+	class="absolute w-full h-full flex flex-col justify-center items-center bg-black dark:bg-white z-50"
 	transition:fade
 >
 	<ProgressRadial meter="stroke-primary-500" />
