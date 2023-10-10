@@ -33,7 +33,6 @@ export const GET = async ({ url, cookies, locals }) => {
 			attributes: {}
 		});
 		locals.auth.setSession(session);
-		console.log(session);
 		if (session.user.keyHash) {
 			return new Response(null, {
 				status: 302,
