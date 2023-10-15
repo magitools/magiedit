@@ -249,7 +249,7 @@
 	titleStyle={{ color: 'black' }}
 />
 
-<div class="flex h-full w-full flex-col relative">
+<div class="flex h-full w-full flex-col relative p-4">
 	{#if loading}
 		<LoadingOverlay text={loadingText} />
 	{/if}
@@ -273,7 +273,7 @@
 			>
 		</div>
 	</div>
-	<div class="h-full w-full py-2 grid grid-cols-1 md:grid-cols-2 group" data-source={source}>
+	<div class="h-full w-full grid grid-cols-1 md:grid-cols-2 group" data-source={source}>
 		<div
 			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden md:group-data-[source=true]:block md:group-data-[source=false]:hidden"
 		>
