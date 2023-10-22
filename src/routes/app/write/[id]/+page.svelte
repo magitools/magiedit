@@ -6,8 +6,8 @@
 	import 'highlight.js/styles/nord.css';
 	/* 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
 	 */ import CommandPalette, { defineActions } from 'svelte-command-palette';
-	import { fade } from 'svelte/transition';
 	import { parser } from '$lib/articles/parser';
+	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
 
 	export let data;
 	let source = true;
@@ -249,15 +249,10 @@
 	titleStyle={{ color: 'black' }}
 />
 
-{#if loading}
-	<div
-		class="absolute z-10 w-screen h-screen bg-black/70 flex flex-col justify-center items-center"
-	>
-		<p transition:fade>{loadingText}</p>
-	</div>
-{/if}
-
-<div class="flex h-full w-full flex-col">
+<div class="flex h-full w-full flex-col relative p-4">
+	{#if loading}
+		<LoadingOverlay text={loadingText} />
+	{/if}
 	<div class="w-full card p-4 my-2">
 		<button class="btn variant-filled" on:click={handleSave}>
 			{loading ? 'Saving...' : 'Save'}
@@ -265,7 +260,7 @@
 		<button class="btn variant-filled" on:click={handleFileDownload}> Download </button>
 		<button class="btn variant-filled" on:click={handleSaveToDisk}>Save to file</button>
 	</div>
-	<div class="w-full flex justify-end">
+	<div class="w-full flex justify-end md:hidden">
 		<div class="flex space-x-2">
 			<button
 				class={`uppercase btn variant-${source ? 'filled' : 'ghost'}`}
@@ -278,22 +273,24 @@
 			>
 		</div>
 	</div>
-	<div class="h-full w-full py-2 flex justify-center">
-		{#if source}
+	<div class="h-full w-full grid grid-cols-1 md:grid-cols-2 group" data-source={source}>
+		<div
+			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden md:group-data-[source=true]:block md:group-data-[source=false]:hidden"
+		>
 			<textarea
 				bind:this={sourceElement}
 				data-testid="source"
-				class="prose textarea max-w-[70%] w-full min-h-full max-h-full overflow-y-auto text-black dark:text-white card p-4"
+				class="prose textarea w-full min-h-full text-black dark:text-white"
 				bind:value={content}
 			/>
-		{:else}
-			<div
-				data-testid="preview"
-				class="w-full max-w-[70%] prose h-full overflow-y-auto text-black dark:text-white card p-4"
-			>
+		</div>
+		<div
+			class="w-full h-full block group-data-[source=true]:hidden group-data-[source=false]:block md:group-data-[source=true]:block md:group-data-[source=false]:block"
+		>
+			<div data-testid="preview" class="w-full prose h-full text-black dark:text-white card p-4">
 				<!-- ts-ignore-svelte/no-at-html-tags -->
 				{@html renderedContent.data}
 			</div>
-		{/if}
+		</div>
 	</div>
 </div>
