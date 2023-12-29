@@ -29,22 +29,27 @@
 	//let fileHandle: FileSystemFileHandle;
 	let editorContainer: HTMLDivElement;
 
+	const textUpdateListener = EditorView.updateListener.of((update) => {
+		if (update.docChanged) {
+			parser.process(view.state.doc.toString()).then((data) => {
+				renderedContent = {
+					frontmatter: { ...(data.data.frontmatter as Record<string, any>) },
+					data: data.toString()
+				};
+			});
+		}
+	});
 	let startState = EditorState.create({
 		doc: content,
 		extensions: [
 			oneDark,
 			basicSetup,
+			textUpdateListener,
 			keymap.of(defaultKeymap),
 			markdown({ codeLanguages: languages })
 		]
 	});
 	let view = new EditorView({ state: startState });
-	$: parser.process(view.state.doc.toString()).then((data) => {
-		renderedContent = {
-			frontmatter: { ...(data.data.frontmatter as Record<string, any>) },
-			data: data.toString()
-		};
-	});
 
 	async function handleSave() {
 		loading = true;
