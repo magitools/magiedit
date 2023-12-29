@@ -2,33 +2,28 @@
 	import { onMount } from 'svelte';
 	import { handleDownload } from '$lib/articles/download';
 
-	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore, modeCurrent } from '@skeletonlabs/skeleton';
 	import 'highlight.js/styles/nord.css';
 	/* 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
 	 */ import CommandPalette, { defineActions } from 'svelte-command-palette';
-	import { EditorState } from '@codemirror/state';
+	import { EditorState, Compartment } from '@codemirror/state';
 	import { EditorView, keymap } from '@codemirror/view';
 	import { defaultKeymap } from '@codemirror/commands';
 	import { basicSetup } from 'codemirror';
 	import { markdown } from '@codemirror/lang-markdown';
 	import { languages } from '@codemirror/language-data';
-	import { oneDark } from '@codemirror/theme-one-dark';
+	import { solarizedDark } from 'cm6-theme-solarized-dark';
+	import { solarizedLight } from 'cm6-theme-solarized-light';
 	import { parser } from '$lib/articles/parser';
 	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
 
 	export let data;
 	let source = true;
-	let sourceElement: HTMLTextAreaElement;
 	let loading = false;
 	let loadingText = 'loading, please wait...';
 
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
-	let content = data?.article?.content ?? 'here goes your markdown content';
-	let renderedContent = { frontmatter: {}, data: '' };
-	//let fileHandle: FileSystemFileHandle;
-	let editorContainer: HTMLDivElement;
-
 	const textUpdateListener = EditorView.updateListener.of((update) => {
 		if (update.docChanged) {
 			parser.process(view.state.doc.toString()).then((data) => {
@@ -39,17 +34,32 @@
 			});
 		}
 	});
+	const baseCodeMirrorConfig = [
+		basicSetup,
+		textUpdateListener,
+		keymap.of(defaultKeymap),
+		markdown({ codeLanguages: languages })
+	];
+	const themeCompartment = new Compartment();
+	let content = data?.article?.content ?? 'here goes your markdown content';
+	let renderedContent = { frontmatter: {}, data: '' };
+	//let fileHandle: FileSystemFileHandle;
+	let editorContainer: HTMLDivElement;
+
 	let startState = EditorState.create({
 		doc: content,
 		extensions: [
-			oneDark,
-			basicSetup,
-			textUpdateListener,
-			keymap.of(defaultKeymap),
-			markdown({ codeLanguages: languages })
+			baseCodeMirrorConfig,
+			themeCompartment.of($modeCurrent ? solarizedLight : solarizedDark)
 		]
 	});
 	let view = new EditorView({ state: startState });
+
+	modeCurrent.subscribe((currentTheme) => {
+		view.dispatch({
+			effects: themeCompartment.reconfigure(currentTheme ? solarizedLight : solarizedDark)
+		});
+	});
 
 	async function handleSave() {
 		loading = true;

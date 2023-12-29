@@ -20,9 +20,6 @@ dependencies:
   '@codemirror/state':
     specifier: ^6.3.3
     version: 6.3.3
-  '@codemirror/theme-one-dark':
-    specifier: ^6.1.2
-    version: 6.1.2
   '@codemirror/view':
     specifier: ^6.22.3
     version: 6.22.3
@@ -41,6 +38,12 @@ dependencies:
   bcryptjs:
     specifier: ^2.4.3
     version: 2.4.3
+  cm6-theme-solarized-dark:
+    specifier: ^0.2.0
+    version: 0.2.0(@codemirror/language@6.9.3)(@codemirror/state@6.3.3)(@codemirror/view@6.22.3)(@lezer/highlight@1.2.0)
+  cm6-theme-solarized-light:
+    specifier: ^0.2.0
+    version: 0.2.0(@codemirror/language@6.9.3)(@codemirror/state@6.3.3)(@codemirror/view@6.22.3)(@lezer/highlight@1.2.0)
   codemirror:
     specifier: ^6.0.1
     version: 6.0.1(@lezer/common@1.1.2)
@@ -1063,15 +1066,6 @@ packages:
 
   /@codemirror/state@6.3.3:
     resolution: {integrity: sha512-0wufKcTw2dEwEaADajjHf6hBy1sh3M6V0e+q4JKIhLuiMSe5td5HOWpUdvKth1fT1M9VYOboajoBHpkCd7PG7A==}
-    dev: false
-
-  /@codemirror/theme-one-dark@6.1.2:
-    resolution: {integrity: sha512-F+sH0X16j/qFLMAfbciKTxVOwkdAS336b7AXTKOZhy8BR3eH/RelsnLgLFINrpST63mmN2OuwUt0W2ndUgYwUA==}
-    dependencies:
-      '@codemirror/language': 6.9.3
-      '@codemirror/state': 6.3.3
-      '@codemirror/view': 6.22.3
-      '@lezer/highlight': 1.2.0
     dev: false
 
   /@codemirror/view@6.22.3:
@@ -2839,6 +2833,34 @@ packages:
       memoizee: 0.4.15
       timers-ext: 0.1.7
     dev: true
+
+  /cm6-theme-solarized-dark@0.2.0(@codemirror/language@6.9.3)(@codemirror/state@6.3.3)(@codemirror/view@6.22.3)(@lezer/highlight@1.2.0):
+    resolution: {integrity: sha512-FWtYHcX8NLzNSs21yGbkLF+q/5m2u80ug0JytKoI9nMZWPP5dcnsFYp1iZBEegLehiZnpv1qcmTsLTUG2KD39w==}
+    peerDependencies:
+      '@codemirror/language': ^6.0.0
+      '@codemirror/state': ^6.0.0
+      '@codemirror/view': ^6.0.0
+      '@lezer/highlight': ^1.0.0
+    dependencies:
+      '@codemirror/language': 6.9.3
+      '@codemirror/state': 6.3.3
+      '@codemirror/view': 6.22.3
+      '@lezer/highlight': 1.2.0
+    dev: false
+
+  /cm6-theme-solarized-light@0.2.0(@codemirror/language@6.9.3)(@codemirror/state@6.3.3)(@codemirror/view@6.22.3)(@lezer/highlight@1.2.0):
+    resolution: {integrity: sha512-Iw7Xv+9A6NlT7sRGlM2pOwD3ZBETkAqpb7c6O0LPj5kjwcK6C3k+mvjzaQt1gzfBErMmhL1HHuK07zICeXkE+w==}
+    peerDependencies:
+      '@codemirror/language': ^6.0.0
+      '@codemirror/state': ^6.0.0
+      '@codemirror/view': ^6.0.0
+      '@lezer/highlight': ^1.0.0
+    dependencies:
+      '@codemirror/language': 6.9.3
+      '@codemirror/state': 6.3.3
+      '@codemirror/view': 6.22.3
+      '@lezer/highlight': 1.2.0
+    dev: false
 
   /codemirror@6.0.1(@lezer/common@1.1.2):
     resolution: {integrity: sha512-J8j+nZ+CdWmIeFIGXEFbFPtpiYacFMDR8GlHK3IyHQJMCaVRfGx9NT+Hxivv1ckLWPvNdZqndbr/7lVhrf/Svg==}
