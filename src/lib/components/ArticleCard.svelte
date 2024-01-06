@@ -7,11 +7,13 @@
 
 	import fm from 'front-matter';
 	import Button from './ui/button/button.svelte';
-	let loading = false;
+	import { createEventDispatcher } from 'svelte';
 	export let article: IArticle;
 	export let userId: string | undefined;
-
+	let dialogOpen = false;
+	let loading = false;
 	let frontmatter: Record<string, any> = fm(article.content).attributes as Record<string, any>;
+	const dispatch = createEventDispatcher();
 	const handleFileDownload = async () => {
 		loading = true;
 		await handleDownload(article.content);
@@ -30,26 +32,17 @@
 		toast.success('Finished publishing', { id: toastId });
 	};
 	const handleDelete = async () => {
-		toast('article deleted');
-
-		/* modalStore.trigger({
-			type: 'confirm',
-			title: 'are you sure?',
-			body: 'are you certain you want to delete this article',
-			response: async (r: boolean) => {
-				if (r) {
-					const res = await fetch(`/api/articles/${article.id}`, {
-						method: 'DELETE'
-					});
-					 					if (!res.ok) {
-						toastStore.trigger({ message: 'could not delete article' });
-					} else {
-						toastStore.trigger({ message: 'article deleted' });
-					}
-				}
-			}
-		} 
-		);*/
+		dialogOpen = false;
+		const toastId = toast.loading('deleting article...');
+		const res = await fetch(`/api/articles/${article.id}`, {
+			method: 'DELETE'
+		});
+		if (!res.ok) {
+			toast.error('could not delete article', { id: toastId });
+		} else {
+			toast.success('article deleted', { id: toastId });
+			dispatch('reload', { id: article.id });
+		}
 	};
 </script>
 
@@ -68,9 +61,9 @@
 			<Button disabled={loading} on:click={handleFileDownload}>Download</Button>
 			<Button disabled={loading || !userId} on:click={handlePublish}>Publish</Button>
 		</div>
-		<Dialog.Root>
+		<Dialog.Root bind:open={dialogOpen}>
 			<Dialog.Trigger>
-				<Button variant="destructive">Delete</Button>
+				<Button on:click={() => (dialogOpen = true)} variant="destructive">Delete</Button>
 			</Dialog.Trigger>
 			<Dialog.Content>
 				<Dialog.Header>
@@ -81,7 +74,8 @@
 					<Dialog.Description>This action cannot be undone</Dialog.Description>
 				</Dialog.Header>
 				<Dialog.Footer>
-					<Button type="submit" variant="destructive" on:click={handleDelete}>Delete</Button>
+					<Button on:click={() => (dialogOpen = false)}>Cancel</Button>
+					<Button variant="destructive" on:click={handleDelete}>Delete</Button>
 				</Dialog.Footer>
 			</Dialog.Content>
 		</Dialog.Root>
