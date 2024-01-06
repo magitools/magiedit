@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	import type { PageData } from './$types';
 
@@ -10,12 +11,13 @@
 <p>User id: {data.userId}</p>
 <p>username: {data.username}</p>
 <p>email: {data.email}</p>
-<p>AI Credits: {data.aiCredits}</p>
+<div class="flex items-center gap-4">
+	<p>AI Credits: {data.aiCredits}</p>
+	<Button href="/profile/recharge" class="btn variant-filled">Recharge</Button>
+</div>
 <form method="post" action="?/logout" use:enhance>
-	<button class="btn variant-filled-error" type="submit">Sign Out</button>
+	<Button variant="destructive" type="submit">Sign Out</Button>
 </form>
-
-<a href="/profile/recharge" class="btn variant-filled">Recharge</a>
 
 <div class="">
 	<p>you have saved these images</p>
