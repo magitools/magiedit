@@ -1,17 +1,18 @@
 <script lang="ts">
-	import { AppBar } from '@skeletonlabs/skeleton';
+	import Button from './ui/button/button.svelte';
+
 	export let authed: boolean;
 	export let username: string;
 </script>
 
-<AppBar>
-	<svelte.fragment slot="lead"><a href="/">MagiEdit</a></svelte.fragment>
-	<svelte.fragment slot="trail">
+<div class="w-full flex justify-between bg-background py-6 px-4 items-center">
+	<a href="/app">MagiEdit</a>
+	<div class="flex">
 		{#if authed}
-			<a href="/profile">{username}</a>
-			<a href="/app/settings">settings</a>
+			<Button href="/profile">{username}</Button>
+			<Button href="/app/settings">settings</Button>
 		{:else}
-			<a href="/login">Sign In</a>
+			<Button href="/login">Sign In</Button>
 		{/if}
-	</svelte.fragment>
-</AppBar>
+	</div>
+</div>

@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
+	import * as Card from '$lib/components/ui/card';
+
 	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
-	import { getToastStore } from '@skeletonlabs/skeleton';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import Label from '$lib/components/ui/label/label.svelte';
 
 	let passkey = '';
 	let loading = false;
-	const toastStore = getToastStore();
 	async function handleSubmit(ev: SubmitEvent) {
 		ev.preventDefault();
 		loading = true;
@@ -18,7 +21,7 @@
 		if (!res.ok) {
 			console.log(await res.json());
 			loading = false;
-			toastStore.trigger({ message: 'something went wrong, pleasy try again later' });
+			toast.error('something went wrong, pleasy try again later');
 			return;
 		}
 		sessionStorage.setItem('magiedit:key', passkey);
@@ -26,28 +29,27 @@
 	}
 </script>
 
-<div class="flex justify-center items-center h-full">
-	<div class="card min-h-[200px] relative">
-		{#if loading}
-			<LoadingOverlay text="checking and unlocking content, please wait" />
-		{/if}
-		<div class="card-header text-xl font-bold">Almost there!</div>
-		<div class="p-4 space-y-2">
+<div class="flex justify-center items-center h-full bg-background">
+	<Card.Root>
+		<Card.Header>
+			<Card.Title>Just One More Step</Card.Title>
+		</Card.Header>
+		<Card.Content>
+			{#if loading}
+				<LoadingOverlay text="checking and unlocking content, please wait" />
+			{/if}
 			<p>please enter the key you previously created to unlock your articles</p>
 			<form method="post" on:submit={handleSubmit}>
-				<label for="passkey">
-					<span>Passkey</span>
-					<input
-						disabled={loading}
-						bind:value={passkey}
-						type="password"
-						name="passkey"
-						autocomplete="current-password"
-						class="input"
-					/>
-				</label>
+				<Label for="passkey">Passkey</Label>
+				<Input
+					bind:value={passkey}
+					disabled={loading}
+					type="password"
+					name="passkey"
+					autocomplete="current-password"
+				/>
 				<button disabled={loading} type="submit" class="btn variant-filled mt-2">Submit</button>
 			</form>
-		</div>
-	</div>
+		</Card.Content>
+	</Card.Root>
 </div>

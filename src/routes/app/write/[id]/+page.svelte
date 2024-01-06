@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { mode } from 'mode-watcher';
 	import { handleDownload } from '$lib/articles/download';
 
-	import { getModalStore, getToastStore, modeCurrent } from '@skeletonlabs/skeleton';
 	import 'highlight.js/styles/nord.css';
 	/* 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
 	 */ import CommandPalette, { defineActions } from 'svelte-command-palette';
@@ -14,24 +14,20 @@
 	import { languages } from '@codemirror/language-data';
 	import { solarizedDark } from 'cm6-theme-solarized-dark';
 	import { solarizedLight } from 'cm6-theme-solarized-light';
+	import { toast } from 'svelte-sonner';
+
 	import { parser } from '$lib/articles/parser';
 	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let data;
 	let source = true;
 	let loading = false;
 	let loadingText = 'loading, please wait...';
 
-	const modalStore = getModalStore();
-	const toastStore = getToastStore();
 	const textUpdateListener = EditorView.updateListener.of((update) => {
 		if (update.docChanged) {
-			parser.process(view.state.doc.toString()).then((data) => {
-				renderedContent = {
-					frontmatter: { ...(data.data.frontmatter as Record<string, any>) },
-					data: data.toString()
-				};
-			});
+			content = view.state.doc.toString();
 		}
 	});
 	const baseCodeMirrorConfig = [
@@ -44,25 +40,33 @@
 	let content = data?.article?.content ?? 'here goes your markdown content';
 	let renderedContent = { frontmatter: {}, data: '' };
 	//let fileHandle: FileSystemFileHandle;
+	$: parser.process(content).then((data) => {
+		renderedContent = {
+			frontmatter: { ...(data.data.frontmatter as Record<string, any>) },
+			data: data.toString()
+		};
+	});
 	let editorContainer: HTMLDivElement;
 
 	let startState = EditorState.create({
 		doc: content,
 		extensions: [
 			baseCodeMirrorConfig,
-			themeCompartment.of($modeCurrent ? solarizedLight : solarizedDark)
+			themeCompartment.of($mode === 'light' ? solarizedLight : solarizedDark)
 		]
 	});
 	let view = new EditorView({ state: startState });
 
-	modeCurrent.subscribe((currentTheme) => {
+	mode.subscribe((currentTheme) => {
 		view.dispatch({
-			effects: themeCompartment.reconfigure(currentTheme ? solarizedLight : solarizedDark)
+			effects: themeCompartment.reconfigure(
+				currentTheme === 'light' ? solarizedLight : solarizedDark
+			)
 		});
 	});
 
 	async function handleSave() {
-		loading = true;
+		const toastId = toast.loading('Saving article...');
 		loadingText = 'generating encryption key...';
 		const keyBytes = await window.crypto.subtle.digest(
 			'SHA-256',
@@ -89,7 +93,9 @@
 		});
 		if (!res.ok) {
 			console.error(res);
-			toastStore.trigger({ message: 'something went wrong, check console for full trace' });
+			toast.error('something went wrong, check console for full trace', { id: toastId });
+		} else {
+			toast.success('article saved', { id: toastId });
 		}
 		loading = false;
 	}
@@ -210,89 +216,82 @@
 			title: 'Add GIF',
 			subTitle: 'Search Giphy for gifs',
 			onRun: () => {
-				modalStore.trigger({
+				/* 				modalStore.trigger({
 					component: 'giphyModal',
 					type: 'component',
 					response: (r: string) => {
 						if (!r) return;
 						appendToContent(r);
 					}
-				});
+				}); */
 			}
 		},
 		{
 			title: 'Add Image',
 			subTitle: 'Search Unsplash for images',
 			onRun: () => {
-				modalStore.trigger({
+				/* 				modalStore.trigger({
 					component: 'unsplashModal',
 					type: 'component',
 					response: (r: string) => {
 						if (!r) return;
 						appendToContent(r);
 					}
-				});
+				}); */
 			}
 		},
 		{
 			title: 'Generate Image',
 			subTitle: 'Generate an image using DALL-E 2',
 			onRun: () => {
-				modalStore.trigger({
+				/* 				modalStore.trigger({
 					component: 'openAiImageModal',
 					type: 'component',
 					response: (r: string) => {
 						if (!r) return;
 						appendToContent(r);
 					}
-				});
+				}); */
 			}
 		},
 		{
 			title: 'Get Saved images',
 			subTitle: 'Use one of your previously generated images',
 			onRun: () => {
-				modalStore.trigger({
+				/* 				modalStore.trigger({
 					component: 'savedImages',
 					type: 'component',
 					response: (r: string) => {
 						if (!r) return;
 						appendToContent(r);
 					}
-				});
+				}); */
 			}
 		},
 		{
 			title: 'Generate Cover Image',
 			subTitle: 'Use or generate a summary of your article to create a cover image',
 			onRun: () => {
-				modalStore.trigger({
+				/* 				modalStore.trigger({
 					component: 'openAiCoverModal',
 					type: 'component',
 					meta: { content }
-				});
+				}); */
 			}
 		}
 	]);
 </script>
-
-<CommandPalette
-	{commands}
-	inputClass="text-black dark:text-white"
-	inputStyle={{ color: 'black' }}
-	titleStyle={{ color: 'black' }}
-/>
 
 <div class="flex h-full w-full flex-col relative p-4">
 	{#if loading}
 		<LoadingOverlay text={loadingText} />
 	{/if}
 	<div class="w-full card p-4 my-2">
-		<button class="btn variant-filled" on:click={handleSave}>
+		<Button class="btn variant-filled" on:click={handleSave}>
 			{loading ? 'Saving...' : 'Save'}
-		</button>
-		<button class="btn variant-filled" on:click={handleFileDownload}> Download </button>
-		<button class="btn variant-filled" on:click={handleSaveToDisk}>Save to file</button>
+		</Button>
+		<Button class="btn variant-filled" on:click={handleFileDownload}>Download</Button>
+		<Button class="btn variant-filled" on:click={handleSaveToDisk}>Save to file</Button>
 	</div>
 	<div class="w-full flex justify-end md:hidden">
 		<div class="flex space-x-2">
@@ -307,15 +306,15 @@
 			>
 		</div>
 	</div>
-	<div class="h-full w-full grid grid-cols-1 md:grid-cols-2 group" data-source={source}>
+	<div class="h-full w-full grid grid-cols-1 md:grid-cols-2 group gap-4" data-source={source}>
 		<div
 			bind:this={editorContainer}
 			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden md:group-data-[source=true]:block md:group-data-[source=false]:hidden"
 		/>
 		<div
-			class="w-full h-full block group-data-[source=true]:hidden group-data-[source=false]:block md:group-data-[source=true]:block md:group-data-[source=false]:block"
+			class="w-full h-full bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block md:group-data-[source=true]:block md:group-data-[source=false]:block"
 		>
-			<div data-testid="preview" class="w-full prose h-full text-black dark:text-white card p-4">
+			<div data-testid="preview" class="w-full prose h-full p-4">
 				<!-- ts-ignore-svelte/no-at-html-tags -->
 				{@html renderedContent.data}
 			</div>
