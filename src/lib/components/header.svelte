@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Button from './ui/button/button.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 
 	export let authed: boolean;
 	export let username: string;
@@ -7,10 +8,22 @@
 
 <div class="w-full flex justify-between bg-background py-6 px-4 items-center">
 	<a href="/app">MagiEdit</a>
-	<div class="flex">
+	<div>
 		{#if authed}
-			<Button href="/profile">{username}</Button>
-			<Button href="/app/settings">settings</Button>
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
+					Hi, {username}!
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content>
+					<DropdownMenu.Group>
+						<DropdownMenu.Item href="/profile">Profile</DropdownMenu.Item>
+					</DropdownMenu.Group>
+					<DropdownMenu.Separator />
+					<DropdownMenu.Group>
+						<DropdownMenu.Item href="/app/settings">Publishers</DropdownMenu.Item>
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 		{:else}
 			<Button href="/login">Sign In</Button>
 		{/if}
