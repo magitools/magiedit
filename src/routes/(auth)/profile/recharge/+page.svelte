@@ -1,4 +1,7 @@
 <script lang="ts">
+	import Button from '$lib/components/ui/button/button.svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import Label from '$lib/components/ui/label/label.svelte';
 	import type { PageServerData } from './$types';
 	let quantity = 0;
 	let loading = false;
@@ -20,19 +23,16 @@
 </script>
 
 <h1>here you can recharge your credits</h1>
-
-<label for="quantity" class="label">
-	<span>Quantity</span>
-	<input
-		disabled={loading}
-		class="input"
-		type="number"
-		name="quantity"
-		id="quantity"
-		bind:value={quantity}
-	/>
-</label>
+<Label for="quantity">Quantity</Label>
+<Input
+	disabled={loading}
+	class="input"
+	type="number"
+	name="quantity"
+	id="quantity"
+	bind:value={quantity}
+/>
 {#if data.price && data.price.unit_amount}
 	<p>The total is <b>{(quantity * (data.price.unit_amount / 100)).toFixed(2)}€</b></p>
 {/if}
-<button class="btn variant-filled" disabled={quantity < 1} on:click={recharge}> Recharge </button>
+<Button disabled={quantity < 1} on:click={recharge}>Recharge</Button>

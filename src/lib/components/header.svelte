@@ -1,17 +1,31 @@
 <script lang="ts">
-	import { AppBar } from '@skeletonlabs/skeleton';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+
 	export let authed: boolean;
 	export let username: string;
 </script>
 
-<AppBar>
-	<svelte.fragment slot="lead"><a href="/">MagiEdit</a></svelte.fragment>
-	<svelte.fragment slot="trail">
+<div class="w-full flex justify-between bg-background py-6 px-4 items-center">
+	<a href="/app">MagiEdit</a>
+	<div>
 		{#if authed}
-			<a href="/profile">{username}</a>
-			<a href="/app/settings">settings</a>
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
+					Hi, {username}!
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content>
+					<DropdownMenu.Group>
+						<DropdownMenu.Item href="/profile">Profile</DropdownMenu.Item>
+					</DropdownMenu.Group>
+					<DropdownMenu.Separator />
+					<DropdownMenu.Group>
+						<DropdownMenu.Item href="/app/settings">Publishers</DropdownMenu.Item>
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 		{:else}
-			<a href="/login">Sign In</a>
+			<Button href="/login">Sign In</Button>
 		{/if}
-	</svelte.fragment>
-</AppBar>
+	</div>
+</div>

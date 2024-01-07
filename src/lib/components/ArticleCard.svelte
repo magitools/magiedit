@@ -1,15 +1,19 @@
 <script lang="ts">
+	import { toast } from 'svelte-sonner';
 	import { handleDownload } from '$lib/articles/download';
 	import type { IArticle } from '$lib/articles/types';
-	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	import * as Card from '$lib/components/ui/card';
+	import * as Dialog from '$lib/components/ui/dialog';
+
 	import fm from 'front-matter';
-	let loading = false;
+	import Button from './ui/button/button.svelte';
+	import { createEventDispatcher } from 'svelte';
 	export let article: IArticle;
 	export let userId: string | undefined;
-
+	let dialogOpen = false;
+	let loading = false;
 	let frontmatter: Record<string, any> = fm(article.content).attributes as Record<string, any>;
-	const modalStore = getModalStore();
-	const toastStore = getToastStore();
+	const dispatch = createEventDispatcher();
 	const handleFileDownload = async () => {
 		loading = true;
 		await handleDownload(article.content);
@@ -17,6 +21,7 @@
 	};
 	const handlePublish = async () => {
 		const data = new FormData();
+		const toastId = toast.loading('Publishing...');
 		data.append('content', article.content || '');
 		const res = await (
 			await fetch('/api/articles/publish', {
@@ -24,49 +29,55 @@
 				body: data
 			})
 		).json();
-		modalStore.trigger({
-			type: 'alert',
-			title: 'Finished Publishing',
-			body: res.status.join('\n')
-		});
+		toast.success('Finished publishing', { id: toastId });
 	};
 	const handleDelete = async () => {
-		modalStore.trigger({
-			type: 'confirm',
-			title: 'are you sure?',
-			body: 'are you certain you want to delete this article',
-			response: async (r: boolean) => {
-				if (r) {
-					const res = await fetch(`/api/articles/${article.id}`, {
-						method: 'DELETE'
-					});
-					if (!res.ok) {
-						toastStore.trigger({ message: 'could not delete article' });
-					} else {
-						toastStore.trigger({ message: 'article deleted' });
-					}
-				}
-			}
+		dialogOpen = false;
+		const toastId = toast.loading('deleting article...');
+		const res = await fetch(`/api/articles/${article.id}`, {
+			method: 'DELETE'
 		});
+		if (!res.ok) {
+			toast.error('could not delete article', { id: toastId });
+		} else {
+			toast.success('article deleted', { id: toastId });
+			dispatch('reload', { id: article.id });
+		}
 	};
 </script>
 
-<div class="card max-w-[500px] max-h-[500px] h-full">
-	<h2 class="card-header text-xl pb-4">{frontmatter.title || 'No title set'}</h2>
-	{#if frontmatter?.cover_image}
-		<img src={frontmatter.cover_image} class="w-full h-auto" alt="article cover" />
-	{/if}
-	<section class="p-4" />
-	<div class="card-footer flex justify-between">
+<Card.Root class="min-w-[500px]">
+	<Card.Header>
+		<Card.Title>{frontmatter.title || 'No title set'}</Card.Title>
+	</Card.Header>
+	<Card.Content>
+		{#if frontmatter?.cover_image}
+			<img src={frontmatter.cover_image} class="w-full h-auto" alt="article cover" />
+		{/if}
+	</Card.Content>
+	<Card.Footer class="flex justify-between">
 		<div>
-			<a class="btn variant-filled" href={`/app/write/${article.id}`}>Edit</a>
-			<button class="btn variant-filled" disabled={loading} on:click={handleFileDownload}
-				>Download</button
-			>
-			<button class="btn variant-filled" disabled={loading || !userId} on:click={handlePublish}
-				>Publish</button
-			>
+			<Button href={`/app/write/${article.id}`}>Edit</Button>
+			<Button disabled={loading} on:click={handleFileDownload}>Download</Button>
+			<Button disabled={loading || !userId} on:click={handlePublish}>Publish</Button>
 		</div>
-		<button on:click={handleDelete} class="btn variant-filled-error">Delete</button>
-	</div>
-</div>
+		<Dialog.Root bind:open={dialogOpen}>
+			<Dialog.Trigger>
+				<Button on:click={() => (dialogOpen = true)} variant="destructive">Delete</Button>
+			</Dialog.Trigger>
+			<Dialog.Content>
+				<Dialog.Header>
+					<Dialog.Title
+						>Are you sure you want to delete {#if frontmatter.title}{frontmatter.title}{:else}this
+							article{/if}</Dialog.Title
+					>
+					<Dialog.Description>This action cannot be undone</Dialog.Description>
+				</Dialog.Header>
+				<Dialog.Footer>
+					<Button on:click={() => (dialogOpen = false)}>Cancel</Button>
+					<Button variant="destructive" on:click={handleDelete}>Delete</Button>
+				</Dialog.Footer>
+			</Dialog.Content>
+		</Dialog.Root>
+	</Card.Footer>
+</Card.Root>

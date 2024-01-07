@@ -13,6 +13,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 		.where(eq(userArticles.author, session.user.userId));
 
 	return {
-		articles
+		articles: articles || []
 	};
 };

@@ -6,6 +6,7 @@ export const GET = async ({ url, cookies, locals }) => {
 	const state = url.searchParams.get('state');
 	const code = url.searchParams.get('code');
 	// validate state
+	console.log(storedState, state, code);
 	if (!storedState || !state || storedState !== state || !code) {
 		return new Response(null, {
 			status: 400

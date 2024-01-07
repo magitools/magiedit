@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { generateIv } from '$lib/articles/crypto.js';
-	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { showOpenFilePicker } from 'file-system-access';
+	import { toast } from 'svelte-sonner';
 
 	export let data;
-	const toastStore = getToastStore();
 	async function handleFileLoad() {
 		const [filehandle] = await showOpenFilePicker({
 			accepts: [
@@ -23,12 +22,11 @@
 			]
 		});
 		if (!filehandle) return;
+		const toastId = toast.loading('loading your file');
 		try {
 			const content = await (await filehandle.getFile()).text();
 
-			toastStore.trigger({
-				message: 'file loaded'
-			});
+			toast.success('file loaded', { id: toastId });
 			const keyBytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data.key));
 			const key = await crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['encrypt']);
 			const iv = generateIv();
@@ -49,9 +47,7 @@
 			).json();
 			await goto(`/app/write/${res.id}`);
 		} catch (error) {
-			toastStore.trigger({
-				message: 'could not open file, please try again'
-			});
+			toast.error('could not open file, please try again', { id: toastId });
 			console.error(error);
 			return;
 		}

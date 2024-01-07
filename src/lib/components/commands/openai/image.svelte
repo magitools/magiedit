@@ -1,4 +1,6 @@
 <script lang="ts">
+	// TODO NOT YET PORTED TO SHAD
+
 	import { ProgressRadial, getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	let query = '';
 	let amount = 1;
