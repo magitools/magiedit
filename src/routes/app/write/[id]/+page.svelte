@@ -4,8 +4,8 @@
 	import { handleDownload } from '$lib/articles/download';
 
 	import 'highlight.js/styles/nord.css';
-	/* 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access';
-	 */ import CommandPalette, { defineActions } from 'svelte-command-palette';
+	/* 	import { showSaveFilePicker, type FileSystemFileHandle } from 'file-system-access'; */
+	import * as Command from '$lib/components/ui/command';
 	import { EditorState, Compartment } from '@codemirror/state';
 	import { EditorView, keymap } from '@codemirror/view';
 	import { defaultKeymap } from '@codemirror/commands';
@@ -19,6 +19,7 @@
 	import { parser } from '$lib/articles/parser';
 	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import Giphy from '$lib/components/commands/giphy.svelte';
 
 	export let data;
 	let source = true;
@@ -47,7 +48,8 @@
 		};
 	});
 	let editorContainer: HTMLDivElement;
-
+	let commandDialogOpen = false;
+	let giphyDialogOpen = false;
 	let startState = EditorState.create({
 		doc: content,
 		extensions: [
@@ -113,70 +115,19 @@
 		}
 	}
 	function handleKeyDown(event: KeyboardEvent) {
-		/* 		if (event.repeat) return;
+		if (!event.metaKey && !event.ctrlKey) return;
+		event.preventDefault();
 		switch (event.key) {
-			case 'Control':
-				event.preventDefault();
-				ctrlDown = true;
-				break;
 			case 's':
-				if (ctrlDown) {
-					event.preventDefault();
-					handleSave();
-				}
+				handleSave();
 				break;
 			case 'l':
-				if (ctrlDown) {
-					event.preventDefault();
-					source = !source;
-				}
+				source = !source;
 				break;
-			case '[':
-				if (window.getSelection()?.type === 'Range') {
-					event.preventDefault();
-					content =
-						content.substring(0, sourceElement.selectionStart) +
-						'[' +
-						content.substring(sourceElement.selectionStart, sourceElement.selectionEnd) +
-						']' +
-						content.substring(sourceElement.selectionEnd);
-				}
+			case 'k':
+				commandDialogOpen = !commandDialogOpen;
 				break;
-			case '(':
-				if (window.getSelection()?.type === 'Range') {
-					event.preventDefault();
-					content =
-						content.substring(0, sourceElement.selectionStart) +
-						'(' +
-						content.substring(sourceElement.selectionStart, sourceElement.selectionEnd) +
-						')' +
-						content.substring(sourceElement.selectionEnd);
-				}
-				break;
-			case '"':
-				if (window.getSelection()?.type === 'Range') {
-					event.preventDefault();
-					content =
-						content.substring(0, sourceElement.selectionStart) +
-						'"' +
-						content.substring(sourceElement.selectionStart, sourceElement.selectionEnd) +
-						'"' +
-						content.substring(sourceElement.selectionEnd);
-				}
-				break;
-			case 'Enter':
-				event.preventDefault();
-				content =
-					content.substring(0, sourceElement.selectionStart) +
-					'\n' +
-					content.substring(sourceElement.selectionStart);
-				sourceElement.focus();
-				sourceElement.selectionStart = sourceElement.selectionEnd;
-				sourceElement.selectionEnd = sourceElement.selectionEnd;
-				break;
-			default:
-				break;
-		}*/
+		}
 	}
 	onMount(() => {
 		window.addEventListener('keydown', handleKeyDown);
@@ -211,76 +162,110 @@
 		await writable.close(); */
 	}
 
-	const commands = defineActions([
+	/* const commands = defineActions([
 		{
 			title: 'Add GIF',
 			subTitle: 'Search Giphy for gifs',
 			onRun: () => {
-				/* 				modalStore.trigger({
+								modalStore.trigger({
 					component: 'giphyModal',
 					type: 'component',
 					response: (r: string) => {
 						if (!r) return;
 						appendToContent(r);
 					}
-				}); */
+				});
 			}
 		},
 		{
 			title: 'Add Image',
 			subTitle: 'Search Unsplash for images',
 			onRun: () => {
-				/* 				modalStore.trigger({
+								modalStore.trigger({
 					component: 'unsplashModal',
 					type: 'component',
 					response: (r: string) => {
 						if (!r) return;
 						appendToContent(r);
 					}
-				}); */
+				});
 			}
 		},
 		{
 			title: 'Generate Image',
 			subTitle: 'Generate an image using DALL-E 2',
 			onRun: () => {
-				/* 				modalStore.trigger({
+							modalStore.trigger({
 					component: 'openAiImageModal',
 					type: 'component',
 					response: (r: string) => {
 						if (!r) return;
 						appendToContent(r);
 					}
-				}); */
+				}); 
 			}
 		},
 		{
 			title: 'Get Saved images',
 			subTitle: 'Use one of your previously generated images',
 			onRun: () => {
-				/* 				modalStore.trigger({
+						modalStore.trigger({
 					component: 'savedImages',
 					type: 'component',
 					response: (r: string) => {
 						if (!r) return;
 						appendToContent(r);
 					}
-				}); */
+				}); 
 			}
 		},
 		{
 			title: 'Generate Cover Image',
 			subTitle: 'Use or generate a summary of your article to create a cover image',
 			onRun: () => {
-				/* 				modalStore.trigger({
+				 				modalStore.trigger({
 					component: 'openAiCoverModal',
 					type: 'component',
 					meta: { content }
-				}); */
+				}); 
 			}
 		}
-	]);
+	]); */
+	function addToDoc(event) {
+		const length = startState.doc.length;
+		const newText = `\n${event.detail}\n`;
+		const transaction = view.state.update({ changes: { from: length, insert: newText } });
+		view.dispatch(transaction);
+		console.log(event);
+	}
 </script>
+
+<Command.Dialog bind:open={commandDialogOpen} loop>
+	<Command.Input placeholder="Type a command or search..." />
+	<Command.List>
+		<Command.Empty>No results found.</Command.Empty>
+		<Command.Group heading="Images">
+			<Command.Item
+				onSelect={() => {
+					giphyDialogOpen = !giphyDialogOpen;
+					commandDialogOpen = false;
+				}}>Giphy</Command.Item
+			>
+		</Command.Group>
+		<Command.Separator />
+		<Command.Group heading="AI">
+			<Command.Item
+				onSelect={async () => {
+					commandDialogOpen = false;
+					alert('image');
+				}}>Generate Image</Command.Item
+			>
+			<Command.Item>Generate Summary</Command.Item>
+		</Command.Group>
+	</Command.List>
+</Command.Dialog>
+
+<Giphy on:addToDoc={addToDoc} bind:open={giphyDialogOpen} />
 
 <div class="flex h-full w-full flex-col relative p-4">
 	{#if loading}
@@ -312,12 +297,10 @@
 			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden md:group-data-[source=true]:block md:group-data-[source=false]:hidden"
 		/>
 		<div
-			class="w-full h-full bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block md:group-data-[source=true]:block md:group-data-[source=false]:block"
+			class="w-full h-full p-4 bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block md:group-data-[source=true]:block md:group-data-[source=false]:block"
 		>
-			<div data-testid="preview" class="w-full prose h-full p-4">
-				<!-- ts-ignore-svelte/no-at-html-tags -->
-				{@html renderedContent.data}
-			</div>
+			<!-- ts-ignore-svelte/no-at-html-tags -->
+			{@html renderedContent.data}
 		</div>
 	</div>
 </div>

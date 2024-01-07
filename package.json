@@ -65,6 +65,7 @@
 		"clsx": "^2.1.0",
 		"cm6-theme-solarized-dark": "^0.2.0",
 		"cm6-theme-solarized-light": "^0.2.0",
+		"cmdk-sv": "^0.0.12",
 		"codemirror": "^6.0.1",
 		"drizzle-orm": "^0.28.6",
 		"file-system-access": "^1.0.4",

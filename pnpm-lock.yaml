@@ -50,6 +50,9 @@ dependencies:
   cm6-theme-solarized-light:
     specifier: ^0.2.0
     version: 0.2.0(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/highlight@1.2.0)
+  cmdk-sv:
+    specifier: ^0.0.12
+    version: 0.0.12(react@18.2.0)(svelte@4.2.8)
   codemirror:
     specifier: ^6.0.1
     version: 6.0.1(@lezer/common@1.2.0)
@@ -1775,6 +1778,22 @@ packages:
       lucia: 2.7.6
     dev: false
 
+  /@melt-ui/svelte@0.61.2(react@18.2.0)(svelte@4.2.8):
+    resolution: {integrity: sha512-BHkD9G31zQBToA4euDRBgTQRvWxT9scufOVCXgDO6HKTvyxFspbWT2bgiSFqAK4BbAGDn9Ao36Q8F9O71KN4OQ==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      '@floating-ui/core': 1.5.3(react@18.2.0)
+      '@floating-ui/dom': 1.5.4(react@18.2.0)
+      '@internationalized/date': 3.5.1
+      dequal: 2.0.3
+      focus-trap: 7.5.4
+      nanoid: 4.0.2
+      svelte: 4.2.8
+    transitivePeerDependencies:
+      - react
+    dev: false
+
   /@melt-ui/svelte@0.67.0(react@18.2.0)(svelte@4.2.8):
     resolution: {integrity: sha512-fd9PsDE6sKbeyExagqH0nOpZEnDqyr2efbkjfmCRRYXVW5vlDEOPaSB+mg4Tjch121102sFH1Od+MlXwmeHy3A==}
     peerDependencies:
@@ -2851,6 +2870,18 @@ packages:
       - react
     dev: false
 
+  /bits-ui@0.9.9(react@18.2.0)(svelte@4.2.8):
+    resolution: {integrity: sha512-LkdkyTtpXdkjBzPZJVJgpcre4fut6DONoprMfadHFo82HNUhph+02CxDjYEcZcThb5z4YjSxMlCYvQPZm+YtfQ==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      '@melt-ui/svelte': 0.61.2(react@18.2.0)(svelte@4.2.8)
+      nanoid: 5.0.4
+      svelte: 4.2.8
+    transitivePeerDependencies:
+      - react
+    dev: false
+
   /bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
     dependencies:
@@ -3042,6 +3073,18 @@ packages:
       '@codemirror/state': 6.4.0
       '@codemirror/view': 6.23.0
       '@lezer/highlight': 1.2.0
+    dev: false
+
+  /cmdk-sv@0.0.12(react@18.2.0)(svelte@4.2.8):
+    resolution: {integrity: sha512-d+eILSOb2W+/3U/j7xGTgGRrZkFB/z4Xlvj0ADrWhf34y9YLzJon3JCGP2hMil5IrVm0P/+IFIeCF5l3//kcjA==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      bits-ui: 0.9.9(react@18.2.0)(svelte@4.2.8)
+      nanoid: 5.0.4
+      svelte: 4.2.8
+    transitivePeerDependencies:
+      - react
     dev: false
 
   /code-red@1.0.4:

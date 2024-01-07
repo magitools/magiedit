@@ -25,9 +25,11 @@
 	<div class="flex flex-wrap items-center gap-4 mt-4">
 		{#each articles as article}
 			{#if article}
-				<div>
-					<ArticleCard on:reload={(id) => filterArticles(id)} {article} userId={data.userId} />
-				</div>
+				{#key article.id}
+					<div>
+						<ArticleCard on:reload={(id) => filterArticles(id)} {article} userId={data.userId} />
+					</div>
+				{/key}
 			{/if}
 		{/each}
 	</div>
