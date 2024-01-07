@@ -9,7 +9,7 @@
 	<Card.Root>
 		<Card.Content class="space-y-4">
 			<h1
-				class="text-4xl h-16 lg:text-5xl bg-gradient-to-r dark:from-[#59C173] dark:via-[#a17fe0] dark:to-[#2C5364] from-[#000428] to-[#004e92] bg-clip-text text-transparent"
+				class="text-4xl h-20 lg:h-16 lg:text-5xl bg-gradient-to-r dark:from-[#59C173] dark:via-[#a17fe0] dark:to-[#2C5364] from-[#000428] to-[#004e92] bg-clip-text text-transparent"
 			>
 				Welcome to Magiedit
 			</h1>
