@@ -86,12 +86,10 @@
 		"remark-parse": "^10.0.2",
 		"remark-rehype": "^10.1.0",
 		"stripe": "^13.11.0",
-		"svelte-command-palette": "^1.2.1",
 		"svelte-sonner": "^0.3.10",
 		"tailwind-merge": "^2.2.0",
 		"tailwind-variants": "^0.1.20",
 		"unified": "^11.0.4",
-		"unplugin-icons": "^0.17.4",
 		"unsplash-js": "^7.0.19",
 		"uuid": "^9.0.1",
 		"yaml": "^2.3.4"
