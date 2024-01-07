@@ -46,7 +46,7 @@
 	};
 </script>
 
-<Card.Root class="min-w-[500px]">
+<Card.Root class="w-full ">
 	<Card.Header>
 		<Card.Title>{frontmatter.title || 'No title set'}</Card.Title>
 	</Card.Header>

@@ -22,7 +22,7 @@
 		<p>looks like you don't have any articles</p>
 	</div>
 {:else}
-	<div class="flex flex-wrap items-center gap-4 mt-4">
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
 		{#each articles as article}
 			{#if article}
 				{#key article.id}
