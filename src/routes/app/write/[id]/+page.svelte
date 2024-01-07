@@ -153,61 +153,6 @@
 		await writable.close(); */
 	}
 
-	/* const commands = defineActions([
-		{
-			title: 'Add Image',
-			subTitle: 'Search Unsplash for images',
-			onRun: () => {
-								modalStore.trigger({
-					component: 'unsplashModal',
-					type: 'component',
-					response: (r: string) => {
-						if (!r) return;
-						appendToContent(r);
-					}
-				});
-			}
-		},
-		{
-			title: 'Generate Image',
-			subTitle: 'Generate an image using DALL-E 2',
-			onRun: () => {
-							modalStore.trigger({
-					component: 'openAiImageModal',
-					type: 'component',
-					response: (r: string) => {
-						if (!r) return;
-						appendToContent(r);
-					}
-				}); 
-			}
-		},
-		{
-			title: 'Get Saved images',
-			subTitle: 'Use one of your previously generated images',
-			onRun: () => {
-						modalStore.trigger({
-					component: 'savedImages',
-					type: 'component',
-					response: (r: string) => {
-						if (!r) return;
-						appendToContent(r);
-					}
-				}); 
-			}
-		},
-		{
-			title: 'Generate Cover Image',
-			subTitle: 'Use or generate a summary of your article to create a cover image',
-			onRun: () => {
-				 				modalStore.trigger({
-					component: 'openAiCoverModal',
-					type: 'component',
-					meta: { content }
-				}); 
-			}
-		}
-	]); */
 	function addToDoc(event) {
 		const length = startState.doc.length;
 		const newText = `\n${event.detail}\n`;
@@ -239,15 +184,6 @@
 			</Command.Item>
 		</Command.Group>
 		<Command.Separator />
-		<Command.Group heading="AI">
-			<Command.Item
-				onSelect={async () => {
-					commandDialogOpen = false;
-					alert('image');
-				}}>Generate Image</Command.Item
-			>
-			<Command.Item>Generate Summary</Command.Item>
-		</Command.Group>
 	</Command.List>
 </Command.Dialog>
 
