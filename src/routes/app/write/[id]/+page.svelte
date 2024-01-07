@@ -19,6 +19,7 @@
 	import { parser } from '$lib/articles/parser';
 	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import * as ToggleGroup from '$lib/components/ui/toggle-group';
 	import Giphy from '$lib/components/commands/giphy.svelte';
 	import Unsplash from '$lib/components/commands/unsplash.svelte';
 
@@ -202,22 +203,16 @@
 		<Button class="btn variant-filled" on:click={handleSaveToDisk}>Save to file</Button>
 	</div>
 	<div class="w-full flex justify-end md:hidden">
-		<div class="flex space-x-2">
-			<button
-				class={`uppercase btn variant-${source ? 'filled' : 'ghost'}`}
-				on:click={() => (source = true)}>Source</button
-			>
-			<button
-				data-testid="preview-button"
-				class={`uppercase btn variant-${source ? 'ghost' : 'filled'}`}
-				on:click={() => (source = false)}>Preview</button
-			>
-		</div>
+		<Button variant={source ? 'default' : 'outline'} on:click={() => (source = true)}>Source</Button
+		>
+		<Button variant={source ? 'outline' : 'default'} on:click={() => (source = false)}
+			>Preview</Button
+		>
 	</div>
 	<div class="h-full w-full grid grid-cols-1 md:grid-cols-2 group gap-4" data-source={source}>
 		<div
 			bind:this={editorContainer}
-			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden md:group-data-[source=true]:block md:group-data-[source=false]:hidden"
+			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden md:group-data-[source=true]:block md:group-data-[source=false]:block"
 		/>
 		<div
 			class="w-full h-full p-4 bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block md:group-data-[source=true]:block md:group-data-[source=false]:block"
