@@ -20,6 +20,7 @@
 	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Giphy from '$lib/components/commands/giphy.svelte';
+	import Unsplash from '$lib/components/commands/unsplash.svelte';
 
 	export let data;
 	let source = true;
@@ -50,6 +51,7 @@
 	let editorContainer: HTMLDivElement;
 	let commandDialogOpen = false;
 	let giphyDialogOpen = false;
+	let unsplashDialogOpen = false;
 	let startState = EditorState.create({
 		doc: content,
 		extensions: [
@@ -108,12 +110,6 @@
 		await handleDownload(content);
 		loading = false;
 	}
-	let ctrlDown = false;
-	function handleKeyUp(event: KeyboardEvent) {
-		if (event.key === 'Control') {
-			ctrlDown = false;
-		}
-	}
 	function handleKeyDown(event: KeyboardEvent) {
 		if (!event.metaKey && !event.ctrlKey) return;
 		event.preventDefault();
@@ -131,16 +127,11 @@
 	}
 	onMount(() => {
 		window.addEventListener('keydown', handleKeyDown);
-		window.addEventListener('keyup', handleKeyUp);
 		editorContainer.appendChild(view.dom);
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown);
-			window.removeEventListener('keydown', handleKeyUp);
 		};
 	});
-	function appendToContent(text: string) {
-		content += `${text}`;
-	}
 
 	async function handleSaveToDisk() {
 		/* 		await handleSave();
@@ -163,20 +154,6 @@
 	}
 
 	/* const commands = defineActions([
-		{
-			title: 'Add GIF',
-			subTitle: 'Search Giphy for gifs',
-			onRun: () => {
-								modalStore.trigger({
-					component: 'giphyModal',
-					type: 'component',
-					response: (r: string) => {
-						if (!r) return;
-						appendToContent(r);
-					}
-				});
-			}
-		},
 		{
 			title: 'Add Image',
 			subTitle: 'Search Unsplash for images',
@@ -249,8 +226,17 @@
 				onSelect={() => {
 					giphyDialogOpen = !giphyDialogOpen;
 					commandDialogOpen = false;
-				}}>Giphy</Command.Item
+				}}
+				>Giphy
+			</Command.Item>
+			<Command.Item
+				onSelect={() => {
+					unsplashDialogOpen = !unsplashDialogOpen;
+					commandDialogOpen = false;
+				}}
 			>
+				Unsplash
+			</Command.Item>
 		</Command.Group>
 		<Command.Separator />
 		<Command.Group heading="AI">
@@ -266,6 +252,7 @@
 </Command.Dialog>
 
 <Giphy on:addToDoc={addToDoc} bind:open={giphyDialogOpen} />
+<Unsplash on:addToDoc={addToDoc} bind:open={unsplashDialogOpen} />
 
 <div class="flex h-full w-full flex-col relative p-4">
 	{#if loading}
