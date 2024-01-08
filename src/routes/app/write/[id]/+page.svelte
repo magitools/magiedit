@@ -215,7 +215,7 @@
 			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden md:group-data-[source=true]:block md:group-data-[source=false]:block"
 		/>
 		<div
-			class="w-full h-full p-4 bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block md:group-data-[source=true]:block md:group-data-[source=false]:block"
+			class="w-full h-full prose p-4 bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block md:group-data-[source=true]:block md:group-data-[source=false]:block"
 		>
 			<!-- ts-ignore-svelte/no-at-html-tags -->
 			{@html renderedContent.data}
