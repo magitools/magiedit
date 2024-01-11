@@ -202,20 +202,20 @@
 		<Button class="btn variant-filled" on:click={handleFileDownload}>Download</Button>
 		<Button class="btn variant-filled" on:click={handleSaveToDisk}>Save to file</Button>
 	</div>
-	<div class="w-full flex justify-end md:hidden">
+	<div class="w-full flex justify-end lg:hidden">
 		<Button variant={source ? 'default' : 'outline'} on:click={() => (source = true)}>Source</Button
 		>
 		<Button variant={source ? 'outline' : 'default'} on:click={() => (source = false)}
 			>Preview</Button
 		>
 	</div>
-	<div class="h-full w-full grid grid-cols-1 md:grid-cols-2 group gap-4" data-source={source}>
+	<div class="h-full w-full grid grid-cols-1 lg:grid-cols-2 group gap-4" data-source={source}>
 		<div
 			bind:this={editorContainer}
-			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden md:group-data-[source=true]:block md:group-data-[source=false]:block"
+			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden lg:group-data-[source=true]:block lg:group-data-[source=false]:block"
 		/>
 		<div
-			class="w-full min-h-[100%] h-full min-w-full overflow-y-auto prose p-4 bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block md:group-data-[source=true]:block md:group-data-[source=false]:block"
+			class="w-full min-h-[100%] h-full min-w-full overflow-y-auto prose p-4 bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block lg:group-data-[source=true]:block lg:group-data-[source=false]:block"
 		>
 			<!-- ts-ignore-svelte/no-at-html-tags -->
 			{@html renderedContent.data}
