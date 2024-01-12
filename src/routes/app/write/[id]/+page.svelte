@@ -113,16 +113,20 @@
 	}
 	function handleKeyDown(event: KeyboardEvent) {
 		if (!event.metaKey && !event.ctrlKey) return;
-		event.preventDefault();
 		switch (event.key) {
 			case 's':
+				event.preventDefault();
 				handleSave();
 				break;
 			case 'l':
 				source = !source;
+				event.preventDefault();
+
 				break;
 			case 'k':
 				commandDialogOpen = !commandDialogOpen;
+				event.preventDefault();
+
 				break;
 		}
 	}
