@@ -20,12 +20,8 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 		return 'dev.to';
 	}
 
-	setSettings(settings: UserPreferences[]) {
-		settings.forEach((e) => {
-			if (this.getRequiredSettings().includes(e.key.split(':')[1])) {
-				this.settings[e.key.split(':')[1]] = e.value;
-			}
-		});
+	setSettings(settings: Record<string, any>) {
+		this.settings = { ...settings };
 		return this;
 	}
 
@@ -35,7 +31,7 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 	}
 
 	public async publish(content: string) {
-		const setting = this.settings['dev'];
+		const setting = this.settings['api_token'];
 		if (!setting) throw new Error('could not find required settings');
 		const res = await fetch('https://dev.to/api/articles', {
 			method: 'post',

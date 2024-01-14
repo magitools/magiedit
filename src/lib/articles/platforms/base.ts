@@ -10,7 +10,7 @@ export interface IBasePlatform<T> {
 	settings: Record<string, string>;
 	frontmatter: Record<string, any>;
 	publish(content: string): void;
-	setSettings(settings: UserPreferences[]): T;
+	setSettings(settings: Record<string, any>): T;
 	getRequiredSettings(): IPlatformSetting[];
 	setFrontmatter(data: Record<string, any>): T;
 	getPlatformName(): string;

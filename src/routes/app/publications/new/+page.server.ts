@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 				platformName: new e().getPlatformName(),
 				platformSettings: new e().getRequiredSettings(),
 				platformId: e.name
-			})) ?? []
+			})) || []
 	};
 };
 
@@ -29,8 +29,14 @@ export const actions: Actions = {
 			throw fail(500, { message: 'not connected' });
 		}
 		const formData = await request.formData();
-		const data = Object.fromEntries(formData);
-		console.log(data);
+		const { publisher_id, publisher_name, ...args } = Object.fromEntries(formData);
+		console.log(publisher_id, publisher_name, args);
+		await db.insert(userPublications).values({
+			publisherName: publisher_id,
+			publisherData: args,
+			name: publisher_name,
+			userId: session.user.userId
+		});
 		//TODO implement save logic
 		return { message: 'ok' };
 	}
