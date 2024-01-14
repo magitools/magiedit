@@ -1,7 +1,7 @@
 import type { UserPreferences } from '$lib/server/drizzle';
 import { RegisterPlatform, type IBasePlatform } from './base';
 
-@RegisterPlatform
+//@RegisterPlatform
 export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 	settings: Record<string, string> = {};
 	frontmatter: Record<string, any> = {};

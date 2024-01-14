@@ -1,12 +1,19 @@
 import type { UserPreferences } from '$lib/server/drizzle';
-import { RegisterPlatform, type IBasePlatform } from './base';
+import { RegisterPlatform, type IBasePlatform, type IPlatformSetting } from './base';
 
 @RegisterPlatform
 export class DevPlatform implements IBasePlatform<DevPlatform> {
 	settings: Record<string, string> = {};
 	frontmatter: Record<string, any> = {};
-	public getRequiredSettings(): string[] {
-		return ['dev'];
+	public getRequiredSettings(): IPlatformSetting[] {
+		return [
+			{
+				type: 'input',
+				name: 'api_token',
+				label: { htmlFor: 'api_key', value: 'API Key' },
+				settings: { type: 'text', required: true }
+			}
+		];
 	}
 
 	getPlatformName(): string {

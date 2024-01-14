@@ -36,10 +36,14 @@ const userImages = sqliteTable('user_image', {
 		.references(() => user.id)
 });
 
-const userPreferences = sqliteTable('user_preference', {
+const userPublications = sqliteTable('user_publications', {
 	id: integer('id').primaryKey({ autoIncrement: true }).notNull(),
-	key: text('key').notNull().unique(),
-	value: text('value').notNull()
+	name: text('name').notNull(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id),
+	publisherName: text('publisher_name').notNull(),
+	publisherData: text('publisherData', { mode: 'json' }).notNull()
 });
 
 const userArticles = sqliteTable('user_article', {
@@ -51,7 +55,7 @@ const userArticles = sqliteTable('user_article', {
 		.references(() => user.id)
 });
 
-type UserPreferences = InferSelectModel<typeof userPreferences>;
+type UserPublications = InferSelectModel<typeof userPublications>;
 
-export { user, userKey, userSession, userImages, userPreferences, userArticles };
-export type { UserPreferences };
+export { user, userKey, userSession, userImages, userPublications, userArticles };
+export type { UserPublications };
