@@ -20,13 +20,11 @@
 			{/each}
 		</Select.Content>
 	</Select.Root>
-
+	<input type="hidden" name="publisher_id" value={selectedPlatform} />
 	{#if selectedPlatform}
 		{#each data.platforms?.find((e) => e.platformId === selectedPlatform)?.platformSettings as setting}
 			{#if setting.type === 'input'}
-				{#if setting.settings['label']}
-					<Label for={setting.settings['label'].htmlFor}>{setting.settings['label'].value}</Label>
-				{/if}
+				<Label for={setting.label.htmlFor}>{setting.label.value}</Label>
 				<Input id={setting.name} name={setting.name} {...setting.settings} />
 			{/if}
 		{/each}

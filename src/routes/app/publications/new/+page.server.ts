@@ -30,6 +30,7 @@ export const actions: Actions = {
 		}
 		const formData = await request.formData();
 		const data = Object.fromEntries(formData);
+		console.log(data);
 		//TODO implement save logic
 		return { message: 'ok' };
 	}
