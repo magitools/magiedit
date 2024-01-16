@@ -15,3 +15,26 @@ export const load: PageServerLoad = async ({ locals }) => {
 		.where(eq(userPublications.userId, session.user?.userId));
 	return { publications };
 };
+
+export const actions: Actions = {
+	deletePublication: async (event) => {
+		const session = await event.locals.auth.validate();
+		if (!session || event.url.searchParams.get('publicationId') == null) {
+			throw redirect(301, '/login');
+		}
+		const publication = await db
+			.select()
+			.from(userPublications)
+			.where(eq(userPublications.userId, session.user?.userId))
+			.where(eq(userPublications.id, parseInt(event.url.searchParams.get('publicationId')!)));
+		if (publication.length === 0) {
+			throw new Error('invalid data');
+		}
+		await db
+			.delete(userPublications)
+			.where(eq(userPublications.id, parseInt(event.url.searchParams.get('publicationId')!)));
+		return {
+			message: 'ok'
+		};
+	}
+};
