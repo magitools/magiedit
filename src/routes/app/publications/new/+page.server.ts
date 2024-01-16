@@ -4,7 +4,7 @@ import { eq, like } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { redirect, type Actions, fail } from '@sveltejs/kit';
 import { supportedPlatforms } from '$lib/articles/platforms/base';
-import PlatformList from '$lib/articles/platforms';
+import '$lib/articles/platforms';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const platforms = supportedPlatforms;
 	return {
 		platforms:
-			platforms.map((e) => ({
+			Array.from(platforms.values()).map((e) => ({
 				platformName: new e().getPlatformName(),
 				platformSettings: new e().getRequiredSettings(),
 				platformId: e.name

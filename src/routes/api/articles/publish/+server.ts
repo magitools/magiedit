@@ -22,7 +22,9 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		.from(userPublications)
 		.where(eq(userPublications.userId, session.user.userId))) {
 		try {
-			const platform = supportedPlatforms.find((e) => e.name === publisher.publisherName);
+			const platform = Array.from(supportedPlatforms.values()).find(
+				(e) => e.name === publisher.publisherName
+			);
 			if (!platform) continue;
 			await new platform()
 				.setFrontmatter(frontMatter)
