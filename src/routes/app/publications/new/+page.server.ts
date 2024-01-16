@@ -1,8 +1,7 @@
 import { db } from '$lib/server/db';
 import { userPublications } from '$lib/server/drizzle';
-import { eq, like } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import { redirect, type Actions, fail } from '@sveltejs/kit';
+import { type Actions, fail } from '@sveltejs/kit';
 import { supportedPlatforms } from '$lib/articles/platforms/base';
 import '$lib/articles/platforms';
 

@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { userPublications } from '$lib/server/drizzle';
-import { eq, like } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { redirect, type Actions, fail } from '@sveltejs/kit';
 
@@ -28,7 +28,7 @@ export const actions: Actions = {
 			.where(eq(userPublications.userId, session.user?.userId))
 			.where(eq(userPublications.id, parseInt(event.url.searchParams.get('publicationId')!)));
 		if (publication.length === 0) {
-			throw new Error('invalid data');
+			throw fail(500, { message: 'invalid data' });
 		}
 		await db
 			.delete(userPublications)

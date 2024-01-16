@@ -3,9 +3,10 @@ import '$lib/articles/platforms';
 import { db } from '$lib/server/db';
 import { userPublications } from '$lib/server/drizzle';
 import { fail, json, type RequestHandler } from '@sveltejs/kit';
-import { eq, like } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import fm from 'front-matter';
 
+//TODO parallelize posts
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.auth.validate();
 	if (!session) {

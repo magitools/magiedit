@@ -1,4 +1,3 @@
-import type { UserPreferences } from '$lib/server/drizzle';
 import { RegisterPlatform, type IBasePlatform, type IPlatformSetting } from './base';
 
 @RegisterPlatform

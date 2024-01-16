@@ -19,7 +19,6 @@
 	import { parser } from '$lib/articles/parser';
 	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import * as ToggleGroup from '$lib/components/ui/toggle-group';
 	import Giphy from '$lib/components/commands/giphy.svelte';
 	import Unsplash from '$lib/components/commands/unsplash.svelte';
 

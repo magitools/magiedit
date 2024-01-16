@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card';
-
-	let loading = false;
 </script>
 
 <div class="w-full h-full flex flex-col justify-center items-center bg-background">

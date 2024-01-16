@@ -1,24 +1,39 @@
-import type { UserPreferences } from '$lib/server/drizzle';
-import { RegisterPlatform, type IBasePlatform } from './base';
+import { RegisterPlatform, type IBasePlatform, type IPlatformSetting } from './base';
 
-//@RegisterPlatform
+@RegisterPlatform
 export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 	settings: Record<string, string> = {};
 	frontmatter: Record<string, any> = {};
-	getRequiredSettings(): string[] {
-		return ['hash_token', 'hash_publication'];
-	}
 
+	getRequiredSettings(): IPlatformSetting[] {
+		return [
+			{
+				label: { htmlFor: 'hash_token', value: 'Hashnode Token' },
+				name: 'hash_token',
+				type: 'input',
+				settings: {
+					required: true,
+					type: 'text'
+				}
+			},
+			{
+				label: { htmlFor: 'hash_publication', value: 'Hashnode Publication ID' },
+				name: 'hash_publication',
+				type: 'input',
+				settings: {
+					required: true,
+					type: 'text'
+				}
+			}
+		];
+	}
+	// 'hash_token', 'hash_publication'
 	getPlatformName(): string {
 		return 'hashnode';
 	}
 
-	setSettings(settings: UserPreferences[]) {
-		settings.forEach((e) => {
-			if (this.getRequiredSettings().includes(e.key.split(':')[1])) {
-				this.settings[e.key.split(':')[1]] = e.value;
-			}
-		});
+	setSettings(settings: Record<string, any>) {
+		this.settings = { ...settings };
 		return this;
 	}
 
