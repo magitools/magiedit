@@ -1,9 +1,7 @@
-import type { UserPreferences } from '$lib/server/drizzle';
-
-export const supportedPlatforms: (new () => IBasePlatform<any>)[] = [];
+export const supportedPlatforms = new Set<new () => IBasePlatform<any>>();
 export function RegisterPlatform(constructor: new () => IBasePlatform<any>) {
-	if (supportedPlatforms.find((e) => e == constructor)) return;
-	supportedPlatforms.push(constructor);
+	if (supportedPlatforms.has(constructor)) supportedPlatforms.delete(constructor);
+	supportedPlatforms.add(constructor);
 }
 
 export interface IBasePlatform<T> {
