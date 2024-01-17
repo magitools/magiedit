@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { userPublications } from '$lib/server/drizzle';
 import { and, eq } from 'drizzle-orm';
+import '$lib/articles/platforms';
 import { supportedPlatforms } from '$lib/articles/platforms/base';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
@@ -32,7 +33,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ locals, params }) => {
+	default: async ({ locals, params, request }) => {
 		const session = await locals.auth.validate();
 		if (!session) {
 			throw redirect(301, '/login');
@@ -40,7 +41,19 @@ export const actions: Actions = {
 		const publication = await db
 			.select()
 			.from(userPublications)
-			.where(eq(userPublications.id, parseInt(params.id)))
-			.where(eq(userPublications.userId, session.user.userId));
+			.where(
+				and(
+					eq(userPublications.id, parseInt(params.id)),
+					eq(userPublications.userId, session.user.userId)
+				)
+			);
+		if (publication.length === 0) {
+			throw redirect(301, '/app/publications');
+		}
+		const { name, ...data } = Object.fromEntries(await request.formData());
+		await db
+			.update(userPublications)
+			.set({ name: name.toString(), publisherData: data })
+			.where(eq(userPublications.id, parseInt(params.id)));
 	}
 };
