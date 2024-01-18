@@ -60,6 +60,7 @@
 		"@libsql/client": "^0.3.6",
 		"@lucia-auth/adapter-sqlite": "^2.0.1",
 		"@lucia-auth/oauth": "^3.5.0",
+		"@magitools/forem-wrapper": "^0.0.1",
 		"bcryptjs": "^2.4.3",
 		"bits-ui": "^0.13.2",
 		"clsx": "^2.1.0",

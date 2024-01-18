@@ -6,7 +6,6 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Loader2 } from 'lucide-svelte';
-	import { toast } from 'svelte-sonner';
 	let query = '';
 	let loading = false;
 	const dispatcher = createEventDispatcher<{ addToDoc: string }>();

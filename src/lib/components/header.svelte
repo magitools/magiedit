@@ -20,7 +20,7 @@
 					</DropdownMenu.Group>
 					<DropdownMenu.Separator />
 					<DropdownMenu.Group>
-						<DropdownMenu.Item href="/app/settings">Publishers</DropdownMenu.Item>
+						<DropdownMenu.Item href="/app/publications">Publishers</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
