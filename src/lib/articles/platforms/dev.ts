@@ -1,3 +1,4 @@
+import ForemClient from '@magitools/forem-wrapper';
 import { RegisterPlatform, type IBasePlatform, type IPlatformSetting } from './base';
 
 @RegisterPlatform
@@ -32,22 +33,13 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 	public async publish(content: string) {
 		const setting = this.settings['api_token'];
 		if (!setting) throw new Error('could not find required settings');
-		const res = await fetch('https://dev.to/api/articles', {
-			method: 'post',
-			body: JSON.stringify({
-				article: {
-					title: this.frontmatter.title,
-					body_markdown: content,
-					published: this.frontmatter.published || false
-				}
-			}),
-			headers: {
-				accept: 'application/vnd.forem.api-v1+json',
-				'content-type': 'application/json',
-				'api-key': setting
-			}
-		});
-		if (!res.ok) {
+		try {
+			await new ForemClient().setApiKey(setting).article.publishArticle({
+				title: this.frontmatter.title,
+				body_markdown: content,
+				published: this.frontmatter.published || false
+			});
+		} catch (error) {
 			throw new Error('something went wrong');
 		}
 	}
