@@ -27,7 +27,6 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 			}
 		];
 	}
-	// 'hash_token', 'hash_publication'
 	getPlatformName(): string {
 		return 'hashnode';
 	}
@@ -46,7 +45,7 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 		const token = this.settings['hash_token'];
 		const publication = this.settings['hash_publication'];
 		if (!token || !publication) throw new Error('could not find required settings');
-		const res = await fetch('https://api.hashnode.com', {
+		const res = await fetch('https://gql.hashnode.com', {
 			headers: {
 				Authorization: token,
 				'Content-Type': 'application/json'
@@ -54,15 +53,13 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 			method: 'POST',
 			body: JSON.stringify({
 				query:
-					'mutation createStory($input: CreateStoryInput!){ createStory(input: $input){ code success message } }',
+					'mutation publishPost($input: PublishPostInput!){ publishPost(input: $input){ post { id } } }',
 				variables: {
 					input: {
 						title: this.frontmatter.title,
 						contentMarkdown: content,
 						tags: [],
-						isPartOfPublication: {
-							publicationId: publication
-						}
+						publicationId: publication
 					}
 				}
 			})
