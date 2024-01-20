@@ -29,6 +29,9 @@ dependencies:
   '@libsql/client':
     specifier: ^0.3.6
     version: 0.3.6
+  '@logsnag/node':
+    specifier: ^1.0.1
+    version: 1.0.1
   '@lucia-auth/adapter-sqlite':
     specifier: ^2.0.1
     version: 2.0.1(@libsql/client@0.3.6)(better-sqlite3@9.2.2)(lucia@2.7.6)
@@ -1721,6 +1724,10 @@ packages:
     dependencies:
       '@types/node-fetch': 2.6.10
     dev: true
+
+  /@logsnag/node@1.0.1:
+    resolution: {integrity: sha512-JW2S1KN91XyOb0oG2PblboZ1Ys4mkOSMn83GDYjM8CXzcFbkYFMnlFQoEgP0Y5z+1A56hOO+a7uLsvxO5IdUFA==}
+    dev: false
 
   /@lucia-auth/adapter-sqlite@2.0.1(@libsql/client@0.3.6)(better-sqlite3@9.2.2)(lucia@2.7.6):
     resolution: {integrity: sha512-yc7XQ4X3sWG1gyUGHqaXipJIkmvB4MOgJypnSMWy7Vjhn3AOCM2xw51xTs+dGpLOQIn2Laomg9xpmDM2/9tgqQ==}
