@@ -1,15 +1,6 @@
-import {
-	STRIPE_CANCEL_URL,
-	STRIPE_KEY,
-	STRIPE_PRICE_ID,
-	STRIPE_SUCCESS_URL
-} from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import Stripe from 'stripe';
-
-const stripe = new Stripe(STRIPE_KEY, {
-	apiVersion: '2023-08-16'
-});
 
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.auth.validate();
@@ -20,10 +11,21 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	if (!quantity) {
 		throw error(500, { message: 'invalid data' });
 	}
+	if (
+		!env.STRIPE_CANCEL_URL ||
+		!env.STRIPE_KEY ||
+		!env.STRIPE_PRICE_ID ||
+		!env.STRIPE_SUCCESS_URL
+	) {
+		throw error(500, { message: 'stripe integration data not found' });
+	}
+	const stripe = new Stripe(env.STRIPE_KEY, {
+		apiVersion: '2023-08-16'
+	});
 	const paySession = await stripe.checkout.sessions.create({
-		line_items: [{ price: STRIPE_PRICE_ID, quantity }],
-		success_url: STRIPE_SUCCESS_URL,
-		cancel_url: STRIPE_CANCEL_URL,
+		line_items: [{ price: env.STRIPE_PRICE_ID, quantity }],
+		success_url: env.STRIPE_SUCCESS_URL,
+		cancel_url: env.STRIPE_CANCEL_URL,
 		client_reference_id: session.user.userId,
 		mode: 'payment'
 	});
