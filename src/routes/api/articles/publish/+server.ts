@@ -5,10 +5,13 @@ import { userPublications } from '$lib/server/drizzle';
 import { fail, json, type RequestHandler } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import fm from 'front-matter';
+import { env } from '$env/dynamic/private';
+import { LogSnag } from '@logsnag/node';
 
 //TODO parallelize posts
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.auth.validate();
+	const { LOGSNAG_PROJECT, LOGSNAG_TOKEN } = env;
 	if (!session) {
 		throw fail(500, { message: 'not authenticad' });
 	}
@@ -36,6 +39,15 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 			console.log(error);
 			res.set(publisher.name, 'ko');
 		}
+	}
+	if (LOGSNAG_PROJECT && LOGSNAG_TOKEN) {
+		const logsnag = new LogSnag({ token: LOGSNAG_TOKEN, project: LOGSNAG_PROJECT });
+		await logsnag.track({
+			channel: 'articles',
+			event: 'Published Article',
+			user_id: session.user.userId,
+			tags: { platforms: res.size }
+		});
 	}
 	return json({
 		message: 'finished',
