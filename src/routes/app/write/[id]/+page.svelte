@@ -171,29 +171,36 @@
 	<Command.List>
 		<Command.Empty>No results found.</Command.Empty>
 		<Command.Group heading="Images">
-			<Command.Item
-				onSelect={() => {
-					giphyDialogOpen = !giphyDialogOpen;
-					commandDialogOpen = false;
-				}}
-				>Giphy
-			</Command.Item>
-			<Command.Item
-				onSelect={() => {
-					unsplashDialogOpen = !unsplashDialogOpen;
-					commandDialogOpen = false;
-				}}
-			>
-				Unsplash
-			</Command.Item>
+			{#if data.enabledOptions.giphy}
+				<Command.Item
+					onSelect={() => {
+						giphyDialogOpen = !giphyDialogOpen;
+						commandDialogOpen = false;
+					}}
+					>Giphy
+				</Command.Item>
+			{/if}
+			{#if data.enabledOptions.unsplash}
+				<Command.Item
+					onSelect={() => {
+						unsplashDialogOpen = !unsplashDialogOpen;
+						commandDialogOpen = false;
+					}}
+				>
+					Unsplash
+				</Command.Item>
+			{/if}
 		</Command.Group>
 		<Command.Separator />
 	</Command.List>
 </Command.Dialog>
 
-<Giphy on:addToDoc={addToDoc} bind:open={giphyDialogOpen} />
-<Unsplash on:addToDoc={addToDoc} bind:open={unsplashDialogOpen} />
-
+{#if data.enabledOptions.giphy}
+	<Giphy on:addToDoc={addToDoc} bind:open={giphyDialogOpen} />
+{/if}
+{#if data.enabledOptions.unsplash}
+	<Unsplash on:addToDoc={addToDoc} bind:open={unsplashDialogOpen} />
+{/if}
 <div class="flex h-full w-full flex-col relative p-4">
 	{#if loading}
 		<LoadingOverlay text={loadingText} />
