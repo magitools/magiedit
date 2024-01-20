@@ -21,6 +21,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Giphy from '$lib/components/commands/giphy.svelte';
 	import Unsplash from '$lib/components/commands/unsplash.svelte';
+	import fm from 'front-matter';
 
 	export let data;
 	let source = true;
@@ -71,6 +72,15 @@
 
 	async function handleSave() {
 		const toastId = toast.loading('Saving article...');
+		try {
+			fm(content);
+		} catch (error) {
+			toast.error(
+				'Could not validate yaml frontmatter, please check again. File has not been saved',
+				{ id: toastId }
+			);
+			return;
+		}
 		loadingText = 'generating encryption key...';
 		const keyBytes = await window.crypto.subtle.digest(
 			'SHA-256',
