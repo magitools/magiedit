@@ -1,10 +1,10 @@
-import { OPENAI_ORG, OPENAI_TOKEN } from '$env/static/private';
 import { user } from '$lib/server/drizzle';
 import { db } from '$lib/server/db';
 import { fail, type RequestHandler, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { decode } from 'gpt-tokenizer';
 import { OpenAI } from 'openai';
+import { env } from '$env/dynamic/private';
 
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.auth.validate();
@@ -14,6 +14,10 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	const { content } = await request.json();
 	if (!content) {
 		throw fail(500, { message: 'invalid request' });
+	}
+	const { OPENAI_ORG, OPENAI_TOKEN } = env;
+	if (!OPENAI_ORG || !OPENAI_TOKEN) {
+		throw fail(500, { message: 'OpenAI configuration not found' });
 	}
 	const text = decode(content);
 	const openai = new OpenAI({

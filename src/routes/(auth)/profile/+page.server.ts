@@ -6,9 +6,11 @@ import { db } from '$lib/server/db';
 import { user, userImages } from '$lib/server/drizzle';
 import { eq } from 'drizzle-orm';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, parent }) => {
 	const session = await locals.auth.validate();
 	if (!session) throw redirect(302, '/login');
+	const parentData = await parent();
+
 	const savedImages = await db
 		.select()
 		.from(userImages)
@@ -18,7 +20,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		username: session.user.username,
 		email: session.user.email,
 		aiCredits: session.user.aiCredits,
-		savedImages
+		savedImages: parentData.enabledOptions?.storage ? savedImages : []
 	};
 };
 

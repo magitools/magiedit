@@ -1,4 +1,3 @@
-import { OPENAI_TOKEN, OPENAI_ORG } from '$env/static/private';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import OpenAI from 'openai';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,6 +5,7 @@ import { db } from '$lib/server/db';
 import { user, userImages } from '$lib/server/drizzle';
 import { eq } from 'drizzle-orm';
 import { saveToBucket } from '$lib/server/r2';
+import { env } from '$env/dynamic/private';
 
 export const GET: RequestHandler = async ({ locals, url }) => {
 	const session = await locals.auth.validate();
@@ -15,9 +15,12 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 	if (session?.user?.aiCredits < 1) {
 		throw error(401, { message: 'not enough credits' });
 	}
+	if (!env.OPENAI_TOKEN || !env.OPENAI_ORG) {
+		throw error(500, { message: 'OpenAI configuration not found' });
+	}
 	const openai = new OpenAI({
-		organization: OPENAI_ORG,
-		apiKey: OPENAI_TOKEN
+		organization: env.OPENAI_ORG,
+		apiKey: env.OPENAI_TOKEN
 	});
 	const query = url.searchParams.get('query');
 	const amount = +(url.searchParams.get('amount') || 1);
