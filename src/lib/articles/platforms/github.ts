@@ -11,13 +11,18 @@ export class GithubPlatform implements IBasePlatform<GithubPlatform> {
 			throw new Error('Required Settings not found');
 		}
 		try {
+			const title = this.frontmatter['title'].replaceAll(' ', '-').toLowerCase();
+			const commitMessage = this.settings['github_commit'];
 			const res = await fetch(
 				`https://api.github.com/repos/${github_user}/${github_repo}/contents/${
 					github_folder ? github_folder + '/' : ''
-				}${this.frontmatter['title']}.md`,
+				}${title}.md`,
 				{
 					method: 'put',
-					body: JSON.stringify({ content: btoa(content), message: 'published with magiedit' }),
+					body: JSON.stringify({
+						content: btoa(content),
+						message: commitMessage || 'published with magiedit'
+					}),
 					headers: {
 						Authorization: `Bearer ${github_token}`,
 						Accept: 'application/vnd.github+json',
