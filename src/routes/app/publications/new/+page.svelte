@@ -6,7 +6,6 @@
 
 	export let data;
 	let selectedPlatform: string | null = null;
-	console.log(data);
 </script>
 
 <form action="" method="post">

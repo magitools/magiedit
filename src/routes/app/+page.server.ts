@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { userArticles } from '$lib/server/drizzle';
+import { userArticles, userPublications } from '$lib/server/drizzle';
 import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -11,8 +11,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 		.select()
 		.from(userArticles)
 		.where(eq(userArticles.author, session.user.userId));
-
+	const publications = await db
+		.select()
+		.from(userPublications)
+		.where(eq(userPublications.userId, session.user.userId));
 	return {
-		articles: articles || []
+		articles: articles || [],
+		publications: publications || []
 	};
 };
