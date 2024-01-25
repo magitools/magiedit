@@ -12,15 +12,17 @@ export class GithubPlatform implements IBasePlatform<GithubPlatform> {
 		}
 		try {
 			const res = await fetch(
-				`https://api.github.com/repos/${github_user}/${github_repo}/${
+				`https://api.github.com/repos/${github_user}/${github_repo}/contents/${
 					github_folder ? github_folder + '/' : ''
-				}${this.frontmatter['title']}`,
+				}${this.frontmatter['title']}.md`,
 				{
 					method: 'put',
-					body: JSON.stringify({ content, message: 'published with magiedit' }),
+					body: JSON.stringify({ content: btoa(content), message: 'published with magiedit' }),
 					headers: {
 						Authorization: `Bearer ${github_token}`,
-						'Content-Type': 'application/json'
+						Accept: 'application/vnd.github+json',
+						'Content-Type': 'application/json',
+						'X-GitHub-Api-Version': '2022-11-28'
 					}
 				}
 			);
@@ -71,6 +73,18 @@ export class GithubPlatform implements IBasePlatform<GithubPlatform> {
 				},
 				type: 'input',
 				name: 'github_folder',
+				settings: {
+					type: 'text'
+				}
+			},
+			{
+				label: {
+					htmlFor: 'github_commit',
+					value:
+						'Commit Message for file creation: you can use your frontmatter variables by writing %variable_name% (i.e. %title%)'
+				},
+				type: 'input',
+				name: 'github_commit',
 				settings: {
 					type: 'text'
 				}
