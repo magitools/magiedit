@@ -10,7 +10,6 @@ export const load: PageLoad = async ({ data }) => {
 	return {
 		articles: await Promise.all(
 			data.articles.map(async (e) => {
-				console.log(e);
 				const buffer = new Uint8Array(
 					atob(e.content)
 						.split('')
@@ -23,7 +22,6 @@ export const load: PageLoad = async ({ data }) => {
 						key,
 						buffer
 					);
-					console.log(decryptedContent);
 					return { content: new TextDecoder().decode(decryptedContent), id: e.id } as IArticle;
 				} catch (error) {
 					console.log(error.toString());

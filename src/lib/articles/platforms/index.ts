@@ -1,4 +1,5 @@
 import { DevPlatform } from './dev';
 import { HashnodePlatform } from './hashnode';
+import { GithubPlatform } from './github';
 
-export { DevPlatform, HashnodePlatform };
+export { DevPlatform, HashnodePlatform, GithubPlatform };

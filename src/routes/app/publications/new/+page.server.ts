@@ -29,7 +29,6 @@ export const actions: Actions = {
 		}
 		const formData = await request.formData();
 		const { publisher_id, publisher_name, ...args } = Object.fromEntries(formData);
-		console.log(publisher_id, publisher_name, args);
 		await db.insert(userPublications).values({
 			publisherName: publisher_id,
 			publisherData: args,
