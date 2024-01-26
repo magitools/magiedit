@@ -12,7 +12,9 @@ export class GithubPlatform implements IBasePlatform<GithubPlatform> {
 		}
 		try {
 			const title = this.frontmatter['title'].replaceAll(' ', '-').toLowerCase();
-			const commitMessage = this.settings['github_commit'];
+			const commitMessage = this.settings['github_commit'].replace(/%([^%]+)%/g, (match, key) => {
+				return key in this.frontmatter ? this.frontmatter[key] : match;
+			});
 			const res = await fetch(
 				`https://api.github.com/repos/${github_user}/${github_repo}/contents/${
 					github_folder ? github_folder + '/' : ''
