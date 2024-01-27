@@ -25,7 +25,6 @@
 			return;
 		}
 		toast.success('articles unlocked! welcome back!', { id: toast });
-		sessionStorage.setItem('magiedit:key', passkey);
 		await goto('/app');
 	}
 </script>

@@ -25,7 +25,6 @@
 			return;
 		}
 		toast.success('key created! welcome!', { id: toastId });
-		sessionStorage.setItem('magiedit:key', passkey);
 		await goto('/app');
 	}
 </script>
