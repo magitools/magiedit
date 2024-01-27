@@ -1,24 +1,37 @@
 import { supportedPlatforms } from '$lib/articles/platforms/base';
 import '$lib/articles/platforms';
 import { db } from '$lib/server/db';
-import { userPublications } from '$lib/server/drizzle';
+import { userArticles, userPublications } from '$lib/server/drizzle';
 import { fail, json, type RequestHandler } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import fm from 'front-matter';
 import { env } from '$env/dynamic/private';
 import { LogSnag } from '@logsnag/node';
+import { decrypt } from '$lib/server/article';
 
 //TODO parallelize posts
-export const POST: RequestHandler = async ({ locals, request }) => {
+export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 	const session = await locals.auth.validate();
 	const { LOGSNAG_PROJECT, LOGSNAG_TOKEN } = env;
 	if (!session) {
 		throw fail(500, { message: 'not authenticad' });
 	}
-	const { content } = Object.fromEntries(await request.formData());
-	if (!content) {
+	//TODO switch to getting the id
+	const key = cookies.get('magiedit:key');
+	const { id } = Object.fromEntries(await request.formData());
+	if (!id || key === undefined) {
 		throw fail(500, { message: 'invalid data' });
 	}
+	const article = await db
+		.select()
+		.from(userArticles)
+		.where(
+			and(
+				eq(userArticles.id, parseInt(id.toString())),
+				eq(userArticles.author, session.user.userId)
+			)
+		);
+	const content = await decrypt(article[0].content, article[0].iv, key);
 	const frontMatter = fm(content.toString()).attributes as Record<string, any>;
 	const res = new Map<string, 'ok' | 'ko'>();
 	for (const publisher of await db
