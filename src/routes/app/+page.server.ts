@@ -8,6 +8,9 @@ import { decrypt } from '$lib/server/article';
 export const load: PageServerLoad = async ({ locals, cookies }) => {
 	const session = await locals.auth.validate();
 	if (!session) throw redirect(302, '/login');
+	if (!cookies.get('magiedit:key')) {
+		throw redirect(302, session.user.keyHash ? '/profile/key/unlock' : '/profile/key/create');
+	}
 	const articles = await db
 		.select()
 		.from(userArticles)
