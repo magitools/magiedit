@@ -35,7 +35,6 @@ export const actions: Actions = {
 			name: publisher_name,
 			userId: session.user.userId
 		});
-		//TODO implement save logic
 		return { message: 'ok' };
 	}
 };
