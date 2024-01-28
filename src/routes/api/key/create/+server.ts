@@ -1,3 +1,4 @@
+import { encode } from '$lib/server/cookie';
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/drizzle';
 import { fail, json, redirect, type RequestHandler } from '@sveltejs/kit';
@@ -10,6 +11,6 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 	if (!passkey) throw fail(500, { message: 'invalid data' });
 	await db.update(user).set({ keyHash: await bcrypt.hash(passkey.toString(), 12) });
 	//TODO set transform string
-	cookies.set('magiedit:key', passkey.toString(), { path: '/' });
+	cookies.set('magiedit:key', passkey.toString(), { path: '/', encode: encode });
 	return json({ message: 'ok' });
 };

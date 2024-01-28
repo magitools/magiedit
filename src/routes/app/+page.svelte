@@ -14,11 +14,7 @@
 		articles = articles.filter((e) => e && e.id !== event.detail.id);
 	}
 	async function handlePublish(event) {
-		//TODO either here or with a form on each card
 		console.log(event.detail);
-		const key = sessionStorage.getItem('magiedit:key');
-		if (!key) return;
-
 		const data = new FormData();
 		const toastId = toast.loading('Publishing...');
 		data.append('id', event.detail);

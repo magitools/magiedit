@@ -1,3 +1,4 @@
+import { encode } from '$lib/server/cookie';
 import { fail, json, redirect, type RequestHandler } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 
@@ -9,6 +10,6 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 	if (!(await bcrypt.compare(passkey.toString(), session.user.keyHash)))
 		throw fail(500, { message: 'invalid credentials' });
 	//TODO set transform string
-	cookies.set('magiedit:key', passkey.toString(), { path: '/' });
+	cookies.set('magiedit:key', passkey.toString(), { path: '/', encode: encode });
 	return json({ message: 'ok' });
 };

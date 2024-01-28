@@ -4,11 +4,12 @@ import { db } from '$lib/server/db';
 import { userArticles, userPublications } from '$lib/server/drizzle';
 import { eq } from 'drizzle-orm';
 import { decrypt } from '$lib/server/article';
+import { decode } from '$lib/server/cookie';
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
 	const session = await locals.auth.validate();
 	if (!session) throw redirect(302, '/login');
-	if (!cookies.get('magiedit:key')) {
+	if (!cookies.get('magiedit:key', { decode: decode })) {
 		throw redirect(302, session.user.keyHash ? '/profile/key/unlock' : '/profile/key/create');
 	}
 	const articles = await db
@@ -23,7 +24,7 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 		articles: await Promise.all(
 			articles.map(async (e) => ({
 				id: e.id,
-				content: await decrypt(e.content, e.iv, cookies.get('magiedit:key'))
+				content: await decrypt(e.content, e.iv, cookies.get('magiedit:key', { decode: decode }))
 			}))
 		),
 		publications: publications || []
