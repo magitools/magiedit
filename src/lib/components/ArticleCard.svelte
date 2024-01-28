@@ -11,9 +11,7 @@
 	export let article: IArticle;
 	export let userId: string | undefined;
 	let dialogOpen = false;
-	let publishDialog = false;
 	let loading = false;
-	let publishingResult = '';
 	let frontmatter: Record<string, any> = fm(article.content).attributes as Record<string, any>;
 	const dispatch = createEventDispatcher();
 	const handleFileDownload = async () => {
