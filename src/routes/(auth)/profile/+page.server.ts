@@ -39,7 +39,7 @@ export const actions: Actions = {
 		if (!session) return fail(401);
 		await auth.invalidateSession(session.sessionId); // invalidate session
 		locals.auth.setSession(null); // remove cookie
-		cookies.delete('keyhash');
+		cookies.delete('magiedit:key');
 		throw redirect(302, '/login'); // redirect to login page
 	}
 };
