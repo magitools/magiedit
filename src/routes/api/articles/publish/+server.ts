@@ -8,6 +8,7 @@ import fm from 'front-matter';
 import { env } from '$env/dynamic/private';
 import { LogSnag } from '@logsnag/node';
 import { decrypt } from '$lib/server/article';
+import { decode } from '$lib/server/cookie';
 
 //TODO parallelize posts
 export const POST: RequestHandler = async ({ locals, request, cookies }) => {
@@ -16,8 +17,7 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 	if (!session) {
 		throw fail(500, { message: 'not authenticad' });
 	}
-	//TODO switch to getting the id
-	const key = cookies.get('magiedit:key');
+	const key = cookies.get('magiedit:key', { decode: decode });
 	const { id } = Object.fromEntries(await request.formData());
 	if (!id || key === undefined) {
 		throw fail(500, { message: 'invalid data' });
