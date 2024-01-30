@@ -8,7 +8,7 @@ import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ locals, parent }) => {
 	const session = await locals.auth.validate();
-	if (!session) throw redirect(302, '/login');
+	if (!session) redirect(302, '/login');
 	const parentData = await parent();
 
 	const savedImages = await db
@@ -39,7 +39,7 @@ export const actions: Actions = {
 		if (!session) return fail(401);
 		await auth.invalidateSession(session.sessionId); // invalidate session
 		locals.auth.setSession(null); // remove cookie
-		cookies.delete('magiedit:key');
-		throw redirect(302, '/login'); // redirect to login page
+		/* @migration task: add path argument */ cookies.delete('magiedit:key');
+		redirect(302, '/login'); // redirect to login page
 	}
 };

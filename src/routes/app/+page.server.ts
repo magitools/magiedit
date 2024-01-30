@@ -8,9 +8,10 @@ import { decode } from '$lib/server/cookie';
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
 	const session = await locals.auth.validate();
-	if (!session) throw redirect(302, '/login');
-	if (!cookies.get('magiedit:key', { decode: decode })) {
-		throw redirect(302, session.user.keyHash ? '/profile/key/unlock' : '/profile/key/create');
+	if (!session) redirect(302, '/login');
+	const cookie = cookies.get('magiedit:key', { decode: decode });
+	if (cookie === undefined) {
+		redirect(302, session.user.keyHash ? '/profile/key/unlock' : '/profile/key/create');
 	}
 	const articles = await db
 		.select()
@@ -24,7 +25,7 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 		articles: await Promise.all(
 			articles.map(async (e) => ({
 				id: e.id,
-				content: await decrypt(e.content, e.iv, cookies.get('magiedit:key', { decode: decode }))
+				content: await decrypt(e.content, e.iv, cookie)
 			}))
 		),
 		publications: publications || []

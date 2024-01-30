@@ -4,7 +4,7 @@ import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ data }) => {
 	const keyData = sessionStorage.getItem('magiedit:key');
-	if (!keyData) throw redirect(302, '/profile/key/unlock');
+	if (!keyData) redirect(302, '/profile/key/unlock');
 	const keyBytes = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(keyData));
 	const key = await window.crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['decrypt']);
 	console.log('Created key');

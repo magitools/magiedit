@@ -7,7 +7,7 @@ import { LogSnag } from '@logsnag/node';
 
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.auth.validate();
-	if (!session) throw redirect(302, '/login');
+	if (!session) redirect(302, '/login');
 	const { LOGSNAG_PROJECT, LOGSNAG_TOKEN } = env;
 	const { content, iv } = Object.fromEntries(await request.formData());
 	if (!content || !iv) throw fail(500, { message: 'invalid data' });

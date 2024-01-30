@@ -24,7 +24,7 @@
 			toast.error('something went wrong, pleasy try again later', { id: toastId });
 			return;
 		}
-		sessionStorage.setItem("magiedit:key", passkey);
+		sessionStorage.setItem('magiedit:key', passkey);
 		toast.success('articles unlocked! welcome back!', { id: toastId });
 		await goto('/app');
 	}

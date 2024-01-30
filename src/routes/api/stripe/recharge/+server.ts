@@ -5,11 +5,11 @@ import Stripe from 'stripe';
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.auth.validate();
 	if (!session) {
-		throw error(401, { message: 'unauthorized' });
+		error(401, { message: 'unauthorized' });
 	}
 	const { quantity } = await request.json();
 	if (!quantity) {
-		throw error(500, { message: 'invalid data' });
+		error(500, { message: 'invalid data' });
 	}
 	if (
 		!env.STRIPE_CANCEL_URL ||
@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		!env.STRIPE_PRICE_ID ||
 		!env.STRIPE_SUCCESS_URL
 	) {
-		throw error(500, { message: 'stripe integration data not found' });
+		error(500, { message: 'stripe integration data not found' });
 	}
 	const stripe = new Stripe(env.STRIPE_KEY, {
 		apiVersion: '2023-08-16'

@@ -10,13 +10,13 @@ import { env } from '$env/dynamic/private';
 export const GET: RequestHandler = async ({ locals, url }) => {
 	const session = await locals.auth.validate();
 	if (!session) {
-		throw error(401, { message: 'not authorized' });
+		error(401, { message: 'not authorized' });
 	}
 	if (session?.user?.aiCredits < 1) {
-		throw error(401, { message: 'not enough credits' });
+		error(401, { message: 'not enough credits' });
 	}
 	if (!env.OPENAI_TOKEN || !env.OPENAI_ORG) {
-		throw error(500, { message: 'OpenAI configuration not found' });
+		error(500, { message: 'OpenAI configuration not found' });
 	}
 	const openai = new OpenAI({
 		organization: env.OPENAI_ORG,
@@ -25,7 +25,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 	const query = url.searchParams.get('query');
 	const amount = +(url.searchParams.get('amount') || 1);
 	if (!query || !amount) {
-		throw error(500, { message: 'invalid data provided' });
+		error(500, { message: 'invalid data provided' });
 	}
 	const res = await openai.images.generate({
 		prompt: query,
@@ -43,12 +43,12 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const session = await locals.auth.validate();
 	if (!session) {
-		throw error(401, { message: 'not authorized' });
+		error(401, { message: 'not authorized' });
 	}
 	const formData = await request.formData();
 	const { content, description } = Object.fromEntries(formData);
 	if (!content) {
-		throw error(500, { message: 'invalid input' });
+		error(500, { message: 'invalid input' });
 	}
 	const arrayBuffer = await (await fetch(content.toString())).arrayBuffer();
 	const data = Buffer.from(new Uint8Array(arrayBuffer));
