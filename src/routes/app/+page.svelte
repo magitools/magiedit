@@ -2,22 +2,33 @@
 	import ArticleCard from '$lib/components/ArticleCard.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
+	import * as Select from '$lib/components/ui/select';
 	import { toast } from 'svelte-sonner';
 
 	export let data;
 	let articles: any[] = [];
 	let publishingResult = '';
 	let publishDialog = false;
+	let choiceDialog = false;
+	let articleId: number | null = null;
+	let selectedPublishers = [];
 
 	$: articles = [...data.articles];
-	async function filterArticles(event: CustomEvent<any>) {
+
+	function filterArticles(event: CustomEvent<any>) {
 		articles = articles.filter((e) => e && e.id !== event.detail.id);
 	}
-	async function handlePublish(event) {
-		console.log(event.detail);
+
+	function handleArticleChoice(event) {
+		articleId = event.detail;
+		choiceDialog = true;
+	}
+	async function handlePublish() {
+		choiceDialog = false;
 		const data = new FormData();
 		const toastId = toast.loading('Publishing...');
-		data.append('id', event.detail);
+		if (articleId === null || selectedPublishers.length === 0) return;
+		data.append('id', articleId.toString());
 		const res = await (
 			await fetch('/api/articles/publish', {
 				method: 'POST',
@@ -47,7 +58,7 @@
 				{#key article.id}
 					<div>
 						<ArticleCard
-							on:publish={handlePublish}
+							on:publish={handleArticleChoice}
 							on:reload={(id) => filterArticles(id)}
 							{article}
 							userId={data.userId}
@@ -58,6 +69,30 @@
 		{/each}
 	</div>
 {/if}
+
+<Dialog.Root bind:open={choiceDialog}>
+	<Dialog.Content>
+		<Dialog.Header>
+			<Dialog.Title>Where would you like to publish?</Dialog.Title>
+			<Dialog.Description>
+				<Select.Root multiple onSelectedChange={(e) => (selectedPublishers = e)}>
+					<Select.Trigger>
+						<Select.Value placeholder="publishing platforms" />
+					</Select.Trigger>
+					<Select.Content>
+						{#each data.publications as platform}
+							<Select.Item value={platform.id}>{platform.name}</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</Dialog.Description>
+		</Dialog.Header>
+		<Dialog.Footer>
+			<Button on:click={() => handlePublish()}>Publish</Button>
+			<Button variant="destructive" on:click={() => (choiceDialog = false)}>Cancel</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>
 
 <Dialog.Root bind:open={publishDialog}>
 	<Dialog.Content>
