@@ -24,11 +24,16 @@
 		choiceDialog = true;
 	}
 	async function handlePublish() {
+		if (selectedPublishers.length === 0) {
+			toast.error('please choose at least one publishing profile');
+			return;
+		}
 		choiceDialog = false;
 		const data = new FormData();
 		const toastId = toast.loading('Publishing...');
 		if (articleId === null || selectedPublishers.length === 0) return;
 		data.append('id', articleId.toString());
+		data.append('publishers', selectedPublishers.map((e) => e.value).join(','));
 		const res = await (
 			await fetch('/api/articles/publish', {
 				method: 'POST',
@@ -75,16 +80,19 @@
 		<Dialog.Header>
 			<Dialog.Title>Where would you like to publish?</Dialog.Title>
 			<Dialog.Description>
-				<Select.Root multiple onSelectedChange={(e) => (selectedPublishers = e)}>
-					<Select.Trigger>
-						<Select.Value placeholder="publishing platforms" />
-					</Select.Trigger>
-					<Select.Content>
-						{#each data.publications as platform}
-							<Select.Item value={platform.id}>{platform.name}</Select.Item>
-						{/each}
-					</Select.Content>
-				</Select.Root>
+				<div class="space-y-2">
+					<p>choose all the platforms you would like to publish to</p>
+					<Select.Root multiple onSelectedChange={(e) => (selectedPublishers = e)}>
+						<Select.Trigger>
+							<Select.Value placeholder="publishing platforms" />
+						</Select.Trigger>
+						<Select.Content>
+							{#each data.publications as platform}
+								<Select.Item value={platform.id}>{platform.name}</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
+				</div>
 			</Dialog.Description>
 		</Dialog.Header>
 		<Dialog.Footer>

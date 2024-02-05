@@ -3,7 +3,7 @@ import '$lib/articles/platforms';
 import { db } from '$lib/server/db';
 import { userArticles, userPublications } from '$lib/server/drizzle';
 import { fail, json, type RequestHandler } from '@sveltejs/kit';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import fm from 'front-matter';
 import { env } from '$env/dynamic/private';
 import { LogSnag } from '@logsnag/node';
@@ -18,8 +18,8 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 		throw fail(500, { message: 'not authenticad' });
 	}
 	const key = cookies.get('magiedit:key', { decode: decode });
-	const { id } = Object.fromEntries(await request.formData());
-	if (!id || key === undefined) {
+	const { id, publishers: publisherIds } = Object.fromEntries(await request.formData());
+	if (!id || key === undefined || !publisherIds) {
 		throw fail(500, { message: 'invalid data' });
 	}
 	const article = await db
@@ -37,7 +37,18 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 	for (const publisher of await db
 		.select()
 		.from(userPublications)
-		.where(eq(userPublications.userId, session.user.userId))) {
+		.where(
+			and(
+				eq(userPublications.userId, session.user.userId),
+				inArray(
+					userPublications.id,
+					publisherIds
+						.toString()
+						.split(',')
+						.map((e) => Number(e))
+				)
+			)
+		)) {
 		try {
 			const platform = Array.from(supportedPlatforms.values()).find(
 				(e) => e.name === publisher.publisherName
