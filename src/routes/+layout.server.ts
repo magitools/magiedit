@@ -2,8 +2,7 @@ import { env } from '$env/dynamic/private';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
-	const session = await locals.auth.validate();
-	if (!session) {
+	if (!locals.user) {
 		return {
 			authed: false
 		};
@@ -31,10 +30,10 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		giphy: typeof env.GIPHY_TOKEN === 'string'
 	};
 	return {
-		authed: session ? true : false,
-		userId: session.user.userId,
-		username: session.user.username,
-		email: session.user.email,
+		authed: true,
+		userId: locals.user.id,
+		username: locals.user.username,
+		email: locals.user.email,
 		enabledOptions
 	};
 };

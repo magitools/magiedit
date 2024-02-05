@@ -12,9 +12,9 @@ import { decode } from '$lib/server/cookie';
 
 //TODO parallelize posts
 export const POST: RequestHandler = async ({ locals, request, cookies }) => {
-	const session = await locals.auth.validate();
+	const { user } = locals;
 	const { LOGSNAG_PROJECT, LOGSNAG_TOKEN } = env;
-	if (!session) {
+	if (!user) {
 		throw fail(500, { message: 'not authenticad' });
 	}
 	const key = cookies.get('magiedit:key', { decode: decode });
@@ -25,12 +25,7 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 	const article = await db
 		.select()
 		.from(userArticles)
-		.where(
-			and(
-				eq(userArticles.id, parseInt(id.toString())),
-				eq(userArticles.author, session.user.userId)
-			)
-		);
+		.where(and(eq(userArticles.id, parseInt(id.toString())), eq(userArticles.author, user.id)));
 	const content = await decrypt(article[0].content, article[0].iv, key);
 	const frontMatter = fm(content.toString()).attributes as Record<string, any>;
 	const res = new Map<string, 'ok' | 'ko'>();
@@ -39,7 +34,7 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 		.from(userPublications)
 		.where(
 			and(
-				eq(userPublications.userId, session.user.userId),
+				eq(userPublications.userId, user.id),
 				inArray(
 					userPublications.id,
 					publisherIds
@@ -69,7 +64,7 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 		await logsnag.track({
 			channel: 'articles',
 			event: 'Published Article',
-			user_id: session.user.userId,
+			user_id: user.id,
 			tags: { platforms: res.size }
 		});
 	}

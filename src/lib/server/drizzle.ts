@@ -6,16 +6,9 @@ const user = sqliteTable('user', {
 	email: text('email').notNull(),
 	username: text('username').notNull(),
 	customerId: text('customer_id'),
+	githubId: integer('github_id').unique(),
 	aiCredits: integer('ai_credits').default(0),
 	keyHash: text('key_hash')
-});
-
-const userKey = sqliteTable('user_key', {
-	id: text('id').notNull().primaryKey(),
-	userId: text('user_id')
-		.notNull()
-		.references(() => user.id),
-	hashedPassword: text('hashed_password')
 });
 
 const userSession = sqliteTable('user_session', {
@@ -23,8 +16,7 @@ const userSession = sqliteTable('user_session', {
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id),
-	activeExpires: integer('active_expires').notNull(),
-	idleExpires: integer('idle_expires').notNull()
+	expiresAt: integer('expires_at').notNull()
 });
 
 const userImages = sqliteTable('user_image', {
@@ -57,5 +49,5 @@ const userArticles = sqliteTable('user_article', {
 
 type UserPublications = InferSelectModel<typeof userPublications>;
 
-export { user, userKey, userSession, userImages, userPublications, userArticles };
+export { user, userSession, userImages, userPublications, userArticles };
 export type { UserPublications };
