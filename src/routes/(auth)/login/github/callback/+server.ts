@@ -1,7 +1,13 @@
+import { db } from '$lib/server/db.js';
+import { user } from '$lib/server/drizzle.js';
 import { auth, githubAuth } from '$lib/server/lucia.js';
-import { OAuthRequestError } from '@lucia-auth/oauth';
+import { isRedirect, redirect } from '@sveltejs/kit';
+import { OAuth2RequestError } from 'arctic';
 
-export const GET = async ({ url, cookies, locals }) => {
+import { eq } from 'drizzle-orm';
+import { generateId } from 'lucia';
+
+export const GET = async ({ url, cookies }) => {
 	const storedState = cookies.get('github_oauth_state');
 	const state = url.searchParams.get('state');
 	const code = url.searchParams.get('code');
@@ -12,49 +18,46 @@ export const GET = async ({ url, cookies, locals }) => {
 		});
 	}
 	try {
-		const { getExistingUser, githubUser, createUser } = await githubAuth.validateCallback(code);
-
-		const getUser = async () => {
-			const existingUser = await getExistingUser();
-			if (existingUser) return existingUser;
-			const user = await createUser({
-				attributes: {
-					username: githubUser.login,
-					email: githubUser.email
-				}
-			});
-			return user;
-		};
-
-		const user = await getUser();
-		const session = await auth.createSession({
-			userId: user.userId,
-			attributes: {}
+		const tokens = await githubAuth.validateAuthorizationCode(code);
+		const githubUserResponse = await fetch('https://api.github.com/user', {
+			headers: {
+				Authorization: `Bearer ${tokens.accessToken}`
+			}
 		});
-		locals.auth.setSession(session);
-		if (session.user.keyHash) {
-			return new Response(null, {
-				status: 302,
-				headers: {
-					Location: '/profile/key/unlock'
-				}
+		const githubUser = await githubUserResponse.json();
+		const existingUser = await db.select().from(user).where(eq(user.githubId, githubUser.id));
+		if (existingUser.length === 1) {
+			const session = await auth.createSession(existingUser[0].id, {});
+			const sessionCookie = auth.createSessionCookie(session.id);
+			cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '/',
+				...sessionCookie.attributes
 			});
+			redirect(
+				302,
+				existingUser[0].keyHash !== null ? '/profile/key/unlock' : '/profile/key/create'
+			);
 		} else {
-			return new Response(null, {
-				status: 302,
-				headers: {
-					Location: '/profile/key/create'
-				}
+			const userId = generateId(15);
+			await db.insert(user).values({
+				id: userId,
+				githubId: githubUser.id,
+				username: githubUser.login,
+				email: githubUser.email
 			});
+			redirect(302, '/profile/key/create');
 		}
 	} catch (e) {
-		if (e instanceof OAuthRequestError) {
+		if (e instanceof OAuth2RequestError) {
 			// invalid code
 			return new Response(null, {
 				status: 400
 			});
 		}
-		console.log(e);
+		if (isRedirect(e)) {
+			console.log(e);
+			redirect(e.status, e.location);
+		}
 		return new Response(null, {
 			status: 500
 		});

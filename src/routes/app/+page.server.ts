@@ -7,20 +7,17 @@ import { decrypt } from '$lib/server/article';
 import { decode } from '$lib/server/cookie';
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
-	const session = await locals.auth.validate();
-	if (!session) redirect(302, '/login');
+	const { user } = locals;
+	if (!user) redirect(302, '/login');
 	const cookie = cookies.get('magiedit:key', { decode: decode });
 	if (cookie === undefined) {
-		redirect(302, session.user.keyHash ? '/profile/key/unlock' : '/profile/key/create');
+		redirect(302, locals.user?.keyHash ? '/profile/key/unlock' : '/profile/key/create');
 	}
-	const articles = await db
-		.select()
-		.from(userArticles)
-		.where(eq(userArticles.author, session.user.userId));
+	const articles = await db.select().from(userArticles).where(eq(userArticles.author, user.id));
 	const publications = await db
 		.select()
 		.from(userPublications)
-		.where(eq(userPublications.userId, session.user.userId));
+		.where(eq(userPublications.userId, user.id));
 	return {
 		articles: await Promise.all(
 			articles.map(async (e) => ({

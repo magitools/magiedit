@@ -6,8 +6,8 @@ import { env } from '$env/dynamic/private';
 import { LogSnag } from '@logsnag/node';
 
 export const PUT: RequestHandler = async ({ locals, params, request }) => {
-	const session = await locals.auth.validate();
-	if (!session) throw fail(500, { message: 'invalid session' });
+	const { user } = locals;
+	if (!user) throw fail(500, { message: 'invalid session' });
 	const article = await db
 		.select()
 		.from(userArticles)
@@ -23,15 +23,14 @@ export const PUT: RequestHandler = async ({ locals, params, request }) => {
 };
 
 export const DELETE: RequestHandler = async ({ locals, params }) => {
-	const session = await locals.auth.validate();
-	if (!session) throw fail(500, { message: 'invalid session' });
+	const { user } = locals;
+	if (!user) throw fail(500, { message: 'invalid session' });
 	const article = await db
 		.select()
 		.from(userArticles)
 		.where(eq(userArticles.id, parseInt(params.id!)));
 	if (article.length !== 1) throw fail(500, { message: 'article not found' });
-	if (article[0].author !== session.user.userId)
-		throw fail(500, { message: 'invalid permissions' });
+	if (article[0].author !== user.id) throw fail(500, { message: 'invalid permissions' });
 	await db.delete(userArticles).where(eq(userArticles.id, parseInt(params.id!)));
 	const { LOGSNAG_PROJECT, LOGSNAG_TOKEN } = env;
 	if (LOGSNAG_PROJECT && LOGSNAG_TOKEN) {
@@ -39,7 +38,7 @@ export const DELETE: RequestHandler = async ({ locals, params }) => {
 		await logsnag.track({
 			channel: 'articles',
 			event: 'Deleted Article',
-			user_id: session.user.userId
+			user_id: user.id
 		});
 	}
 	return json({ message: 'deleted' });

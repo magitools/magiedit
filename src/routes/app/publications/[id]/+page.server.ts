@@ -7,19 +7,14 @@ import '$lib/articles/platforms';
 import { supportedPlatforms } from '$lib/articles/platforms/base';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
-	const session = await locals.auth.validate();
-	if (!session) {
+	const { user } = locals;
+	if (!user) {
 		redirect(301, '/login');
 	}
 	const publication = await db
 		.select()
 		.from(userPublications)
-		.where(
-			and(
-				eq(userPublications.id, parseInt(params.id)),
-				eq(userPublications.userId, session.user.userId)
-			)
-		);
+		.where(and(eq(userPublications.id, parseInt(params.id)), eq(userPublications.userId, user.id)));
 	if (publication.length === 0) {
 		redirect(301, '/app/publications');
 	}
@@ -34,18 +29,15 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 export const actions: Actions = {
 	default: async ({ locals, params, request }) => {
-		const session = await locals.auth.validate();
-		if (!session) {
+		const { user } = locals;
+		if (!user) {
 			redirect(301, '/login');
 		}
 		const publication = await db
 			.select()
 			.from(userPublications)
 			.where(
-				and(
-					eq(userPublications.id, parseInt(params.id)),
-					eq(userPublications.userId, session.user.userId)
-				)
+				and(eq(userPublications.id, parseInt(params.id)), eq(userPublications.userId, user.id))
 			);
 		if (publication.length === 0) {
 			redirect(301, '/app/publications');
