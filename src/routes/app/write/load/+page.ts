@@ -3,7 +3,7 @@ import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {
 	const keyData = sessionStorage.getItem('magiedit:key');
-	if (!keyData) throw redirect(302, '/profile/key/unlock');
+	if (!keyData) redirect(302, '/profile/key/unlock');
 };
 
 export const ssr = false;

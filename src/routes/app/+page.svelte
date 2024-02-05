@@ -1,13 +1,48 @@
 <script lang="ts">
 	import ArticleCard from '$lib/components/ArticleCard.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import * as Select from '$lib/components/ui/select';
+	import { toast } from 'svelte-sonner';
 
 	export let data;
 	let articles: any[] = [];
+	let publishingResult = '';
+	let publishDialog = false;
+	let choiceDialog = false;
+	let articleId: number | null = null;
+	let selectedPublishers = [];
 
 	$: articles = [...data.articles];
-	async function filterArticles(event: CustomEvent<any>) {
+
+	function filterArticles(event: CustomEvent<any>) {
 		articles = articles.filter((e) => e && e.id !== event.detail.id);
+	}
+
+	function handleArticleChoice(event) {
+		articleId = event.detail;
+		choiceDialog = true;
+	}
+	async function handlePublish() {
+		if (selectedPublishers.length === 0) {
+			toast.error('please choose at least one publishing profile');
+			return;
+		}
+		choiceDialog = false;
+		const data = new FormData();
+		const toastId = toast.loading('Publishing...');
+		if (articleId === null || selectedPublishers.length === 0) return;
+		data.append('id', articleId.toString());
+		data.append('publishers', selectedPublishers.map((e) => e.value).join(','));
+		const res = await (
+			await fetch('/api/articles/publish', {
+				method: 'POST',
+				body: data
+			})
+		).json();
+		publishingResult = res.status;
+		publishDialog = true;
+		toast.success('Finished publishing', { id: toastId });
 	}
 </script>
 
@@ -27,10 +62,56 @@
 			{#if article}
 				{#key article.id}
 					<div>
-						<ArticleCard on:reload={(id) => filterArticles(id)} {article} userId={data.userId} />
+						<ArticleCard
+							on:publish={handleArticleChoice}
+							on:reload={(id) => filterArticles(id)}
+							{article}
+							userId={data.userId}
+						/>
 					</div>
 				{/key}
 			{/if}
 		{/each}
 	</div>
 {/if}
+
+<Dialog.Root bind:open={choiceDialog}>
+	<Dialog.Content>
+		<Dialog.Header>
+			<Dialog.Title>Where would you like to publish?</Dialog.Title>
+			<Dialog.Description>
+				<div class="space-y-2">
+					<p>choose all the platforms you would like to publish to</p>
+					<Select.Root multiple onSelectedChange={(e) => (selectedPublishers = e)}>
+						<Select.Trigger>
+							<Select.Value placeholder="publishing platforms" />
+						</Select.Trigger>
+						<Select.Content>
+							{#each data.publications as platform}
+								<Select.Item value={platform.id}>{platform.name}</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
+				</div>
+			</Dialog.Description>
+		</Dialog.Header>
+		<Dialog.Footer>
+			<Button on:click={() => handlePublish()}>Publish</Button>
+			<Button variant="destructive" on:click={() => (choiceDialog = false)}>Cancel</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={publishDialog}>
+	<Dialog.Content>
+		<Dialog.Header>
+			<Dialog.Title>Article finished publishing</Dialog.Title>
+			<Dialog.Description>
+				{publishingResult}
+			</Dialog.Description>
+		</Dialog.Header>
+		<Dialog.Footer>
+			<Button on:click={() => (publishDialog = false)}>Ok</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>

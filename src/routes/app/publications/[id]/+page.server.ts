@@ -9,7 +9,7 @@ import { supportedPlatforms } from '$lib/articles/platforms/base';
 export const load: PageServerLoad = async ({ locals, params }) => {
 	const session = await locals.auth.validate();
 	if (!session) {
-		throw redirect(301, '/login');
+		redirect(301, '/login');
 	}
 	const publication = await db
 		.select()
@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 			)
 		);
 	if (publication.length === 0) {
-		throw redirect(301, '/app/publications');
+		redirect(301, '/app/publications');
 	}
 	const platform = Array.from(supportedPlatforms.values()).find(
 		(e) => e.name === publication[0].publisherName
@@ -36,7 +36,7 @@ export const actions: Actions = {
 	default: async ({ locals, params, request }) => {
 		const session = await locals.auth.validate();
 		if (!session) {
-			throw redirect(301, '/login');
+			redirect(301, '/login');
 		}
 		const publication = await db
 			.select()
@@ -48,7 +48,7 @@ export const actions: Actions = {
 				)
 			);
 		if (publication.length === 0) {
-			throw redirect(301, '/app/publications');
+			redirect(301, '/app/publications');
 		}
 		const { name, ...data } = Object.fromEntries(await request.formData());
 		await db

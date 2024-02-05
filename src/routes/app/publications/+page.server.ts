@@ -7,7 +7,7 @@ import { redirect, type Actions, fail } from '@sveltejs/kit';
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
 	if (!session) {
-		throw redirect(301, '/login');
+		redirect(301, '/login');
 	}
 	const publications = await db
 		.select()
@@ -20,7 +20,7 @@ export const actions: Actions = {
 	deletePublication: async (event) => {
 		const session = await event.locals.auth.validate();
 		if (!session || event.url.searchParams.get('publicationId') == null) {
-			throw redirect(301, '/login');
+			redirect(301, '/login');
 		}
 		const publication = await db
 			.select()

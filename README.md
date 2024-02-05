@@ -2,6 +2,24 @@
 
 ## Build your own
 
+### Manual
+
+- Clone this repo
+- set the following environment variables
+- - DATABASE_URL: url to your sqlite database
+- - DATABASE_TOKEN (optional): use if you need to authenticate using libsql
+- - GITHUB_CLIENT_ID: Github OAuth application client id
+- - GITHUB_CLIENT_SECRET: Github OAuth application secret
+- - COOKIE_ENCRYPTION_KEY: 32 bytes secret key as hex string
+- run `npm install`
+- run `npm run dev`
+
+### Docker
+
+- coming soon
+
+## Optional Parameters
+
 In order to have image search, provide as environment variables
 
 - **UNSPLASH_ACCESS** being your unsplash access key
@@ -24,4 +42,3 @@ class TestPublisher extends IBasePlatform<TestPublisher> {}
 
 - implement the necessary methods; you can an example in the [dev.to implementation](/src/lib/articles/platforms/dev.ts)
 - import and export your newly created class in `src/lib/articles/platforms/index.ts`
-- profit (btw, I have a [ko-fi page](https://ko-fi.com/matteogassend), if you feel generous)

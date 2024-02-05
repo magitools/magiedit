@@ -3,8 +3,8 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
-	if (!session) throw redirect(302, '/login');
-	if (session.user.keyHash) throw redirect(302, '/app');
+	if (!session) redirect(302, '/login');
+	if (session.user.keyHash) redirect(302, '/app');
 	return {
 		userId: session.user.userId,
 		username: session.user.username,

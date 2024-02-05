@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
 	const session = await locals.auth.validate();
-	if (!session) throw redirect(302, '/login');
+	if (!session) redirect(302, '/login');
 	const article = await db
 		.select()
 		.from(userArticles)

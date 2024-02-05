@@ -4,7 +4,7 @@ import { generateIv } from '$lib/articles/crypto';
 
 export const load: PageLoad = async () => {
 	const keyData = sessionStorage.getItem('magiedit:key');
-	if (!keyData) throw redirect(302, '/profile/key/unlock');
+	if (!keyData) redirect(302, '/profile/key/unlock');
 	const keyBytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(keyData));
 	const key = await crypto.subtle.importKey('raw', keyBytes, 'AES-CBC', false, ['encrypt']);
 	const iv = generateIv();
@@ -26,7 +26,7 @@ export const load: PageLoad = async () => {
 		return {};
 	}
 	const result = await res.json();
-	throw redirect(302, `/app/write/${result.id}`);
+	redirect(302, `/app/write/${result.id}`);
 };
 
 export const ssr = false;

@@ -11,9 +11,7 @@
 	export let article: IArticle;
 	export let userId: string | undefined;
 	let dialogOpen = false;
-	let publishDialog = false;
 	let loading = false;
-	let publishingResult = '';
 	let frontmatter: Record<string, any> = fm(article.content).attributes as Record<string, any>;
 	const dispatch = createEventDispatcher();
 	const handleFileDownload = async () => {
@@ -22,18 +20,7 @@
 		loading = false;
 	};
 	const handlePublish = async () => {
-		const data = new FormData();
-		const toastId = toast.loading('Publishing...');
-		data.append('content', article.content || '');
-		const res = await (
-			await fetch('/api/articles/publish', {
-				method: 'POST',
-				body: data
-			})
-		).json();
-		publishingResult = res.status;
-		publishDialog = true;
-		toast.success('Finished publishing', { id: toastId });
+		dispatch('publish', article.id);
 	};
 	const handleDelete = async () => {
 		dialogOpen = false;
@@ -49,20 +36,6 @@
 		}
 	};
 </script>
-
-<Dialog.Root bind:open={publishDialog}>
-	<Dialog.Content>
-		<Dialog.Header>
-			<Dialog.Title>Article finished publishing</Dialog.Title>
-			<Dialog.Description>
-				{publishingResult}
-			</Dialog.Description>
-		</Dialog.Header>
-		<Dialog.Footer>
-			<Button on:click={() => (publishDialog = false)}>Ok</Button>
-		</Dialog.Footer>
-	</Dialog.Content>
-</Dialog.Root>
 
 <Card.Root class="w-full ">
 	<Card.Header>
