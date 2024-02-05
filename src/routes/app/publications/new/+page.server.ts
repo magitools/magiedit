@@ -6,7 +6,7 @@ import { supportedPlatforms } from '$lib/articles/platforms/base';
 import '$lib/articles/platforms';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const session = await locals.auth.validate();
+	const { session } = locals;
 	if (!session) {
 		throw fail(500, { message: 'not connected' });
 	}
@@ -23,8 +23,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
 	default: async ({ locals, request }) => {
-		const session = await locals.auth.validate();
-		if (!session) {
+		const { user } = locals;
+		if (!user) {
 			throw fail(500, { message: 'not connected' });
 		}
 		const formData = await request.formData();
@@ -33,7 +33,7 @@ export const actions: Actions = {
 			publisherName: publisher_id,
 			publisherData: args,
 			name: publisher_name,
-			userId: session.user.userId
+			userId: user.id
 		});
 		return { message: 'ok' };
 	}

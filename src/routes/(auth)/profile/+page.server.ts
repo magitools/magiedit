@@ -7,31 +7,28 @@ import { user, userImages } from '$lib/server/drizzle';
 import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ locals, parent }) => {
-	const session = await locals.auth.validate();
-	if (!session) redirect(302, '/login');
+	const { user } = locals;
+	if (!user) redirect(302, '/login');
 	const parentData = await parent();
 
-	const savedImages = await db
-		.select()
-		.from(userImages)
-		.where(eq(userImages.userId, session.user.userId));
+	const savedImages = await db.select().from(userImages).where(eq(userImages.userId, user.id));
 	return {
-		userId: session.user.userId,
-		username: session.user.username,
-		email: session.user.email,
-		aiCredits: session.user.aiCredits,
+		userId: user.id,
+		username: user.username,
+		email: user.email,
+		aiCredits: user.aiCredits,
 		savedImages: parentData.enabledOptions?.storage ? savedImages : []
 	};
 };
 
 export const actions: Actions = {
 	recharge: async ({ locals }) => {
-		const session = await locals.auth.validate();
-		if (!session) return fail(401);
+		const { user: userSession } = locals;
+		if (!userSession) return fail(401);
 		await db
 			.update(user)
-			.set({ aiCredits: (session?.user?.aiCredits ?? 0) + 1 })
-			.where(eq(user.id, session?.user?.userId));
+			.set({ aiCredits: (userSession?.aiCredits ?? 0) + 1 })
+			.where(eq(user.id, userSession?.id));
 		return JSON.stringify({ status: 'ok' });
 	},
 	logout: async ({ locals, cookies }) => {

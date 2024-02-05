@@ -20,7 +20,7 @@ export const auth = new Lucia(adapter, {
 			username: attributes.username,
 			email: attributes.email,
 			aiCredits: attributes.ai_credits,
-			keyHash: attributes.key_hash
+			keyHash: attributes.keyHash
 		};
 	}
 });
@@ -29,7 +29,7 @@ interface DatabaseUserAttributes {
 	username: string;
 	email: string;
 	ai_credits: number;
-	key_hash: string;
+	keyHash: string;
 }
 
 declare module 'lucia' {

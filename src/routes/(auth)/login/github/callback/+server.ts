@@ -33,7 +33,6 @@ export const GET = async ({ url, cookies }) => {
 				path: '/',
 				...sessionCookie.attributes
 			});
-			console.log(existingUser);
 			redirect(
 				302,
 				existingUser[0].keyHash !== null ? '/profile/key/unlock' : '/profile/key/create'
