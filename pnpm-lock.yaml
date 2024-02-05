@@ -38,9 +38,6 @@ dependencies:
   '@lucia-auth/adapter-sqlite':
     specifier: ^3.0.0
     version: 3.0.0(@libsql/client@0.3.6)(better-sqlite3@9.2.2)(lucia@3.0.1)
-  '@lucia-auth/oauth':
-    specifier: ^3.5.0
-    version: 3.5.0(lucia@3.0.1)
   '@magitools/forem-wrapper':
     specifier: ^0.0.1
     version: 0.0.1
@@ -1997,14 +1994,6 @@ packages:
     dependencies:
       '@libsql/client': 0.3.6
       better-sqlite3: 9.2.2
-      lucia: 3.0.1
-    dev: false
-
-  /@lucia-auth/oauth@3.5.0(lucia@3.0.1):
-    resolution: {integrity: sha512-JSwAMVwlDJtbvfcJV1nbkv41OD830pgICrx8zFT71SYd5I1MnEQ+GqMTXBGRyxzc5XlLatT8ZS1Jt0k81487xg==}
-    peerDependencies:
-      lucia: ^2.0.0
-    dependencies:
       lucia: 3.0.1
     dev: false
 
