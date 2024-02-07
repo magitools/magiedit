@@ -44,6 +44,12 @@ export class GithubPlatform implements IBasePlatform<GithubPlatform> {
 		this.settings = settings;
 		return this;
 	}
+	setTags(data: string[]): GithubPlatform {
+		return this;
+	}
+	validate(): boolean {
+		return true;
+	}
 	getRequiredSettings(): IPlatformSetting[] {
 		return [
 			{
