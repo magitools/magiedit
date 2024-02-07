@@ -15,6 +15,7 @@
 	import { solarizedDark } from 'cm6-theme-solarized-dark';
 	import { solarizedLight } from 'cm6-theme-solarized-light';
 	import { toast } from 'svelte-sonner';
+	import { Badge } from '$lib/components/ui/badge';
 
 	import { parser } from '$lib/articles/parser';
 	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
@@ -205,10 +206,10 @@
 	</Command.List>
 </Command.Dialog>
 
-{#if data.enabledOptions.giphy}
+{#if data?.enabledOptions?.giphy}
 	<Giphy on:addToDoc={addToDoc} bind:open={giphyDialogOpen} />
 {/if}
-{#if data.enabledOptions.unsplash}
+{#if data?.enabledOptions?.unsplash}
 	<Unsplash on:addToDoc={addToDoc} bind:open={unsplashDialogOpen} />
 {/if}
 <div class="flex h-full w-full flex-col relative p-4">
@@ -237,8 +238,20 @@
 		<div
 			class="w-full min-h-[100%] h-full min-w-full overflow-y-auto prose p-4 bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block lg:group-data-[source=true]:block lg:group-data-[source=false]:block"
 		>
-			<!-- ts-ignore-svelte/no-at-html-tags -->
-			{@html renderedContent.data}
+			<div>
+				<h1>{renderedContent.frontmatter.title}</h1>
+				{#if renderedContent?.frontmatter?.tags && Array.isArray(renderedContent.frontmatter.tags)}
+					<div class="flex w-full justify-evenly">
+						{#each renderedContent.frontmatter.tags as tag}
+							<Badge variant="secondary">{tag}</Badge>
+						{/each}
+					</div>
+				{/if}
+			</div>
+			<div class="w-full h-full">
+				<!-- ts-ignore-svelte/no-at-html-tags -->
+				{@html renderedContent.data}
+			</div>
 		</div>
 	</div>
 </div>
