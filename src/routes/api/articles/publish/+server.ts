@@ -48,11 +48,13 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 			const platform = Array.from(supportedPlatforms.values()).find(
 				(e) => e.name === publisher.publisherName
 			);
-			if (!platform) continue;
-			await new platform()
+			if (platform === undefined) continue;
+			const instance = await new platform()
 				.setFrontmatter(frontMatter)
 				.setSettings(publisher.publisherData)
-				.publish(content.toString());
+				.setTags(frontMatter.tags || {});
+			instance.validate();
+			await instance.publish(content.toString());
 			res.set(publisher.name, 'ok');
 		} catch (error) {
 			console.log(error);
