@@ -11,6 +11,8 @@ export interface IBasePlatform<T> {
 	setSettings(settings: Record<string, any>): T;
 	getRequiredSettings(): IPlatformSetting[];
 	setFrontmatter(data: Record<string, any>): T;
+	setTags(data: string[]): T;
+	validate(): boolean;
 	getPlatformName(): string;
 }
 
