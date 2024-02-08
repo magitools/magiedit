@@ -1,33 +1,15 @@
 import ForemClient from '@magitools/forem-wrapper';
-import { RegisterPlatform, type IBasePlatform, type IPlatformSetting } from './base';
+import { type IPlatformSetting, RegisterPlatform, BasePlatform } from './base';
 
 @RegisterPlatform
-export class DevPlatform implements IBasePlatform<DevPlatform> {
-	settings: Record<string, string> = {};
-	frontmatter: Record<string, any> = {};
-	tags: string[] = [];
-	public getRequiredSettings(): IPlatformSetting[] {
-		return [
-			{
-				type: 'input',
-				name: 'api_token',
-				label: { htmlFor: 'api_key', value: 'API Key' },
-				settings: { type: 'text', required: true }
-			}
-		];
-	}
-
-	getPlatformName(): string {
-		return 'dev.to';
-	}
-
-	setSettings(settings: Record<string, any>) {
-		this.settings = { ...settings };
+export class DevPlatform extends BasePlatform {
+	setFrontmatter(data: Record<string, unknown>): BasePlatform {
+		this.frontmatter = data;
 		return this;
 	}
 
-	setFrontmatter(data: Record<string, any>): DevPlatform {
-		this.frontmatter = data;
+	setSettings(settings: Record<string, unknown>): BasePlatform {
+		this.settings = { ...settings };
 		return this;
 	}
 
@@ -35,21 +17,21 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 		if (this.tags.length > 4) {
 			throw new Error('maximum allowed tags are 4');
 		}
-		console.log(this.tags.join(','));
 		if (!/^[a-zA-Z0-9,]+$/.test(this.tags.join(','))) {
 			throw new Error('non-alphanumeric character detected');
 		}
 		return true;
 	}
 
-	async setTags(data: string[]): Promise<DevPlatform> {
-		this.tags = data;
+	setTags(data: string[]): BasePlatform {
+		this.tags = data.map((e) => e.replace(/[-_]/g, ''));
 		return this;
 	}
 
-	public async publish(content: string) {
+	async publish(content: string) {
 		const setting = this.settings['api_token'];
 		if (!setting) throw new Error('could not find required settings');
+		this.validate();
 		try {
 			await new ForemClient().setApiKey(setting).article.publishArticle({
 				title: this.frontmatter.title,
@@ -59,7 +41,21 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 			});
 		} catch (error) {
 			console.log(error);
-			throw new Error('something went wrong');
+			throw new Error(error.message);
 		}
+	}
+
+	getPlatformName(): string {
+		return 'dev.to';
+	}
+	getRequiredSettings(): IPlatformSetting[] {
+		return [
+			{
+				type: 'input',
+				name: 'api_token',
+				label: { htmlFor: 'api_key', value: 'API Key' },
+				settings: { type: 'text', required: true }
+			}
+		];
 	}
 }

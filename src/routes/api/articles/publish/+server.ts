@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 		.where(and(eq(userArticles.id, parseInt(id.toString())), eq(userArticles.author, user.id)));
 	const content = await decrypt(article[0].content, article[0].iv, key);
 	const frontMatter = fm(content.toString()).attributes as Record<string, any>;
-	const res = new Map<string, 'ok' | 'ko'>();
+	const res = new Map<string, string>();
 	for (const publisher of await db
 		.select()
 		.from(userPublications)
@@ -45,20 +45,18 @@ export const POST: RequestHandler = async ({ locals, request, cookies }) => {
 			)
 		)) {
 		try {
-			const platform = Array.from(supportedPlatforms.values()).find(
-				(e) => e.name === publisher.publisherName
-			);
+			const platform = supportedPlatforms.get(publisher.publisherName);
 			if (platform === undefined) continue;
-			const instance = await new platform()
+			const instance = new platform()
 				.setFrontmatter(frontMatter)
 				.setSettings(publisher.publisherData)
-				.setTags(frontMatter.tags || {});
+				.setTags(frontMatter.tags || []);
 			instance.validate();
 			await instance.publish(content.toString());
 			res.set(publisher.name, 'ok');
 		} catch (error) {
 			console.log(error);
-			res.set(publisher.name, 'ko');
+			res.set(publisher.name, `ko: ${error.message}`);
 		}
 	}
 	if (LOGSNAG_PROJECT && LOGSNAG_TOKEN) {

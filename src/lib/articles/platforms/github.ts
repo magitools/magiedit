@@ -1,7 +1,7 @@
-import { RegisterPlatform, type IBasePlatform, type IPlatformSetting } from './base';
+import { RegisterPlatform, type IPlatformSetting, BasePlatform } from './base';
 
 @RegisterPlatform
-export class GithubPlatform implements IBasePlatform<GithubPlatform> {
+export class GithubPlatform extends BasePlatform {
 	settings: Record<string, string> = {};
 	frontmatter: Record<string, any> = {};
 

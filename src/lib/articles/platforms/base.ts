@@ -1,19 +1,19 @@
-export const supportedPlatforms = new Set<new () => IBasePlatform<any>>();
-export function RegisterPlatform(constructor: new () => IBasePlatform<any>) {
-	if (supportedPlatforms.has(constructor)) supportedPlatforms.delete(constructor);
-	supportedPlatforms.add(constructor);
+export const supportedPlatforms = new Map<string, new () => BasePlatform>();
+export function RegisterPlatform(constructor: new () => BasePlatform) {
+	supportedPlatforms.set(constructor.name, constructor);
 }
 
-export interface IBasePlatform<T> {
-	settings: Record<string, string>;
-	frontmatter: Record<string, any>;
-	publish(content: string): void;
-	setSettings(settings: Record<string, any>): T;
-	getRequiredSettings(): IPlatformSetting[];
-	setFrontmatter(data: Record<string, any>): T;
-	setTags(data: string[]): T;
-	validate(): boolean;
-	getPlatformName(): string;
+export abstract class BasePlatform {
+	settings: Record<string, unknown> = {};
+	frontmatter: Record<string, unknown> = {};
+	tags: string[] = [];
+	abstract publish(content: string): void;
+	abstract setSettings(settings: Record<string, unknown>): BasePlatform;
+	abstract getRequiredSettings(): IPlatformSetting[];
+	abstract setFrontmatter(data: Record<string, unknown>): BasePlatform;
+	abstract setTags(data: string[]): BasePlatform;
+	abstract validate(): boolean;
+	abstract getPlatformName(): string;
 }
 
 export interface IPlatformSetting {
