@@ -33,10 +33,10 @@ export class DevPlatform extends BasePlatform {
 		if (!setting) throw new Error('could not find required settings');
 		this.validate();
 		try {
-			await new ForemClient().setApiKey(setting).article.publishArticle({
-				title: this.frontmatter.title,
+			await new ForemClient().setApiKey(setting as string).article.publishArticle({
+				title: this.frontmatter.title as string,
 				body_markdown: content,
-				published: this.frontmatter.published || false,
+				published: (this.frontmatter.published as boolean) || false,
 				tags: this.tags.join(',')
 			});
 		} catch (error) {
