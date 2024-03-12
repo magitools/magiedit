@@ -1,7 +1,7 @@
-import { RegisterPlatform, type IBasePlatform, type IPlatformSetting } from './base';
+import { RegisterPlatform, type IPlatformSetting, BasePlatform } from './base';
 
 @RegisterPlatform
-export class GithubPlatform implements IBasePlatform<GithubPlatform> {
+export class GithubPlatform extends BasePlatform {
 	settings: Record<string, string> = {};
 	frontmatter: Record<string, any> = {};
 
@@ -43,6 +43,12 @@ export class GithubPlatform implements IBasePlatform<GithubPlatform> {
 	setSettings(settings: Record<string, any>): GithubPlatform {
 		this.settings = settings;
 		return this;
+	}
+	setTags(data: string[]): GithubPlatform {
+		return this;
+	}
+	validate(): boolean {
+		return true;
 	}
 	getRequiredSettings(): IPlatformSetting[] {
 		return [

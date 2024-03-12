@@ -36,6 +36,14 @@ export class HashnodePlatform implements IBasePlatform<HashnodePlatform> {
 		return this;
 	}
 
+	async setTags(data: string[]): Promise<HashnodePlatform> {
+		return this;
+	}
+
+	validate(): boolean {
+		return true;
+	}
+
 	setFrontmatter(data: Record<string, any>): HashnodePlatform {
 		this.frontmatter = data;
 		return this;

@@ -1,11 +1,54 @@
 import ForemClient from '@magitools/forem-wrapper';
-import { RegisterPlatform, type IBasePlatform, type IPlatformSetting } from './base';
+import { type IPlatformSetting, RegisterPlatform, BasePlatform } from './base';
 
 @RegisterPlatform
-export class DevPlatform implements IBasePlatform<DevPlatform> {
-	settings: Record<string, string> = {};
-	frontmatter: Record<string, any> = {};
-	public getRequiredSettings(): IPlatformSetting[] {
+export class DevPlatform extends BasePlatform {
+	setFrontmatter(data: Record<string, unknown>): BasePlatform {
+		this.frontmatter = data;
+		return this;
+	}
+
+	setSettings(settings: Record<string, unknown>): BasePlatform {
+		this.settings = { ...settings };
+		return this;
+	}
+
+	validate(): boolean {
+		if (this.tags.length > 4) {
+			throw new Error('maximum allowed tags are 4');
+		}
+		if (!/^[a-zA-Z0-9,]+$/.test(this.tags.join(','))) {
+			throw new Error('non-alphanumeric character detected');
+		}
+		return true;
+	}
+
+	setTags(data: string[]): BasePlatform {
+		this.tags = data.map((e) => e.replace(/[-_]/g, ''));
+		return this;
+	}
+
+	async publish(content: string) {
+		const setting = this.settings['api_token'];
+		if (!setting) throw new Error('could not find required settings');
+		this.validate();
+		try {
+			await new ForemClient().setApiKey(setting as string).article.publishArticle({
+				title: this.frontmatter.title as string,
+				body_markdown: content,
+				published: (this.frontmatter.published as boolean) || false,
+				tags: this.tags.join(',')
+			});
+		} catch (error) {
+			console.log(error);
+			throw new Error(error.message);
+		}
+	}
+
+	getPlatformName(): string {
+		return 'dev.to';
+	}
+	getRequiredSettings(): IPlatformSetting[] {
 		return [
 			{
 				type: 'input',
@@ -14,33 +57,5 @@ export class DevPlatform implements IBasePlatform<DevPlatform> {
 				settings: { type: 'text', required: true }
 			}
 		];
-	}
-
-	getPlatformName(): string {
-		return 'dev.to';
-	}
-
-	setSettings(settings: Record<string, any>) {
-		this.settings = { ...settings };
-		return this;
-	}
-
-	setFrontmatter(data: Record<string, any>): DevPlatform {
-		this.frontmatter = data;
-		return this;
-	}
-
-	public async publish(content: string) {
-		const setting = this.settings['api_token'];
-		if (!setting) throw new Error('could not find required settings');
-		try {
-			await new ForemClient().setApiKey(setting).article.publishArticle({
-				title: this.frontmatter.title,
-				body_markdown: content,
-				published: this.frontmatter.published || false
-			});
-		} catch (error) {
-			throw new Error('something went wrong');
-		}
 	}
 }
