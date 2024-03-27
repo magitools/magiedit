@@ -37,6 +37,7 @@
 		basicSetup,
 		textUpdateListener,
 		keymap.of(defaultKeymap),
+		EditorView.lineWrapping,
 		markdown({ codeLanguages: languages })
 	];
 	const themeCompartment = new Compartment();
