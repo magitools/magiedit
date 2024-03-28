@@ -15,7 +15,7 @@
 	import { solarizedDark } from 'cm6-theme-solarized-dark';
 	import { solarizedLight } from 'cm6-theme-solarized-light';
 	import { toast } from 'svelte-sonner';
-
+	import * as Resizable from '$lib/components/ui/resizable';
 	import { parser } from '$lib/articles/parser';
 	import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
@@ -27,6 +27,7 @@
 	let source = true;
 	let loading = false;
 	let loadingText = 'loading, please wait...';
+	let winSize = window.innerWidth;
 
 	const textUpdateListener = EditorView.updateListener.of((update) => {
 		if (update.docChanged) {
@@ -142,11 +143,17 @@
 	}
 	onMount(() => {
 		window.addEventListener('keydown', handleKeyDown);
-		editorContainer.appendChild(view.dom);
+		window.onresize = () => {
+			winSize = window.innerWidth;
+		};
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
 	});
+	function attachEditor(node) {
+		editorContainer = node;
+		editorContainer.appendChild(view.dom);
+	}
 
 	async function handleSaveToDisk() {
 		/* 		await handleSave();
@@ -230,16 +237,22 @@
 			>Preview</Button
 		>
 	</div>
-	<div class="h-full w-full grid grid-cols-1 lg:grid-cols-2 group gap-4" data-source={source}>
-		<div
-			bind:this={editorContainer}
-			class="w-full block group-data-[source=true]:block group-data-[source=false]:hidden lg:group-data-[source=true]:block lg:group-data-[source=false]:block"
-		/>
-		<div
-			class="w-full min-h-[100%] h-full min-w-full overflow-y-auto prose p-4 bg-primary text-primary-foreground block group-data-[source=true]:hidden group-data-[source=false]:block lg:group-data-[source=true]:block lg:group-data-[source=false]:block"
-		>
-			<!-- ts-ignore-svelte/no-at-html-tags -->
-			{@html renderedContent.data}
-		</div>
-	</div>
+	<Resizable.PaneGroup direction="horizontal">
+		{#if source || winSize > 1023}
+			<Resizable.Pane>
+				<div use:attachEditor class="w-full" />
+			</Resizable.Pane>
+		{/if}
+		<Resizable.Handle />
+		{#if !source || winSize > 1023}
+			<Resizable.Pane>
+				<div
+					class="w-full min-h-[100%] h-full min-w-full overflow-y-auto prose p-4 bg-primary text-primary-foreground block"
+				>
+					<!-- ts-ignore-svelte/no-at-html-tags -->
+					{@html renderedContent.data}
+				</div>
+			</Resizable.Pane>
+		{/if}
+	</Resizable.PaneGroup>
 </div>

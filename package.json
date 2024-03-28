@@ -82,6 +82,7 @@
 		"lucide-svelte": "^0.306.0",
 		"mode-watcher": "^0.1.2",
 		"openai": "^4.29.2",
+		"paneforge": "^0.0.2",
 		"rehype-add-classes": "^1.0.0",
 		"rehype-stringify": "^9.0.4",
 		"remark-extract-frontmatter": "^3.2.0",
