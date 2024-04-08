@@ -1,6 +1,8 @@
+import { env } from '$env/dynamic/private';
 import { db } from '$lib/server/db.js';
 import { user } from '$lib/server/drizzle.js';
 import { auth, githubAuth } from '$lib/server/lucia.js';
+import { LogSnag } from '@logsnag/node';
 import { isRedirect, redirect } from '@sveltejs/kit';
 import { OAuth2RequestError } from 'arctic';
 
@@ -45,6 +47,16 @@ export const GET = async ({ url, cookies }) => {
 				username: githubUser.login,
 				email: githubUser.email
 			});
+			const { LOGSNAG_PROJECT, LOGSNAG_TOKEN } = env;
+			if (LOGSNAG_PROJECT && LOGSNAG_TOKEN) {
+				const logsnag = new LogSnag({ token: LOGSNAG_TOKEN, project: LOGSNAG_PROJECT });
+				await logsnag.track({
+					channel: 'users',
+					event: 'New User',
+					user_id: userId
+				});
+			}
+
 			redirect(302, '/profile/key/create');
 		}
 	} catch (e) {
