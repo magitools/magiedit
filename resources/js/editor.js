@@ -57,7 +57,7 @@ document.addEventListener('livewire:initialized', async() => {
     if (wire.initialLoad) {
         parsePreview(wire.content).then((content) => {
             setPreview(content)
-            wire.initialLoad = false
+            window.dispatchEvent(new CustomEvent('initial-done'))
         })
     }
 
