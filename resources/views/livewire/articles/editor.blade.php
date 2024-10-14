@@ -1,12 +1,14 @@
-<div class="w-full h-"full" x-data='editor'>
-    <div id="editor" class="max-h-full"></div>
-    <div>preview goes here</div>
+<div class="w-full h-"full">
+<div>
+    <flux:button id="saveButton">Save</flux:button>
+</div>
+<div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div id="editor" class="max-h-full">
+    </div>
+    <flux:card>
+        <div class="w-full prose" id="preview"></div>
+    </flux:card>
+</div>
 </div>
 
-@script
-<script type="module">
-console.log("hello from module")
-	import { basicSetup } from 'codemirror';
-</script>
-@endscript
-
+@vite('resources/js/editor.js')
