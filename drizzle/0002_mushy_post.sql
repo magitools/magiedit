@@ -1,1 +1,0 @@
-ALTER TABLE user ADD `ai_credits` integer DEFAULT 0;
