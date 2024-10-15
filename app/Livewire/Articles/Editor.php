@@ -3,6 +3,8 @@
 namespace App\Livewire\Articles;
 
 use App\Models\Article;
+use Flux\Flux;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -15,12 +17,18 @@ class Editor extends Component
     protected ?Article $article = null;
 
     #[Computed]
-    public function frontmatter()
+    public function frontmatter(): array
     {
         return [];
     }
 
-    public function save(string $content)
+    public function mount(?Article $article): void
+    {
+        $this->article = $article ?? null;
+        $this->content = $this->article->content ?? 'write your article here';
+    }
+
+    public function save(string $content): void
     {
         $parsed = YamlFrontMatter::parse($content);
         $title = $parsed->matter('title');
@@ -30,9 +38,10 @@ class Editor extends Component
             $title = $title ? $title : fake()->unique()->realText(16);
             $this->article = Auth::user()->articles()->create(['content' => $content, 'fm' => $parsed->matter(), 'title' => $title]);
         }
+        Flux::toast('article saved');
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.articles.editor');
     }

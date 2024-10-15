@@ -8,7 +8,8 @@
                 <div class="w-full flex">
                     <flux:spacer />
                     <div class="flex space-x-4">
-                        <flux:button variant="primary">Edit</flux:button>
+                        <flux:button href="{{route('app.articles.edit', ['article' => $article->id])}}" variant="primary">Edit</flux:button>
+                        <flux:button wire:click="previewPost({{$article->id}})">Preview</flux:button>
                         <flux:button wire:click="deletePost({{$article->id}})" variant="danger">Delete</flux:button>
                     </div>
                 </div>
@@ -30,6 +31,9 @@
             </flux:modal.close>
             <flux:button wire:click="destroyPost()" type="submit" variant="danger">Delete article</flux:button>
         </div>
+    </flux:modal>
+    <flux:modal name="preview-article" class="space-y-6">
+        {!! $previewContent !!}
     </flux:modal>
 </div>
 

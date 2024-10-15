@@ -15,7 +15,7 @@ class Article extends Model
     protected function casts(): array
     {
         return [
-            "fm" => "array"
+            'fm' => 'array',
         ];
     }
 
