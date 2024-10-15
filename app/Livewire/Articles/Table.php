@@ -46,6 +46,7 @@ class Table extends Component
     {
         // get content
         // show content
+        $this->previewContent = Article::query()->find($id)->content;
         Flux::modal('preview-article')->show();
     }
 }

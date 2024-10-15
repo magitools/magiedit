@@ -1,4 +1,4 @@
-<div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+<div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @foreach($articles as $article)
             <flux:card class="space-y-6" wire:key="article-{{$article->id}}">
                 <div>
@@ -33,7 +33,15 @@
         </div>
     </flux:modal>
     <flux:modal name="preview-article" class="space-y-6">
-        {!! $previewContent !!}
+        <div class="text-black dark:text-white">
+            {{ $previewContent }}
+        </div>
+        <div class="flex w-full">
+            <flux:spacer />
+            <flux:modal.close>
+                <flux:button variant="ghost">close</flux:button>
+            </flux:modal.close>
+        </div>
     </flux:modal>
 </div>
 
