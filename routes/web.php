@@ -7,10 +7,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function() {
-    Route::prefix('app')->group(function() {
+Route::middleware('auth')->group(function () {
+    Route::prefix('app')->group(function () {
         Route::get('/articles', [ArticleController::class, 'index'])->name('app.articles.index');
         Route::get('/articles/new', [ArticleController::class, 'create'])->name('app.articles.create');
     });
 });
-

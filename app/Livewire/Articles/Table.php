@@ -12,10 +12,14 @@ use Livewire\Component;
 class Table extends Component
 {
     public Collection $articles;
+
     #[Locked]
     public int $selectedId = -1;
 
-    public function mount() {
+    public string $previewContent = '';
+
+    public function mount()
+    {
         $this->articles = Auth::user()->articles;
     }
 
@@ -24,14 +28,24 @@ class Table extends Component
         return view('livewire.articles.table');
     }
 
-    public function deletePost(int $id) {
+    public function deletePost(int $id)
+    {
         $this->selectedId = $id;
         Flux::modal('delete-article')->show();
     }
-    public function destroyPost() {
+
+    public function destroyPost()
+    {
         Flux::modal('delete-article')->close();
         Article::destroy([$this->selectedId]);
         $this->articles = Auth::user()->articles;
         Flux::toast('Deleted article');
+    }
+
+    public function previewPost(int $id)
+    {
+        // get content
+        // show content
+        Flux::modal('preview-article')->show();
     }
 }
