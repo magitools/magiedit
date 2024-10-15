@@ -51,4 +51,9 @@ class User extends AuthUser
     {
         return $this->hasMany(Article::class);
     }
+
+    public function publishers(): HasMany
+    {
+        return $this->hasMany(Publisher::class);
+    }
 }
