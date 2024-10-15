@@ -61,6 +61,9 @@
         <flux:main container>
         {{ $slot }}
         </flux:main>
+        @persist('toast')
+            <flut:toast />
+        @endpersist
         @fluxScripts
     </body>
 </html>
