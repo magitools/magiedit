@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class ArticleController extends Controller
 {
     public function index(): View {
-        $articles = Auth::user()->articles;
-        return view('articles.index', ['articles' => $articles]);
+        return view('articles.index');
     }
 
     public function create(): View {
