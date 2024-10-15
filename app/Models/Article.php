@@ -12,7 +12,15 @@ class Article extends Model
 
     protected $fillable = ['content', 'fm', 'title'];
 
-    public function author(): BelongsTo {
+    protected function casts(): array
+    {
+        return [
+            "fm" => "array"
+        ];
+    }
+
+    public function author(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 }
