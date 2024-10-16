@@ -9,6 +9,7 @@
                     <flux:spacer />
                     <div class="flex space-x-4">
                         <flux:button href="{{route('app.articles.edit', ['article' => $article->id])}}" variant="primary">Edit</flux:button>
+                        <flux:button wire:click="publishPost({{$article->id}})">Publish</flux:button>
                         <flux:button wire:click="previewPost({{$article->id}})">Preview</flux:button>
                         <flux:button wire:click="deletePost({{$article->id}})" variant="danger">Delete</flux:button>
                     </div>
