@@ -16,8 +16,8 @@
         <flux:brand href="#" logo="https://fluxui.dev/img/demo/dark-mode-logo.png" name="Magiedit" class="max-lg:!hidden hidden dark:flex" />
         @auth
         <flux:navbar class="-mb-px max-lg:hidden">
-            <flux:navbar.item icon="home" href="#" current>Articles</flux:navbar.item>
-            <flux:navbar.item icon="inbox" badge="12" href="#">Publishers</flux:navbar.item>
+            <flux:navbar.item icon="envelope" href="{{route('app.articles.index')}}">Articles</flux:navbar.item>
+            <flux:navbar.item icon="newspaper" href="{{route('app.publishers.index')}}">Publishers</flux:navbar.item>
         </flux:navbar>
 
         <flux:spacer />
@@ -46,8 +46,8 @@
             <flux:brand href="#" logo="https://fluxui.dev/img/demo/dark-mode-logo.png" name="Magiedit" class="px-2 hidden dark:flex" />
         @auth
         <flux:navlist variant="outline">
-            <flux:navlist.item icon="home" href="#" current>Articles</flux:navlist.item>
-            <flux:navlist.item icon="inbox" badge="12" href="#">Publishers</flux:navlist.item>
+            <flux:navlist.item icon="envelope" href="{{route('app.articles.index')}}">Articles</flux:navlist.item>
+            <flux:navlist.item icon="newspaper" href="{{route('app.publishers.index')}}">Publishers</flux:navlist.item>
         </flux:navlist>
 
         <flux:spacer />
