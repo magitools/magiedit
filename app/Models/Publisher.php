@@ -13,13 +13,13 @@ class Publisher extends Model
     protected $fillable = [
         'name',
         'data',
-        'class_name'
+        'class_name',
     ];
 
     protected function casts(): array
     {
         return [
-            'data' => 'array'
+            'data' => 'array',
         ];
     }
 

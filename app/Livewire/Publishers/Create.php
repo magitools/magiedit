@@ -50,7 +50,7 @@ class Create extends Component
         Auth::user()->publishers()->create([
             'name' => $this->publisherName,
             'data' => $this->formData,
-           'class_name' => $this->selectedProvider
+            'class_name' => $this->selectedProvider,
         ]);
         Flux::toast('publisher created');
         $this->redirectRoute('app.publishers.index');

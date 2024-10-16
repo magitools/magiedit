@@ -9,11 +9,11 @@ return [
         'input' => [
             'required_values' => [
                 'type',
-                'label'
+                'label',
             ],
             'optional_values' => [
-                'placeholder'
-            ]
+                'placeholder',
+            ],
         ],
         'select' => [
             'required_values' => [
@@ -21,7 +21,7 @@ return [
             ],
             'optional_values' => [
 
-            ]
-        ]
-    ]
+            ],
+        ],
+    ],
 ];

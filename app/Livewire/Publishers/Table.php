@@ -10,8 +10,8 @@ use Livewire\Component;
 
 class Table extends Component
 {
-
     public Collection $publishers;
+
     public int $selectedPublisher;
 
     public function deletePublisher(int $id)
@@ -33,7 +33,8 @@ class Table extends Component
         Flux::toast('publisher deleted');
     }
 
-    public function mount() {
+    public function mount()
+    {
         $this->getPublishers();
     }
 

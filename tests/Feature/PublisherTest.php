@@ -24,7 +24,7 @@ describe('publishers', function () {
             }
         }
     });
-    it('publisher inputs have all required options', function() {
+    it('publisher inputs have all required options', function () {
         foreach ($this->classes as $class) {
             $instance = new $class;
             $inputs = $instance->getInputs();
