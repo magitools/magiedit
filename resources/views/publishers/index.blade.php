@@ -1,3 +1,3 @@
 <x-layouts.app>
-    <p>publishers go here</p>
+    <livewire:publishers.table />
 </x-layouts.app>

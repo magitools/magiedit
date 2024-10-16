@@ -15,5 +15,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/articles/new', [ArticleController::class, 'create'])->name('app.articles.create');
         Route::get('/publishers', [PublisherController::class, 'index'])->name('app.publishers.index');
         Route::get('/publishers/new', [PublisherController::class, 'create'])->name('app.publishers.create');
+        Route::get('/publishers/edit/{publisher}', [PublisherController::class, 'edit'])->name('app.publishers.edit');
     });
 });
