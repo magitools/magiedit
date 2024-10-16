@@ -30,5 +30,10 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-progress --no-suggest
 
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
       - name: Run Pest
         run: php artisan test
