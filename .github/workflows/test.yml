@@ -21,6 +21,12 @@ jobs:
           extensions: json, dom, curl, libxml, mbstring
           coverage: none
 
+      - name: Configure Flux authentication
+        with:
+          FLUX_USERNAME: ${{ secrets.FLUX_USERNAME }}
+          FLUX_LICENSE_KEY: ${{ secrets.FLUX_LICENSE_KEY }}
+        run: composer config http-basic.composer.fluxui.dev "${FLUX_USERNAME}" "${FLUX_LICENSE_KEY}"
+
       - name: Install Dependencies
         run: composer install --no-progress --no-suggest
 
