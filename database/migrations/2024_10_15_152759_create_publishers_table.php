@@ -14,8 +14,9 @@ return new class extends Migration
     {
         Schema::create('publishers', function (Blueprint $table) {
             $table->id();
-            $table->string("class_name");
-            $table->foreignId(User::class);
+            $table->string('class_name');
+            $table->json('data');
+            $table->foreignIdFor(User::class);
             $table->timestamps();
         });
     }

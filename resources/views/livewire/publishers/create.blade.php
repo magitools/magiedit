@@ -11,7 +11,7 @@
     <form wire:submit="save">
         @foreach($this->inputs as $input)
             @if ($input['input'] == 'input')
-                <flux:input wire:model.defer="formData.{{$input['name']}}" label='{{$input["label"]}}' description='{{$input["placeholder"]}}' />
+                <flux:input required wire:model.defer="formData.{{$input['name']}}" label='{{$input["label"]}}' description='{{$input["placeholder"]}}' />
             @endif
         @endforeach
         <flux:button type="submit" variant="primary">Create Publisher</flux:button>

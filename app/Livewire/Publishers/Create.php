@@ -3,6 +3,8 @@
 namespace App\Livewire\Publishers;
 
 use App\Publishers\PublisherContract;
+use Flux\Flux;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Spatie\StructureDiscoverer\Discover;
@@ -43,7 +45,12 @@ class Create extends Component
 
     public function save()
     {
-        dd($this->formData);
+        Auth::user()->publishers()->create([
+            'data' => $this->formData,
+           'class_name' => $this->selectedProvider
+        ]);
+        Flux::toast('publisher created');
+        $this->redirectRoute('app.publishers.index');
     }
 
     public function render()

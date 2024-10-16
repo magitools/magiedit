@@ -10,6 +10,18 @@ class Publisher extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'data',
+        'class_name'
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'data' => 'array'
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
