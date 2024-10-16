@@ -11,6 +11,7 @@ class Publisher extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'data',
         'class_name'
     ];

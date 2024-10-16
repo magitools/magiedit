@@ -9,9 +9,10 @@
     </flux:select>
 
     <form wire:submit="save">
+        <flux:input required wire:model="publisherName" label="Publisher Name" description="This is the name you will see when selecting publishers" placeholder="publisher name here..." />
         @foreach($this->inputs as $input)
             @if ($input['input'] == 'input')
-                <flux:input required wire:model.defer="formData.{{$input['name']}}" label='{{$input["label"]}}' description='{{$input["placeholder"]}}' />
+                <flux:input required wire:model.defer="formData.{{$input['name']}}" label='{{$input["label"]}}' description='{{$input["description"] ?? ""}}' placeholder="{{$input['placeholder']}}" />
             @endif
         @endforeach
         <flux:button type="submit" variant="primary">Create Publisher</flux:button>

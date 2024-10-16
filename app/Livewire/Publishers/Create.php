@@ -15,6 +15,8 @@ class Create extends Component
 
     public string $selectedProvider = '';
 
+    public string $publisherName = '';
+
     public array $formData = [];
 
     #[Computed]
@@ -46,6 +48,7 @@ class Create extends Component
     public function save()
     {
         Auth::user()->publishers()->create([
+            'name' => $this->publisherName,
             'data' => $this->formData,
            'class_name' => $this->selectedProvider
         ]);
