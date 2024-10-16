@@ -18,6 +18,10 @@ class Table extends Component
 
     public string $previewContent = '';
 
+    public Collection $publishers;
+
+    public array $selectedProviders = [];
+
     public function mount()
     {
         $this->articles = Auth::user()->articles;
@@ -48,5 +52,10 @@ class Table extends Component
         // show content
         $this->previewContent = Article::query()->find($id)->content;
         Flux::modal('preview-article')->show();
+    }
+
+    public function publishPost(int $id)
+    {
+        $this->selectedId = $id;
     }
 }
