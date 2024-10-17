@@ -16,6 +16,25 @@
                 </div>
             </flux:card>
         @endforeach
+    <flux:modal name="publisher-select" class="space-y-6">
+        <div>
+            <flux:heading>You are about to publish an article</flux:heading>
+            <flux:subheading>please choose the publishers you want to use</flux:subheading>
+        </div>
+        <div>
+            <form wire:submit="sendPost()">
+                <flux:checkbox.group wire:model="selectedProviders">
+                    @foreach($this->publishers as $publisher)
+                        <flux:checkbox label="{{$publisher->name}}" value="{{$publisher->id}}"/>
+                    @endforeach
+                </flux:checkbox.group>
+                <div class="flex w-full">
+                    <flux:spacer />
+                    <flux:button type="submit">Publish</flux:button>
+                </div>
+            </form>
+        </div>
+    </flux:modal>
     <flux:modal name="delete-article" class="space-y-6">
         <div>
             <flux:heading>Delete article?</flux:heading>

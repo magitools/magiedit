@@ -25,6 +25,7 @@ class Table extends Component
     public function mount()
     {
         $this->articles = Auth::user()->articles;
+        $this->publishers = Auth::user()->publishers;
     }
 
     public function render()
@@ -57,5 +58,6 @@ class Table extends Component
     public function publishPost(int $id)
     {
         $this->selectedId = $id;
+        Flux::modal('publisher-select')->show();
     }
 }
