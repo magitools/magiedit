@@ -30,7 +30,10 @@
                 </flux:checkbox.group>
                 <div class="flex w-full">
                     <flux:spacer />
-                    <flux:button type="submit">Publish</flux:button>
+                    <flux:modal.close>
+                        <flux:button variant="ghost">cancel</flux:button>
+                    </flux:modal.close>
+                    <flux:button type="submit">Publish</flux:button>:
                 </div>
             </form>
         </div>
