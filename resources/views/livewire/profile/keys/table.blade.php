@@ -49,11 +49,11 @@
         </form>
     </flux:modal>
     <flux:modal name="key-preview" class="space-y-6">
-        <div>
+        <div x-data="">
             <flux:heading>Here's your new API key</flux:heading>
             <flux:subheading>
                 <p>Make sure to save it somewhere; you won't be able to see it again</p>
-                <p>{{$this->textToken}}</p>
+                <p x-clipboard>{{$this->textToken}}</p>
             </flux:subheading>
         </div>
         <div class="flex w-full">

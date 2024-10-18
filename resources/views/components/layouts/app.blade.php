@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>{{ $title ?? 'Page Title' }}</title>
-        @vite('resources/css/app.css')
+        @livewireStyles
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
         @fluxStyles
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
@@ -65,6 +66,7 @@
         @persist('toast')
             <flut:toast />
         @endpersist
+        @livewireScriptConfig
         @fluxScripts
     </body>
 </html>
