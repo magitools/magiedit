@@ -8,6 +8,7 @@
         "php": "^8.2",
         "devdojo/auth": "^1.0",
         "laravel/framework": "^11.9",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/flux": "^1.0",
         "livewire/flux-pro": "^1.0",
