@@ -32,6 +32,7 @@
             <flux:profile avatar="https://robohash.org/{{Auth::user()->email}}" />
 
             <flux:menu>
+                <flux:menu.item href="{{route('app.profile.keys')}}" icon="key">API Keys</flux:menu.item>
                 <flux:menu.separator />
 
                 <flux:menu.item href="{{route('logout')}}" icon="arrow-right-start-on-rectangle">Logout</flux:menu.item>

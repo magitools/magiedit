@@ -4,6 +4,7 @@ namespace App\Livewire\Articles;
 
 use App\Models\Article;
 use App\Models\Publisher;
+use App\Publishers\PublisherContract;
 use Flux\Flux;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -65,8 +66,18 @@ class Table extends Component
     public function sendPost()
     {
         // get article content and fm
-
-        $publishers = Publisher::query()->whereIn('id', $this->selectedProviders)->get();;
-        dd($publishers);
+        $article = Article::query()->find($this->selectedId);
+        $publishers = Publisher::query()->whereIn('id', $this->selectedProviders)->get();
+        foreach($publishers as $publisher) {
+            /**
+             * @var PublisherContract $className
+             */
+            $className = $publisher->class_name;
+            $instance = new $className();
+            $res = $instance->setFm($article->fm)
+                ->setData($publisher->data)
+                ->publish($article->content);
+            Flux::modal('publisher-select')->close();
+        }
     }
 }

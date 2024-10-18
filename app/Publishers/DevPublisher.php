@@ -2,7 +2,9 @@
 
 namespace App\Publishers;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class DevPublisher implements PublisherContract
 {
@@ -46,15 +48,27 @@ class DevPublisher implements PublisherContract
         return $this;
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function publish(string $content): bool
     {
-        Http::post("https://dev.to/api/articles", [
-            'title' => $this->fm['title'] ?? 'no title (yet...)',
-            'body_markdown' => $content,
-            'published' => false,
-            'series' => $this->fm['series'] ?? null,
-            'description' => $this->fm['description'] ?? null,
-            'canonical_url' => $this->fm['canonical_url'] ?? null
+        $res = Http::withHeaders([
+            "api-key" => $this->values['api-key']
+        ])->post("https://dev.to/api/articles", [
+            'article' => [
+                'title' => $this->fm['title'] ?? 'no title (yet...)',
+                'body_markdown' => $content,
+                'published' => false,
+                'series' => $this->fm['series'] ?? null,
+                'description' => $this->fm['description'] ?? null,
+                'canonical_url' => $this->fm['canonical_url'] ?? null
+            ]
         ]);
+        if (!$res->created()) {
+            Log::error($res->body());
+            Log::error($res->reason());
+        }
+        return $res->created();
     }
 }

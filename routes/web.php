@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,5 +17,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/publishers', [PublisherController::class, 'index'])->name('app.publishers.index');
         Route::get('/publishers/new', [PublisherController::class, 'create'])->name('app.publishers.create');
         Route::get('/publishers/edit/{publisher}', [PublisherController::class, 'edit'])->name('app.publishers.edit');
+        Route::get('/profile/keys', [UserController::class, 'keys'])->name('app.profile.keys');
     });
 });
