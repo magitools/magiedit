@@ -15,7 +15,7 @@ class Table extends Component
 
     public string $tokenName;
 
-    public string $textToken = "";
+    public string $textToken = '';
 
     public function getKeys()
     {
@@ -36,7 +36,8 @@ class Table extends Component
         $this->getKeys();
     }
 
-    public function createApiKey() {
+    public function createApiKey()
+    {
         $data = Auth::user()->createToken($this->tokenName);
         $this->textToken = $data->plainTextToken;
         $this->getKeys();
@@ -48,6 +49,7 @@ class Table extends Component
     {
         $this->getKeys();
     }
+
     public function render()
     {
         return view('livewire.profile.keys.table');

@@ -68,12 +68,12 @@ class Table extends Component
         // get article content and fm
         $article = Article::query()->find($this->selectedId);
         $publishers = Publisher::query()->whereIn('id', $this->selectedProviders)->get();
-        foreach($publishers as $publisher) {
+        foreach ($publishers as $publisher) {
             /**
              * @var PublisherContract $className
              */
             $className = $publisher->class_name;
-            $instance = new $className();
+            $instance = new $className;
             $res = $instance->setFm($article->fm)
                 ->setData($publisher->data)
                 ->publish($article->content);

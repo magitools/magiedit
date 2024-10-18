@@ -15,7 +15,6 @@ class DevPublisher implements PublisherContract
 
     private array $fm;
 
-
     public function getName(): string
     {
         return 'dev.to';
@@ -37,14 +36,17 @@ class DevPublisher implements PublisherContract
     public function setData(array $values): self
     {
         $this->values = $values;
+
         return $this;
     }
+
     /**
-     * @param array<int,mixed> $fm
+     * @param  array<int,mixed>  $fm
      */
     public function setFm(array $fm): self
     {
         $this->fm = $fm;
+
         return $this;
     }
 
@@ -54,21 +56,22 @@ class DevPublisher implements PublisherContract
     public function publish(string $content): bool
     {
         $res = Http::withHeaders([
-            "api-key" => $this->values['api-key']
-        ])->post("https://dev.to/api/articles", [
+            'api-key' => $this->values['api-key'],
+        ])->post('https://dev.to/api/articles', [
             'article' => [
                 'title' => $this->fm['title'] ?? 'no title (yet...)',
                 'body_markdown' => $content,
                 'published' => false,
                 'series' => $this->fm['series'] ?? null,
                 'description' => $this->fm['description'] ?? null,
-                'canonical_url' => $this->fm['canonical_url'] ?? null
-            ]
+                'canonical_url' => $this->fm['canonical_url'] ?? null,
+            ],
         ]);
-        if (!$res->created()) {
+        if (! $res->created()) {
             Log::error($res->body());
             Log::error($res->reason());
         }
+
         return $res->created();
     }
 }
