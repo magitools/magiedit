@@ -6,37 +6,35 @@ use App\Models\Article;
 use Flux\Flux;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use League\HTMLToMarkdown\HtmlConverter;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 class Editor extends Component
 {
-    public string $content = 'write your article here';
+    public string $content = '<p>write your article here</p>';
+    public array $fm = [];
 
-    protected ?Article $article = null;
+    #[Locked]
+    public ?Article $article = null;
 
-    #[Computed]
-    public function frontmatter(): array
-    {
-        return [];
-    }
 
     public function mount(?Article $article): void
     {
         $this->article = $article ?? null;
-        $this->content = $this->article->content ?? 'write your article here';
+        $this->content = $this->article->content ?? '<p>write your article here</p>';
+        $this->fm = $this->article?->fm ?? [];
     }
 
-    public function save(string $content): void
+    public function save(string $content, array $state): void
     {
-        $parsed = YamlFrontMatter::parse($content);
-        $title = $parsed->matter('title');
+        $title = $state['title'] ?? fake()->unique()->realText(16);;
         if ($this->article) {
-            $this->article->update(['content' => $content, 'fm' => $parsed->matter(), 'title' => $title]);
+            $this->article->update(['content' => $content, 'fm' => $state, 'title' => $title]);
         } else {
-            $title = $title ? $title : fake()->unique()->realText(16);
-            $this->article = Auth::user()->articles()->create(['content' => $content, 'fm' => $parsed->matter(), 'title' => $title]);
+            $this->article = Auth::user()->articles()->create(['content' => $content, 'fm' => $state, 'title' => $title]);
         }
         Flux::toast('article saved');
     }

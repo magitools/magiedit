@@ -1,3 +1,4 @@
+/*
 import { basicSetup } from 'codemirror';
 import { markdown } from '@codemirror/lang-markdown';
 import { EditorView, keymap } from '@codemirror/view';
@@ -32,9 +33,9 @@ const parser = unified()
 	})
 	.use(rehypeStringify);
 
-/**
+/!**
     * content {string}
-**/
+**!/
 function parsePreview(content) {
     return parser.process(content).then((data) => {
         return {
@@ -45,7 +46,6 @@ function parsePreview(content) {
 }
 
 
-document.addEventListener('livewire:initialized', async() => {
     const wire = Livewire.first()
     const editorContainer = document.querySelector("#editor")
     const previewContainer = document.querySelector("#preview")
@@ -80,5 +80,90 @@ document.addEventListener('livewire:initialized', async() => {
     saveButton.addEventListener('click', () => {
         wire.save(view.state.doc.toString())
     })
+
+*/
+
+import {Editor, Extension, mergeAttributes} from '@tiptap/core'
+import Blockquote from '@tiptap/extension-blockquote'
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import BulletList from '@tiptap/extension-bullet-list'
+import CodeBlock from '@tiptap/extension-code-block'
+import HardBreak from '@tiptap/extension-hard-break'
+import Heading from '@tiptap/extension-heading'
+import HorizontalRule from '@tiptap/extension-horizontal-rule'
+import ListItem from '@tiptap/extension-list-item'
+import OrderedList from '@tiptap/extension-ordered-list'
+import Text from '@tiptap/extension-text'
+import Bold from '@tiptap/extension-bold'
+import Code from '@tiptap/extension-code'
+import Italic from '@tiptap/extension-italic'
+import Strike from '@tiptap/extension-strike'
+import Dropcursor from '@tiptap/extension-dropcursor'
+import Gapcursor from '@tiptap/extension-gapcursor'
+import {codeToHtml} from "shiki";
+
+const CustomCodeBlock = CodeBlock.extend({
+    async renderHTML({ node, HTMLAttributes }) {
+        const language = node.attrs.language || this.options.defaultLanguage;
+        const codeContent = node.textContent;
+        let highlightedCode = codeContent;
+
+        // Use Shiki to highlight the code if the highlighter is available
+        highlightedCode = await codeToHtml(codeContent, { lang: language, theme: "nord" });
+        console.log(highlightedCode)
+        // Return the highlighted code inside a pre and code tag
+        return (
+            {
+                html: highlightedCode
+            }
+        )
+    },
 })
 
+const saveButton = document.querySelector("#saveButton")
+const editorContainer = document.querySelector("#editor")
+
+import {unified} from 'unified'
+import rehypeParse from 'rehype-parse'
+import rehypeRemark from 'rehype-remark'
+import remarkStringify from 'remark-stringify'
+
+saveButton.onclick = async() => {
+    const content = editor.getHTML()
+    console.log(content)
+    editorContainer.setAttribute('data-content', content)
+    window.dispatchEvent(new Event('content-save'))
+}
+console.log("got content ", editorContainer.getAttribute('data-content'))
+
+
+const editor = new Editor({
+    element: document.querySelector('#editor'),
+    extensions: [
+        Document,
+        Text,
+        Paragraph,
+        Blockquote,
+        BulletList,
+        CodeBlock,
+        HardBreak,
+        Heading,
+        HorizontalRule,
+        ListItem,
+        OrderedList,
+        Bold,
+        Code,
+        Italic,
+        Strike,
+        Dropcursor,
+        Gapcursor
+
+    ],
+    content: editorContainer.getAttribute('data-content') ?? '<p>Hello World!</p>',
+    editorProps: {
+        attributes: {
+            class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none text-black dark:text-white',
+        },
+    },
+})

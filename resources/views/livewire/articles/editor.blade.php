@@ -1,26 +1,117 @@
-<div class="w-full h-full relative" x-data="{loading:true}" @initial-done.window="loading = false">
-    <div
-    x-show="loading"
-    x-transition:enter="transition-transform transition-opacity"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
-
-    class="absolute inset-0 bg-white dark:bg-zinc-800 z-50 flex flex-col items-center justify-center">
-        <p>Parsing the initial file, please wait...</p>
-    </div>
+<div class="w-full h-full relative space-y-6" x-data="editor" @content-save.window="saveArticle"  @initial-done.window="loading = false">
     <div>
         <flux:button id="saveButton" >Save</flux:button>
     </div>
-    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div id="editor" class="max-h-full">
-        </div>
-        <flux:card>
-            <div class="w-full prose" id="preview"></div>
+    <flux:accordion transition>
+        <flux:accordion.item>
+            <flux:accordion.heading>Frontmatter Settings</flux:accordion.heading>
+
+            <flux:accordion.content>
+                <flux:table>
+                    <flux:columns>
+                        <flux:column>Key</flux:column>
+                        <flux:column>Value</flux:column>
+                    </flux:columns>
+                    <flux:rows>
+                        <template x-for="(row, index) in rows" x-bind:key="index">
+                            <flux:row>
+                                <flux:cell>
+                                    <flux:input x-model="row.key" />
+                                </flux:cell>
+                                <flux:cell>
+                                    <flux:input x-model="row.value" />
+                                </flux:cell>
+                                <flux:cell>
+                                    <flux:button @click="deleteRow(index)">Delete</flux:button>
+                                </flux:cell>
+                            </flux:row>
+                        </template>
+                    </flux:rows>
+                </flux:table>
+                <flux:button class="w-full" @click="addRow">+</flux:button>
+            </flux:accordion.content>
+        </flux:accordion.item>
+    </flux:accordion>
+    <div class="w-full">
+        <flux:card id="editor" class="max-h-full" data-content="{{$this->content}}">
         </flux:card>
     </div>
 </div>
 
-@vite('resources/js/editor.js')
+@script
+<script>
+    // inspired by filament's key-value form component
+    Alpine.data('editor', () => {
+        return {
+            shouldUpdateRows: true,
+            rows: [],
+            fm: $wire.fm,
+
+            init: function() {
+              this.updateRows()
+                if (this.rows.length <= 0) {
+                    this.rows.push({ key: '', value: '' })
+                } else {
+                    this.updateState()
+                }
+            },
+
+            saveArticle: function() {
+                this.updateState()
+                $wire.save(document.querySelector('#editor').getAttribute('data-content'), Alpine.raw(this.fm))
+            },
+
+            addRow: function () {
+                this.rows.push({ key: '', value: '' })
+
+                this.updateState()
+            },
+
+            deleteRow: function (index) {
+                this.rows.splice(index, 1)
+
+                if (this.rows.length <= 0) {
+                    this.addRow()
+                }
+
+                this.updateState()
+            },
+
+            updateRows: function () {
+                if (!this.shouldUpdateRows) {
+                    this.shouldUpdateRows = true
+
+                    return
+                }
+
+                let rows = []
+
+                for (let [key, value] of Object.entries(this.fm ?? {})) {
+                    rows.push({
+                        key,
+                        value,
+                    })
+                }
+                this.rows = rows
+            },
+
+            updateState: function() {
+                let state = {}
+                this.rows.forEach((row) => {
+                    if (row.key === '' || row.key === null) {
+                        return
+                    }
+
+                    state[row.key] = row.value
+                })
+                this.shouldUpdateRows = false
+                this.fm = state
+            }
+        }
+    })
+</script>
+@endscript
+
+@assets
+@vite("resources/js/editor.js")
+@endassets

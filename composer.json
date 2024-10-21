@@ -10,6 +10,7 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "league/html-to-markdown": "^5.1",
         "livewire/flux": "^1.0",
         "livewire/flux-pro": "^1.0",
         "livewire/livewire": "^3.5",
