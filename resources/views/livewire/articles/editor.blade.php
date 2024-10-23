@@ -1,5 +1,13 @@
 <div class="w-full h-full relative space-y-6" x-data="editor" @content-save.window="saveArticle"  @initial-done.window="loading = false">
     <div>
+        <flux:card>
+            <div>
+                <flux:heading>Warning: this editor is a Work In Progress!</flux:heading>
+                <flux:subheading>You may encounter bugs; don't hesitate to signal them! :) </flux:subheading>
+            </div>
+        </flux:card>
+    </div>
+    <div>
         <flux:button id="saveButton" >Save</flux:button>
     </div>
     <flux:accordion transition>
