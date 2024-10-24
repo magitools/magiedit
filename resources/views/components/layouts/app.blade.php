@@ -64,7 +64,7 @@
         {{ $slot }}
         </flux:main>
         @persist('toast')
-            <flut:toast />
+            <flux:toast />
         @endpersist
         @livewireScriptConfig
         @fluxScripts
