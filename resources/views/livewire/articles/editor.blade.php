@@ -41,6 +41,13 @@
         </flux:accordion.item>
     </flux:accordion>
     <div class="w-full">
+        <div id="bubble-menu">
+            <div class="flex">
+                <button id="bm-bold">Bold</button>
+                <button id="bm-italic">Italic</button>
+                <button id="bm-strike">Strike</button>
+            </div>
+        </div>
         <flux:card id="editor" class="max-h-full" data-content="{{$this->content}}">
         </flux:card>
     </div>
@@ -119,7 +126,4 @@
     })
 </script>
 @endscript
-
-@assets
 @vite("resources/js/editor.js")
-@endassets
