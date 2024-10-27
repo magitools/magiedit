@@ -5,24 +5,55 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PublisherResource;
 use App\Models\Publisher;
 use App\Publishers\PublisherContract;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Spatie\StructureDiscoverer\Discover;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 
 class PublisherController extends Controller
 {
-    public function index(): View
+    public function index()
     {
-        return view('publishers.index');
+        return Inertia::render('App/Publishers/Index', [
+            'publishers' => Auth::user()->publishers
+        ]);
     }
 
-    public function create(): View
+    public function create()
     {
-        return view('publishers.create');
+        $providers = Discover::in(app_path('Publishers'))->classes()->implementing(PublisherContract::class)->get();
+        $providerData = array_map(function ($el) {
+                /** @var PublisherContract */
+                $instance = new $el();
+                $name = $instance->getName();
+                $inputs = $instance->getInputs();
+                return [
+        'class' => $el,
+                    'name' => $name,
+                    'inputs' => $inputs
+                ];
+            }, $providers);
+
+        return Inertia::render('App/Publishers/Create', [
+            'providers' => $providerData        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'data' => 'required|array',
+            'class_name' => 'required|string'
+        ]);
+        Auth::user()->publishers()->create([
+            'name' => $validated['name'],
+            'data' => $validated['data'],
+            'class_name' => $validated['class_name'],
+        ]);
+        return to_route('app.publishers.index');
     }
 
     public function indexApi(): JsonResponse
@@ -39,10 +70,7 @@ class PublisherController extends Controller
             'content' => 'required'
         ]);
         $parsed = YamlFrontMatter::parse($validated['content']);
-        Log::info($validated['content']);
-        Log::info(implode(',', $validated['publishers']));
         $publishers = Publisher::query()->whereIn('id', $validated['publishers'])->get();
-        Log::info(count($publishers));
         $res = [];
         foreach ($publishers as $publisher) {
             $className = $publisher->class_name;

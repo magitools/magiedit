@@ -1,14 +1,14 @@
 import './bootstrap';
-import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+import { createInertiaApp } from '@inertiajs/svelte';
+import Layout from "./Components/Layout.svelte"
 
-// Register any Alpine directives, components, or plugins here...
-Alpine.directive('clipboard', (el) => {
-    let text = el.textContent
-
-    el.addEventListener('click', () => {
-        console.log("copying")
-        navigator.clipboard.writeText(text)
-    })
+createInertiaApp({
+    resolve: name => {
+        const pages = import.meta.glob('./Pages/**/*.svelte', { eager: true })
+        const page = pages[`./Pages/${name}.svelte`]
+        return { default: page.default, layout: page.layout || Layout }
+    },
+    setup({ el, App, props }) {
+        new App({ target: el, props })
+    }
 })
-
-Livewire.start()

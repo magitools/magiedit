@@ -8,8 +8,15 @@
     "devDependencies": {
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
+        "bits-ui": "^0.21.16",
+        "clsx": "^2.1.1",
         "laravel-vite-plugin": "^1.0",
+        "lucide-svelte": "^0.453.0",
+        "mode-watcher": "^0.4.1",
         "postcss": "^8.4.47",
+        "svelte-sonner": "^0.3.28",
+        "tailwind-merge": "^2.5.4",
+        "tailwind-variants": "^0.2.1",
         "tailwindcss": "^3.4.13",
         "vite": "^5.0"
     },
@@ -19,7 +26,9 @@
         "@codemirror/language-data": "^6.5.1",
         "@codemirror/state": "^6.4.1",
         "@codemirror/view": "^6.34.1",
+        "@inertiajs/svelte": "^1.2.0",
         "@shikijs/rehype": "^1.22.0",
+        "@sveltejs/vite-plugin-svelte": "^3.1.2",
         "@tailwindcss/typography": "^0.5.15",
         "@tiptap/core": "^2.8.0",
         "@tiptap/extension-blockquote": "^2.8.0",
@@ -53,6 +62,7 @@
         "remark-rehype": "^11.1.1",
         "remark-stringify": "^11.0.0",
         "shiki": "^1.22.0",
+        "svelte": "^4.0.0",
         "thememirror": "^2.0.1",
         "unified": "^11.0.5",
         "yaml": "^2.6.0"
