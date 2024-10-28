@@ -50,6 +50,13 @@ class ArticleController extends Controller
         $article->update($validated);
     }
 
+    public function destroy(Article $article)
+    {
+        $article->delete();
+
+        return to_route('app.articles.index');
+    }
+
     public function publish(Article $article, Request $request) {
         $validated = $request->validate([
             'publishers' => 'required|array'
