@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e638db2f867f521b3483d425147d1876",
+    "content-hash": "081e4e21ab268370f57922945c31736f",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3923,126 +3923,6 @@
                 }
             ],
             "time": "2024-03-23T07:42:40+00:00"
-        },
-        {
-            "name": "livewire/flux",
-            "version": "v1.0.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/livewire/flux.git",
-                "reference": "9d71e83ee5ca652563ce2c08e42b87bdbb22a4ec"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/livewire/flux/zipball/9d71e83ee5ca652563ce2c08e42b87bdbb22a4ec",
-                "reference": "9d71e83ee5ca652563ce2c08e42b87bdbb22a4ec",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/console": "^10.0|^11.0",
-                "illuminate/support": "^10.0|^11.0",
-                "illuminate/view": "^10.0|^11.0",
-                "laravel/prompts": "^0.1|^0.2|^0.3",
-                "livewire/livewire": "^3.5",
-                "php": "^8.1",
-                "symfony/console": "^6.0|^7.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Flux\\FluxServiceProvider"
-                    ],
-                    "aliases": {
-                        "Flux": "Flux\\Flux"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Flux\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Caleb Porzio",
-                    "email": "calebporzio@gmail.com"
-                }
-            ],
-            "description": "The official UI component library for Livewire.",
-            "keywords": [
-                "components",
-                "flux",
-                "laravel",
-                "livewire",
-                "ui"
-            ],
-            "support": {
-                "issues": "https://github.com/livewire/flux/issues",
-                "source": "https://github.com/livewire/flux/tree/v1.0.10"
-            },
-            "time": "2024-10-13T01:47:41+00:00"
-        },
-        {
-            "name": "livewire/flux-pro",
-            "version": "1.0.10",
-            "dist": {
-                "type": "zip",
-                "url": "https://composer.fluxui.dev/download/9d407ddd-61ed-417b-8f93-eb6875f5fb12/flux-pro-1.0.10.zip",
-                "reference": "cbbac6aecd7e6d475658ff3efe9eebe90ed72c85",
-                "shasum": "cefca124e6769fedd11cfcb0510a0ef6d713512f"
-            },
-            "require": {
-                "illuminate/console": "^10.0|^11.0",
-                "illuminate/support": "^10.0|^11.0",
-                "illuminate/view": "^10.0|^11.0",
-                "laravel/prompts": "^0.1.24|^0.2|^0.3",
-                "livewire/flux": "1.0.10",
-                "livewire/livewire": "^3.5",
-                "php": "^8.1",
-                "symfony/console": "^6.0|^7.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "aliases": {
-                        "Flux": "FluxPro\\FluxPro"
-                    },
-                    "providers": [
-                        "FluxPro\\FluxProServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "FluxPro\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Caleb Porzio",
-                    "email": "calebporzio@gmail.com"
-                }
-            ],
-            "description": "The pro version of Flux, the official UI component library for Livewire.",
-            "keywords": [
-                "components",
-                "flux",
-                "laravel",
-                "livewire",
-                "ui"
-            ],
-            "time": "2024-10-15T14:39:13+00:00"
         },
         {
             "name": "livewire/livewire",
@@ -11854,59 +11734,6 @@
                 }
             ],
             "time": "2024-03-03T12:36:25+00:00"
-        },
-        {
-            "name": "wire-elements/wire-spy",
-            "version": "v0.0.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/wire-elements/wire-spy.git",
-                "reference": "a53ae56255da5d498d58f45d5fedc4abb547de09"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/wire-elements/wire-spy/zipball/a53ae56255da5d498d58f45d5fedc4abb547de09",
-                "reference": "a53ae56255da5d498d58f45d5fedc4abb547de09",
-                "shasum": ""
-            },
-            "require": {
-                "livewire/livewire": "^v3.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "WireElements\\WireSpy\\WireSpyServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "WireElements\\WireSpy\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Philo Hermans",
-                    "email": "me@philo.dev"
-                }
-            ],
-            "description": "Devtools for Livewire",
-            "support": {
-                "issues": "https://github.com/wire-elements/wire-spy/issues",
-                "source": "https://github.com/wire-elements/wire-spy/tree/v0.0.9"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/PhiloNL",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-10-15T14:56:26+00:00"
         }
     ],
     "aliases": [],

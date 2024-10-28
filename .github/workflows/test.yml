@@ -21,12 +21,6 @@ jobs:
           extensions: json, dom, curl, libxml, mbstring
           coverage: none
 
-      - name: Configure Flux authentication
-        env:
-          FLUX_USERNAME: ${{ secrets.FLUX_USERNAME }}
-          FLUX_LICENSE_KEY: ${{ secrets.FLUX_LICENSE_KEY }}
-        run: composer config http-basic.composer.fluxui.dev "${FLUX_USERNAME}" "${FLUX_LICENSE_KEY}"
-
       - name: Install Dependencies
         run: composer install --no-progress --no-suggest
 
@@ -37,3 +31,6 @@ jobs:
 
       - name: Run Pest
         run: php artisan test
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse
