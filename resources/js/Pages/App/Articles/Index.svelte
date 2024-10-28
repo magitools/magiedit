@@ -58,7 +58,7 @@
 <Button>
     <a use:inertia href={route("app.articles.create")}>New</a>
 </Button>
-<div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+<div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {#each articles as article}
         <Card.Root>
             <Card.Header>
