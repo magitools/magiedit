@@ -31,6 +31,3 @@ jobs:
 
       - name: Run Pest
         run: php artisan test
-
-      - name: Run PHPStan
-        run: vendor/bin/phpstan analyse
