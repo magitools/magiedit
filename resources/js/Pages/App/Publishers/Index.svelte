@@ -1,8 +1,29 @@
 <script>
     import * as Card from "$lib/components/ui/card";
     import { Button } from "$lib/components/ui/button";
-    import { inertia } from "@inertiajs/svelte";
+    import * as Dialog from "$lib/components/ui/dialog/index.js";
+    import { toast } from "svelte-sonner";
+    import { inertia, router } from "@inertiajs/svelte";
     export let publishers;
+
+    function prepareDestroy(id) {
+        deleteId = id;
+        deleteDialogOpen = true;
+    }
+
+    async function destroy() {
+        const toastId = toast.loading("deleting publisher...");
+        await router.delete(route("app.publishers.destroy", [deleteId]), {
+            onSuccess: () => {
+                toast.success("publisher deleted!", { id: toastId });
+            },
+        });
+        deleteDialogOpen = false;
+        deleteId = null;
+    }
+
+    let deleteId = null;
+    let deleteDialogOpen = false;
 </script>
 
 <Button>
@@ -16,7 +37,35 @@
                 <Card.Title>{publisher.name}</Card.Title>
             </Card.Header>
             <Card.Content></Card.Content>
-            <Card.Footer></Card.Footer>
+            <Card.Footer>
+                <Button
+                    variant="destructive"
+                    on:click={prepareDestroy(publisher.id)}>Delete</Button
+                >
+            </Card.Footer>
         </Card.Root>
     {/each}
 </div>
+
+<Dialog.Root bind:open={deleteDialogOpen}>
+    <Dialog.Trigger />
+    <Dialog.Content>
+        <Dialog.Header>
+            <Dialog.Title>Delete Publisher?</Dialog.Title>
+            <Dialog.Description
+                >Are you sure? This is a definitive action</Dialog.Description
+            >
+        </Dialog.Header>
+        <Dialog.Footer>
+            <Button
+                on:click={() => {
+                    deleteId = null;
+                    deleteDialogOpen = false;
+                }}>Cancel</Button
+            >
+            <Button type="submit" variant="destructive" on:click={destroy}
+                >Ok</Button
+            >
+        </Dialog.Footer>
+    </Dialog.Content>
+</Dialog.Root>

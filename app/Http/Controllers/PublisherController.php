@@ -56,6 +56,12 @@ class PublisherController extends Controller
         return to_route('app.publishers.index');
     }
 
+    public function destroy(Publisher $publisher)
+    {
+        $publisher->delete();
+        return to_route('app.publishers.index');
+    }
+
     public function indexApi(): JsonResponse
     {
             return response()->json([
