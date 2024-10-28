@@ -3,10 +3,26 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\UserController;
+use App\Publishers\PublisherContract;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use Spatie\StructureDiscoverer\Discover;
 
 Route::get('/', function () {
-    return view('welcome');
+        $providers = Discover::in(app_path('Publishers'))->classes()->implementing(PublisherContract::class)->get();
+        $providerData = array_map(function ($el) {
+                /** @var PublisherContract */
+                $instance = new $el();
+                $name = $instance->getName();
+                $inputs = $instance->getInputs();
+                return [
+                    'name' => $name,
+                ];
+            }, $providers);
+
+    return Inertia::render('Home', [
+        'platforms' => $providerData
+    ]);
 });
 
 Route::middleware('auth')->group(function () {
@@ -15,6 +31,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/articles', [ArticleController::class, 'store'])->name('app.articles.store');
         Route::get('/articles/edit/{article}', [ArticleController::class, 'edit'])->name('app.articles.edit');
         Route::put('/articles/{article}', [ArticleController::class, 'update'])->name('app.articles.update');
+        Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->name('app.articles.destroy');
         Route::post('/articles/{article}/publish', [ArticleController::class, 'publish'])->name('app.articles.publish');
         Route::get('/articles/new', [ArticleController::class, 'create'])->name('app.articles.create');
         Route::get('/publishers', [PublisherController::class, 'index'])->name('app.publishers.index');
