@@ -10,62 +10,69 @@
 <div class="w-full flex justify-between bg-background py-6 px-4 items-center">
     <div class="flex items-center space-x-6">
         <a use:inertia href={route("app.articles.index")}>MagiEdit</a>
-        <nav
-            class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6"
-        >
-            <a
-                href={route("app.articles.index")}
-                use:inertia
-                class={route("app.articles.index").includes($page.url)
-                    ? "text-foreground hover:text-foreground transition-colors"
-                    : "text-muted-foreground hover:text-foreground transition-colors"}
+
+        {#if $page.props.auth.authed}
+            <nav
+                class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6"
             >
-                Articles
-            </a>
-            <a
-                href={route("app.publishers.index")}
-                use:inertia
-                class={route("app.publishers.index").includes($page.url)
-                    ? "text-foreground hover:text-foreground transition-colors"
-                    : "text-muted-foreground hover:text-foreground transition-colors"}
-            >
-                Publishers
-            </a>
-        </nav>
-        <Sheet.Root>
-            <Sheet.Trigger asChild let:builder>
-                <Button
-                    variant="outline"
-                    size="icon"
-                    class="shrink-0 md:hidden"
-                    builders={[builder]}
+                <a
+                    href={route("app.articles.index")}
+                    use:inertia
+                    class={route("app.articles.index").includes($page.url)
+                        ? "text-foreground hover:text-foreground transition-colors"
+                        : "text-muted-foreground hover:text-foreground transition-colors"}
                 >
-                    <Menu class="h-5 w-5" />
-                </Button>
-            </Sheet.Trigger>
-            <Sheet.Content side="left">
-                <nav class="grid gap-6 text-lg font-medium">
-                    <a
-                        href={route("app.articles.index")}
-                        use:inertia
-                        class={route("app.articles.index").includes($page.url)
-                            ? "text-foreground hover:text-foreground transition-colors"
-                            : "text-muted-foreground hover:text-foreground transition-colors"}
+                    Articles
+                </a>
+                <a
+                    href={route("app.publishers.index")}
+                    use:inertia
+                    class={route("app.publishers.index").includes($page.url)
+                        ? "text-foreground hover:text-foreground transition-colors"
+                        : "text-muted-foreground hover:text-foreground transition-colors"}
+                >
+                    Publishers
+                </a>
+            </nav>
+            <Sheet.Root>
+                <Sheet.Trigger asChild let:builder>
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        class="shrink-0 md:hidden"
+                        builders={[builder]}
                     >
-                        Articles
-                    </a>
-                    <a
-                        href={route("app.publishers.index")}
-                        use:inertia
-                        class={route("app.publishers.index").includes($page.url)
-                            ? "text-foreground hover:text-foreground transition-colors"
-                            : "text-muted-foreground hover:text-foreground transition-colors"}
-                    >
-                        Publishers
-                    </a>
-                </nav>
-            </Sheet.Content>
-        </Sheet.Root>
+                        <Menu class="h-5 w-5" />
+                    </Button>
+                </Sheet.Trigger>
+                <Sheet.Content side="left">
+                    <nav class="grid gap-6 text-lg font-medium">
+                        <a
+                            href={route("app.articles.index")}
+                            use:inertia
+                            class={route("app.articles.index").includes(
+                                $page.url,
+                            )
+                                ? "text-foreground hover:text-foreground transition-colors"
+                                : "text-muted-foreground hover:text-foreground transition-colors"}
+                        >
+                            Articles
+                        </a>
+                        <a
+                            href={route("app.publishers.index")}
+                            use:inertia
+                            class={route("app.publishers.index").includes(
+                                $page.url,
+                            )
+                                ? "text-foreground hover:text-foreground transition-colors"
+                                : "text-muted-foreground hover:text-foreground transition-colors"}
+                        >
+                            Publishers
+                        </a>
+                    </nav>
+                </Sheet.Content>
+            </Sheet.Root>
+        {/if}
     </div>
     <div>
         {#if $page.props.auth.authed}
@@ -102,7 +109,7 @@
                 </DropdownMenu.Content>
             </DropdownMenu.Root>
         {:else}
-            <Button><a use:inertia href={route("login")}>Sign In</a></Button>
+            <Button><a href={route("login")}>Sign In</a></Button>
         {/if}
     </div>
 </div>
