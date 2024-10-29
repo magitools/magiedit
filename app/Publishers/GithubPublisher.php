@@ -3,7 +3,6 @@
 namespace App\Publishers;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class GithubPublisher implements PublisherContract
 {
@@ -79,6 +78,13 @@ class GithubPublisher implements PublisherContract
         $title = strtolower(str_ireplace(' ', '-', $this->fm['title']));
         $commit = $this->values['gh_commit'];
         Log::info($title);
+        $fileRes = Http::withHeaders([
+            'authorization' => "Bearer {$this->values['gh_token']}" ,
+            'accept' => 'application/vnd.github+json',
+            'content-type' => 'application/json',
+			'X-GitHub-Api-Version' => '2022-11-28'
+        ])->get("https://api.github.com/repos/{$this->values['gh_user']}/{$this->values['gh_repo']}/contents/{$this->values['gh_folder']}/$title.md");
+        $sha = $fileRes->status() == 200 ? $fileRes->json()['sha'] : null;
         $res = Http::withHeaders([
             'authorization' => "Bearer {$this->values['gh_token']}" ,
             'accept' => 'application/vnd.github+json',
@@ -86,9 +92,9 @@ class GithubPublisher implements PublisherContract
 			'X-GitHub-Api-Version' => '2022-11-28'
         ])->put("https://api.github.com/repos/{$this->values['gh_user']}/{$this->values['gh_repo']}/contents/{$this->values['gh_folder']}/$title.md", [
                 'message' => $commit,
-                'content' => base64_encode($content)
+                'content' => base64_encode($content),
+                'sha' => $sha
             ]);
-        Log::info($res->json());
         return false;
     }
 
