@@ -72,7 +72,7 @@ class ArticleController extends Controller
             $instance = new $className();
             $valid = $instance
                 ->setData($publisher->data)
-                ->setFm($parsed->matter())
+                ->setFm(["title" => $article->title, ...$parsed->matter()])
                 ->publish($content);
             $res[$publisher->name] = $valid;
         }
