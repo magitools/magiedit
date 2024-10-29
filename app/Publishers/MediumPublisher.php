@@ -29,6 +29,7 @@ class MediumPublisher implements PublisherContract
             [
                 'name' => 'token',
                 'input' => 'input',
+                'type' => 'text',
                 'label' => 'Medium Token',
                 'placeholder' => 'write your medium token here...'
             ],
