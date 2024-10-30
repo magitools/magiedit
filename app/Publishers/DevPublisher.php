@@ -5,6 +5,7 @@ namespace App\Publishers;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 class DevPublisher implements PublisherContract
 {
@@ -55,12 +56,13 @@ class DevPublisher implements PublisherContract
      */
     public function publish(string $content): bool
     {
+        $parsed = YamlFrontMatter::parse($content);
         $res = Http::withHeaders([
             'api-key' => $this->values['api-key'],
         ])->post('https://dev.to/api/articles', [
             'article' => [
                 'title' => $this->fm['title'] ?? 'no title (yet...)',
-                'body_markdown' => $content,
+                'body_markdown' => $parsed->body(),
                 'published' => false,
                 'series' => $this->fm['series'] ?? null,
                 'description' => $this->fm['description'] ?? null,
