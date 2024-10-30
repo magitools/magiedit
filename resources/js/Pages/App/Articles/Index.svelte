@@ -4,6 +4,7 @@
     import { Label } from "$lib/components/ui/label";
     import * as Sheet from "$lib/components/ui/sheet";
     import * as Dialog from "$lib/components/ui/dialog";
+    import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
     import { Switch } from "$lib/components/ui/switch";
     import { toast } from "svelte-sonner";
     import { inertia, router } from "@inertiajs/svelte";
@@ -54,6 +55,16 @@
     let articleDeleteDialogOpen = false;
     //TODO show status for individual publisher output
 </script>
+
+<Breadcrumb.Root slot="crumbs">
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href={route("app.articles.index")}>
+                Articles
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
 
 <Button>
     <a use:inertia href={route("app.articles.create")}>New</a>

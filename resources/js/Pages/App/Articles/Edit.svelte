@@ -2,6 +2,7 @@
     import Editor from "@/Components/Articles/Editor.svelte";
     import Frontmatter from "@/Components/Articles/Frontmatter.svelte";
     import { Button } from "$lib/components/ui/button";
+    import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
     import { router } from "@inertiajs/svelte";
     import { toast } from "svelte-sonner";
     export let article;
@@ -42,6 +43,22 @@
         value: article.fm[key],
     }));
 </script>
+
+<Breadcrumb.Root slot="crumbs">
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href={route("app.articles.index")}
+                >Articles</Breadcrumb.Link
+            >
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href={route("app.articles.edit", [article.id])}>
+                Edit
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
 
 <div>
     <Button on:click={save}>Save</Button>

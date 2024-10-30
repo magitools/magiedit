@@ -4,6 +4,7 @@
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { toast } from "svelte-sonner";
     import { inertia, router } from "@inertiajs/svelte";
+    import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
     export let publishers;
 
     function prepareDestroy(id) {
@@ -25,6 +26,16 @@
     let deleteId = null;
     let deleteDialogOpen = false;
 </script>
+
+<Breadcrumb.Root slot="crumbs">
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href={route("app.publishers.index")}
+                >Publishers</Breadcrumb.Link
+            >
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
 
 <Button>
     <a use:inertia href={route("app.publishers.create")}>New</a>

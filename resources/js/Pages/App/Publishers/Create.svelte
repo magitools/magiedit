@@ -1,5 +1,6 @@
 <script>
     import { Button } from "$lib/components/ui/button";
+    import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
     import { Input } from "$lib/components/ui/input";
     import * as Select from "$lib/components/ui/select";
     import { Label } from "$lib/components/ui/label";
@@ -28,6 +29,22 @@
         );
     }
 </script>
+
+<Breadcrumb.Root slot="crumbs">
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href={route("app.publishers.index")}>
+                Publishers
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href={route("app.publishers.create")}>
+                New
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
 
 <div>
     <Select.Root

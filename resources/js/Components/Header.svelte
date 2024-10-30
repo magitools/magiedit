@@ -113,3 +113,6 @@
         {/if}
     </div>
 </div>
+<div class="">
+    <slot name="crumbs" />
+</div>

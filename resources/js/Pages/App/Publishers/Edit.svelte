@@ -2,6 +2,7 @@
     import { Button } from "$lib/components/ui/button";
     import { Input } from "$lib/components/ui/input";
     import { Label } from "$lib/components/ui/label";
+    import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
     import { router } from "@inertiajs/svelte";
     import { toast } from "svelte-sonner";
     import { onMount } from "svelte";
@@ -9,7 +10,6 @@
     export let provider;
 
     let name = "";
-    let selectedProvider = null;
     let data = {};
 
     function save() {
@@ -34,6 +34,24 @@
         name = publisher.name;
     });
 </script>
+
+<Breadcrumb.Root slot="crumbs">
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href={route("app.publishers.index")}>
+                Publishers
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.Link
+                href={route("app.publishers.edit", [publisher.id])}
+            >
+                Edit
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
 
 <div>
     <div class="space-y-6">
