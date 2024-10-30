@@ -38,7 +38,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/publishers', [PublisherController::class, 'store'])->name('app.publishers.store');
         Route::get('/publishers/new', [PublisherController::class, 'create'])->name('app.publishers.create');
         Route::delete('/publishers/{publisher}', [PublisherController::class, 'destroy'])->name('app.publishers.destroy');
-        //Route::get('/publishers/edit/{publisher}', [PublisherController::class, 'edit'])->name('app.publishers.edit');
+        Route::get('/publishers/edit/{publisher}', [PublisherController::class, 'edit'])->name('app.publishers.edit');
+        Route::put('/publishers/{publisher}', [PublisherController::class, 'update'])->name('app.publishers.update');
         Route::get('/profile/keys', [UserController::class, 'keys'])->name('app.profile.keys');
         Route::post('/profile/keys', [UserController::class, 'storeKey'])->name('app.profile.keys.store');
     });
