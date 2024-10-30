@@ -41,5 +41,8 @@
             {/each}
         </Table.Body>
     </Table.Root>
-    <Button on:click={addRow}>Add</Button>
+    <div>
+        <Button class="w-full" variant="secondary" on:click={addRow}>Add</Button
+        >
+    </div>
 </div>
