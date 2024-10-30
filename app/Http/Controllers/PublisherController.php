@@ -8,6 +8,7 @@ use App\Publishers\PublisherContract;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Spatie\StructureDiscoverer\Discover;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
@@ -56,6 +57,27 @@ class PublisherController extends Controller
         return to_route('app.publishers.index');
     }
 
+    public function edit(Publisher $publisher) {
+
+        $provider = new $publisher->class_name();
+
+        return Inertia::render('App/Publishers/Edit', [
+            'publisher' => $publisher,
+            'provider' => [
+                'inputs' => $provider->getInputs()
+            ]
+        ]);
+    }
+
+    public function update(Publisher $publisher, Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'data' => 'required|array'
+        ]);
+        $publisher->update($validated);
+        return to_route('app.publishers.index');
+    }
+
     public function destroy(Publisher $publisher)
     {
         $publisher->delete();
@@ -78,6 +100,7 @@ class PublisherController extends Controller
         $parsed = YamlFrontMatter::parse($validated['content']);
         $publishers = Publisher::query()->whereIn('id', $validated['publishers'])->get();
         $res = [];
+        Log::info($parsed->matter());
         foreach ($publishers as $publisher) {
             $className = $publisher->class_name;
             /** @var PublisherContract */

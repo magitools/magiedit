@@ -38,6 +38,13 @@
             </Card.Header>
             <Card.Content></Card.Content>
             <Card.Footer>
+                <Button>
+                    <a
+                        use:inertia
+                        href={route("app.publishers.edit", [publisher.id])}
+                        >Edit</a
+                    >
+                </Button>
                 <Button
                     variant="destructive"
                     on:click={prepareDestroy(publisher.id)}>Delete</Button
