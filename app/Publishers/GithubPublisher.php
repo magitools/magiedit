@@ -3,6 +3,7 @@
 namespace App\Publishers;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class GithubPublisher implements PublisherContract
 {
@@ -73,11 +74,19 @@ class GithubPublisher implements PublisherContract
         return $this;
     }
 
+    protected function getCommitMessage(): string
+    {
+        $res = preg_replace_callback('/%(\w+)%/', function($matches) {
+                $key = $matches[1];
+                return isset($this->fm[$key]) ? $this->fm[$key] : $matches[0];
+        }, $this->values['gh_commit']);
+        return $res;
+    }
+
     public function publish(string $content): bool
     {
         $title = strtolower(str_ireplace(' ', '-', $this->fm['title']));
-        $commit = $this->values['gh_commit'];
-        Log::info($title);
+        $commit = $this->getCommitMessage();
         $fileRes = Http::withHeaders([
             'authorization' => "Bearer {$this->values['gh_token']}" ,
             'accept' => 'application/vnd.github+json',
@@ -95,7 +104,19 @@ class GithubPublisher implements PublisherContract
                 'content' => base64_encode($content),
                 'sha' => $sha
             ]);
-        return false;
+        Log::info($res->json());
+        return $res->status() < 300;
     }
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
