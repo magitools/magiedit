@@ -60,9 +60,11 @@
     </Breadcrumb.List>
 </Breadcrumb.Root>
 
-<div>
-    <Button on:click={save}>Save</Button>
-    {article.title}
+<div class="flex flex-col space-y-6">
+    <div>
+        <Button on:click={save}>Save</Button>
+    </div>
+    <h1 class="font-bold text-xl">{article.title}</h1>
     <Frontmatter {fm} onChange={onFmChange} />
     <Editor {content} {onChange} />
 </div>
