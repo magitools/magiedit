@@ -85,7 +85,10 @@ class GithubPublisher implements PublisherContract
 
     public function publish(string $content): bool
     {
-        $title = strtolower(str_ireplace(' ', '-', $this->fm['title']));
+        $title = strtolower($this->fm['title']);
+        $title = preg_replace('/[^a-z0-9\s-]/', '', $title);
+        $title = preg_replace('/[\s-]+/', '-', $title);
+        $title = trim($title, '-');
         $commit = $this->getCommitMessage();
         $fileRes = Http::withHeaders([
             'authorization' => "Bearer {$this->values['gh_token']}" ,
