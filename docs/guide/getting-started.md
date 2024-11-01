@@ -2,6 +2,8 @@
 title: "Getting Started"
 ---
 
+## Basics
+
 There are two ways to use [magiedit](https://magiedit.magitools.app):
 
 - hosted (on [magiedit](https://magiedit.magitools.app))
