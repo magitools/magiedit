@@ -15,6 +15,14 @@ export default defineConfig({
         ],
         sidebar: [
             {
+                text: "Guide",
+                items: [
+                    { text: "Getting Started", link: "/guide/getting-started" },
+                    { text: "VPS Installation", link: "/guide/vps" },
+                ]
+
+            },
+            {
                 text: "API",
                 items: [
                     { text: "Requirements", link: "/api/requirements" },
@@ -23,13 +31,12 @@ export default defineConfig({
                 ]
             },
             {
-                text: "Guide",
+                text: "Contribuing",
                 items: [
-                    { text: "Getting Started", link: "/guide/getting-started" },
-                    { text: "VPS Installation", link: "/guide/vps" },
+                    { text: "Integrations", link: "/contributing/integrations" },
+                    { text: "Publishers", link: "/contributing/publishers" }
                 ]
-
-            }
+            },
         ],
 
         socialLinks: [
