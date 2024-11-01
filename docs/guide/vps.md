@@ -121,11 +121,9 @@ This will obviously change based on which system you are planning to run this on
 
 The [laravel documentation](https://laravel.com/docs/11.x/deployment#nginx) has pretty much all you need to setup a webserver for this project
 
-## Permission Handling
+### Permission Handling
 
 There can be some issues with permissions when trying to run the server as is. If you've already done this before, feel free to skip this section; otherwise, welcome to the wonderful world of permissions, users and group on linux.
-
-### The Basic Setup
 
 By default, both Nginx and PHP-FPM run as the user `www-data`, so you should make sure your project's directory is readable and executable by that user. **I** personally do this by storing my projects in a `/srv` directory owned by the `www-data` user & group (thanks to the `chown` command :wink:). You can also achieve the same result with another way; by changing the user these processes run as.
 
