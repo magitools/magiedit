@@ -30,6 +30,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Publishers | Magiedit</title>
+</svelte:head>
+
 <Breadcrumb.Root slot="crumbs">
     <Breadcrumb.List>
         <Breadcrumb.Item>

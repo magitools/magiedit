@@ -38,6 +38,10 @@
     let token = null;
 </script>
 
+<svelte:head>
+    <title>Keys | Magiedit</title>
+</svelte:head>
+
 <div class="space-y-6">
     <div>
         <Button on:click={() => (keySheetOpen = true)}>New</Button>

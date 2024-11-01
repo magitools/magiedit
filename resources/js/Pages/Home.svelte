@@ -5,6 +5,10 @@
     export let platforms;
 </script>
 
+<svelte:head>
+    <title>Magiedit</title>
+</svelte:head>
+
 <section class="w-full py-12 md:py-24 lg:py-32 xl:py-48">
     <div class="container px-4 md:px-6">
         <div
