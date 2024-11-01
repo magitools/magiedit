@@ -42,5 +42,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/publishers/{publisher}', [PublisherController::class, 'update'])->name('app.publishers.update');
         Route::get('/profile/keys', [UserController::class, 'keys'])->name('app.profile.keys');
         Route::post('/profile/keys', [UserController::class, 'storeKey'])->name('app.profile.keys.store');
+        Route::delete('/profile/keys/{id}', [UserController::class, 'destroyKey'])->name('app.profile.keys.destroy');
     });
 });

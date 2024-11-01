@@ -25,4 +25,10 @@ class UserController extends Controller
             'token' => $data->plainTextToken
         ], status:201);
     }
+
+    public function destroyKey(int $id)
+    {
+        Auth::user()->tokens()->where('id', $id)->delete();
+        return to_route('app.profile.keys');
+    }
 }
