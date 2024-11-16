@@ -14,12 +14,13 @@ class SoloServiceProvider extends SoloApplicationServiceProvider
             // Commands that auto start.
             ->addCommands([
                 'Logs' => 'php artisan pail',
-                'Vite' => 'npm run dev',
-                 'HTTP' => 'php artisan serve',
+                'Vite' => 'pnpm dev',
+                'HTTP' => 'php artisan serve',
             ])
             // Not auto-started
             ->addLazyCommands([
                 'Queue' => 'php artisan queue:listen --tries=1',
+                'VitePress' => 'pnpm run docs:dev'
                 // 'Reverb' => 'php artisan reverb:start',
                 // 'Pint' => 'pint --ansi',
             ])
