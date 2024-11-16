@@ -1,5 +1,5 @@
 <script>
-    import { Button } from "$lib/components/ui/button";
+    import { Button, buttonVariants } from "$lib/components/ui/button";
     import * as Card from "$lib/components/ui/card";
     import { Label } from "$lib/components/ui/label";
     import * as Sheet from "$lib/components/ui/sheet";
@@ -70,35 +70,63 @@
     </Breadcrumb.List>
 </Breadcrumb.Root>
 
-<Button>
-    <a use:inertia href={route("app.articles.create")}>New</a>
-</Button>
-<div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {#each articles as article}
-        <Card.Root>
-            <Card.Header>
-                <Card.Title>{article.title}</Card.Title>
-            </Card.Header>
-            <Card.Content></Card.Content>
-            <Card.Footer class="space-x-6">
-                <Button>
-                    <a
-                        use:inertia
-                        href={route("app.articles.edit", [article.id])}>Edit</a
-                    >
-                </Button>
-                <!--
+<a use:inertia href={route("app.articles.create")} class={buttonVariants()}
+    >New</a
+>
+{#if articles.length > 0}
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {#each articles as article}
+            <Card.Root>
+                <Card.Header>
+                    <Card.Title>{article.title}</Card.Title>
+                </Card.Header>
+                <Card.Content></Card.Content>
+                <Card.Footer class="space-x-6">
+                    <Button>
+                        <a
+                            use:inertia
+                            href={route("app.articles.edit", [article.id])}
+                            >Edit</a
+                        >
+                    </Button>
+                    <!--
                 <Button>Download</Button>
                 -->
-                <Button on:click={handlePublish(article.id)}>Publish</Button>
-                <Button
-                    variant="destructive"
-                    on:click={prepareDestroy(article.id)}>Delete</Button
+                    <Button on:click={handlePublish(article.id)}>Publish</Button
+                    >
+                    <Button
+                        variant="destructive"
+                        on:click={prepareDestroy(article.id)}>Delete</Button
+                    >
+                </Card.Footer>
+            </Card.Root>
+        {/each}
+    </div>
+{:else}
+    <div class="w-full h-full flex flex-col justify-center items-center">
+        <Card.Root>
+            <Card.Header>
+                <Card.Title>No Articles Yet</Card.Title>
+                <Card.Description
+                    >Get started by creating your first article</Card.Description
+                >
+            </Card.Header>
+            <Card.Content>
+                <p>
+                    It looks like you haven't created any articles yet. Why not
+                    start now?
+                </p>
+            </Card.Content>
+            <Card.Footer class="w-full flex items-center justify-center">
+                <a
+                    use:inertia
+                    class={buttonVariants()}
+                    href={route("app.articles.create")}>Create New Article</a
                 >
             </Card.Footer>
         </Card.Root>
-    {/each}
-</div>
+    </div>
+{/if}
 
 <Sheet.Root bind:open={publisherSelectOpen}>
     <Sheet.Trigger />
