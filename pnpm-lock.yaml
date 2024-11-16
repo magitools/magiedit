@@ -189,6 +189,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
+      prettier:
+        specifier: 3.3.3
+        version: 3.3.3
       svelte-sonner:
         specifier: ^0.3.28
         version: 0.3.28(svelte@4.2.19)
@@ -2280,6 +2283,11 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  prettier@3.3.3:
+    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   property-information@3.2.0:
     resolution: {integrity: sha512-BKU45RMZAA+3npkQ/VxEH7EeZImQcfV6rfKH0O4HkkDz3uqqz+689dbkjiWia00vK390MY6EARPS6TzNS4tXPg==}
@@ -5341,6 +5349,8 @@ snapshots:
   preact@10.24.3: {}
 
   prelude-ls@1.2.1: {}
+
+  prettier@3.3.3: {}
 
   property-information@3.2.0: {}
 

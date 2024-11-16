@@ -11,7 +11,8 @@
     },
     "lint-staged": {
         "*.{js, svelte}": [
-            "eslint --fix"
+            "eslint --fix",
+            "prettier --write"
         ]
     },
     "devDependencies": {
@@ -30,6 +31,7 @@
         "lucide-svelte": "^0.453.0",
         "mode-watcher": "^0.4.1",
         "postcss": "^8.4.47",
+        "prettier": "3.3.3",
         "svelte-sonner": "^0.3.28",
         "tailwind-merge": "^2.5.4",
         "tailwind-variants": "^0.2.1",
