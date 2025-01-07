@@ -18,7 +18,7 @@
     "docs:preview": "vitepress preview docs",
     "vite:dev": "vite build --watch",
     "vite:build": "vite build",
-    "dev": "concurrently -c yellow,blue,green --names vite,air,tailwind \"pnpm vite:dev\" \"air -c .air.toml\" \"tailwindcss -i ./src/css/main.css -o ./static/main.css --watch\" ",
+    "dev": "concurrently -c yellow,blue,green --names vite,fresh,tailwind \"pnpm vite:dev\" \"fresh -c fresh.conf\" \"tailwindcss -i ./src/css/main.css -o ./static/main.css --watch\" ",
     "prepare": "husky"
   },
   "dependencies": {
