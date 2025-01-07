@@ -1,20 +1,15 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
-import path from "node:path"
+import { resolve } from "path"
+import { defineConfig } from "vite"
 
 export default defineConfig({
-    plugins: [
-        laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
-        }),
-        svelte()
-    ],
-    resolve: {
-        alias: {
-            $lib: path.resolve("./resources/js/Lib"),
-            "@": path.resolve("./resources/js")
-        }
+    build: {
+        lib: {
+            entry: resolve(__dirname, 'src/js/app.js'),
+            formats: ["es"],
+            name: "[name]",
+            fileName: "[name]"
+        },
+        outDir: "static",
+        emptyOutDir: false
     }
-});
+})

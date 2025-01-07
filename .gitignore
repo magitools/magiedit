@@ -20,3 +20,6 @@ yarn-error.log
 /.vscode
 /.zed
 /**/.vitepress/dist/
+/tmp
+/docs/.vitepress/cache/
+/static/
