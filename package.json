@@ -3,6 +3,7 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^19.6.0",
     "@commitlint/types": "^19.5.0",
+    "@iconify-json/devicon": "^1.2.11",
     "concurrently": "^9.1.2",
     "husky": "^9.1.7",
     "lint-staged": "^15.3.0",
@@ -18,10 +19,12 @@
     "docs:preview": "vitepress preview docs",
     "vite:dev": "vite build --watch",
     "vite:build": "vite build",
-    "dev": "concurrently -c yellow,blue,green --names vite,fresh,tailwind \"pnpm vite:dev\" \"fresh -c fresh.conf\" \"tailwindcss -i ./src/css/main.css -o ./static/main.css --watch\" ",
+    "tailwind:dev": "tailwindcss -i ./src/css/main.css -o ./static/main.css --watch --minify",
+    "dev": "concurrently -c yellow,blue,green,cyan --names vite,air,tailwind,templ \"pnpm vite:dev\" \"air\" \"tailwindcss -i ./src/css/main.css -o ./static/main.css --watch\" \" templ generate --watch -v\" ",
     "prepare": "husky"
   },
   "dependencies": {
+    "@iconify/tailwind": "^1.2.0",
     "htmx.org": "2.0.4"
   }
 }

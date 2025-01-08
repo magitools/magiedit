@@ -1,9 +1,13 @@
+const { addIconSelectors } = require('@iconify/tailwind');
+
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: ["./templates/**/*.html"],
+    content: ["./templates/**/*.templ"],
     theme: {
         extend: {},
     },
-    plugins: [],
+    plugins: [
+        addIconSelectors(["devicon"])
+    ],
 }
 

@@ -1,0 +1,2 @@
+<footer class=\"bg-white\"><div class=\"mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8\"><div class=\"flex justify-center gap-x-6 md:order-2\"><a href=\"https://github.com/magitools/magiedit\" target=\"_blank\" class=\"text-gray-600 hover:text-gray-800\"><span class=\"sr-only\">GitHub</span> <span class=\"iconify devicon--github size-6\"></span></a></div><p class=\"mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0\">&copy; 2023 - 
+ Magitools. All rights reserved.</p></div></footer>

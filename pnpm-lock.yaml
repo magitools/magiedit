@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@iconify/tailwind':
+        specifier: ^1.2.0
+        version: 1.2.0
       htmx.org:
         specifier: 2.0.4
         version: 2.0.4
@@ -18,6 +21,9 @@ importers:
       '@commitlint/types':
         specifier: ^19.5.0
         version: 19.5.0
+      '@iconify-json/devicon':
+        specifier: ^1.2.11
+        version: 1.2.11
       concurrently:
         specifier: ^9.1.2
         version: 9.1.2
@@ -457,8 +463,14 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@iconify-json/devicon@1.2.11':
+    resolution: {integrity: sha512-siDWSFqmPKOYiMvgixqsZ/0rbUXae1M7gF14vefBtFuKXJkTvr4WPzbv1ARc7rqQlkU8XZPyH1edCXO4uToTyw==}
+
   '@iconify-json/simple-icons@1.2.18':
     resolution: {integrity: sha512-ae4ig7fxNXME1wl5og7Ocp82TM4jyz6IsOyI8GrteSbvHR9gaPu2Z01Amn5V/xo1Y7A7/+EH/3Ovpy2az/gYbg==}
+
+  '@iconify/tailwind@1.2.0':
+    resolution: {integrity: sha512-KgpIHWOTcRYw1XcoUqyNSrmYyfLLqZYu3AmP8zdfLk0F5TqRO8YerhlvlQmGfn7rJXgPeZN569xPAJnJ53zZxA==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -1967,7 +1979,15 @@ snapshots:
   '@esbuild/win32-x64@0.24.2':
     optional: true
 
+  '@iconify-json/devicon@1.2.11':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify-json/simple-icons@1.2.18':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/tailwind@1.2.0':
     dependencies:
       '@iconify/types': 2.0.0
 
