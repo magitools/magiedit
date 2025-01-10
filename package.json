@@ -5,6 +5,7 @@
     "@commitlint/types": "^19.5.0",
     "@iconify-json/devicon": "^1.2.11",
     "concurrently": "^9.1.2",
+    "daisyui": "^4.12.23",
     "husky": "^9.1.7",
     "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
@@ -25,6 +26,7 @@
   },
   "dependencies": {
     "@iconify/tailwind": "^1.2.0",
+    "alpinejs": "^3.14.8",
     "htmx.org": "2.0.4"
   }
 }

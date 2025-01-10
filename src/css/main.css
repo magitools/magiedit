@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#mobile-menu {
+    @apply -translate-x-full transition-all duration-500 block max-w-[400px] w-[90vw] right-0 top-0 h-[100dvh] opacity-0 pt-0 bg-gray-50;
+    inset: unset;
+
+    /* Styles while the menu is open */
+    &:popover-open {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    /* Backdrop that overlays other content */
+    &::backdrop {
+        @apply opacity-100 bg-white/70 duration-500;
+    }
+}

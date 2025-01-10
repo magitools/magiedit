@@ -1,0 +1,41 @@
+package key
+
+import (
+	"github.com/magitools/magiedit/database"
+	"github.com/magitools/magiedit/templates/layouts"
+	"strconv"
+)
+
+templ Show(keys []database.Key) {
+	@layouts.Base(false) {
+		<div>
+			<div class="overflow-x-auto">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Value</th>
+							<th>
+								<span class="sr-only">Actions</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						for _, key := range keys {
+							<tr>
+								<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{ strconv.FormatInt(key.ID, 10) }</td>
+								<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{ key.Name }</td>
+								<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{ key.Value }</td>
+								<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+									<a href="#" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, Lindsay Walton</span></a>
+								</td>
+							</tr>
+						}
+						<!-- More people... -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	}
+}

@@ -9,6 +9,7 @@ import (
 	"github.com/charmbracelet/log"
 	"github.com/go-chi/chi/v5"
 	"github.com/magitools/magiedit/routers"
+	"github.com/magitools/magiedit/session"
 	"github.com/magitools/magiedit/utils"
 )
 
@@ -30,11 +31,15 @@ func main() {
 	server.Mount("/", routers.InitWebRouter())
 	log.Info("Registering static routes")
 	server.Mount("/api", routers.InitApiRouter())
+	log.Info("Migrating db")
 	db := utils.GetDB()
 	if _, err := db.ExecContext(context.Background(), ddl); err != nil {
 		panic(err)
 	}
+	log.Info("Initializing session")
+	manager := session.GetManager()
 
+	log.Info("All done!")
 	log.Info(fmt.Sprintf("Server started on port %d", port))
-	http.ListenAndServe(fmt.Sprintf(":%d", port), server)
+	http.ListenAndServe(fmt.Sprintf(":%d", port), manager.LoadAndSave(server))
 }

@@ -4,13 +4,14 @@ go 1.23.3
 
 require (
 	github.com/a-h/templ v0.3.819
+	github.com/alexedwards/scs/v2 v2.8.0
 	github.com/charmbracelet/log v0.4.0
+	github.com/tursodatabase/go-libsql v0.0.0-20241221181756-6121e81fbf92
 )
 
 require (
 	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
 	github.com/libsql/sqlite-antlr4-parser v0.0.0-20240327125255-dbf53b6cbf06 // indirect
-	github.com/tursodatabase/go-libsql v0.0.0-20241221181756-6121e81fbf92 // indirect
 )
 
 require (
@@ -24,6 +25,7 @@ require (
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
+	golang.org/x/crypto v0.32.0
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/sys v0.29.0 // indirect
 )

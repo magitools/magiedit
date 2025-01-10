@@ -7,7 +7,11 @@ export default {
         extend: {},
     },
     plugins: [
+        require("daisyui"),
         addIconSelectors(["devicon"])
     ],
+    daisyUi: {
+        themes: ["cupcake", "night"]
+    }
 }
 

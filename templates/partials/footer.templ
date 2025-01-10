@@ -7,15 +7,15 @@ import (
 
 templ Footer() {
 	{{ date := time.Now().Year() }}
-	<footer class="bg-white">
-		<div class="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
-			<div class="flex justify-center gap-x-6 md:order-2">
-				<a href="https://github.com/magitools/magiedit" target="_blank" class="text-gray-600 hover:text-gray-800">
-					<span class="sr-only">GitHub</span>
-					<span class="iconify devicon--github size-6"></span>
-				</a>
-			</div>
-			<p class="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">&copy; 2023 - { strconv.Itoa(date) } Magitools. All rights reserved.</p>
-		</div>
+	<footer class="footer bg-neutral text-neutral-content items-center p-4">
+		<aside class="grid-flow-col items-center">
+			<p>Copyright © 2023 - { strconv.Itoa(date) } - All right reserved</p>
+		</aside>
+		<nav class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+			<a target="_blank" href="https://github.com/magitools/magiedit">
+				<span class="iconify devicon--github w-6 h-6"></span>
+				<span class="sr-only">Github</span>
+			</a>
+		</nav>
 	</footer>
 }
