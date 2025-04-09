@@ -1,5 +1,12 @@
 # MagiEdit
 
+> how to publish articles to multiple platform with one click
+
+
+## Docs
+
+We have a new documentation website! you can find it [here](https://docs.magiedit.magitools.app)
+
 ## Build your own
 
 ### Manual
