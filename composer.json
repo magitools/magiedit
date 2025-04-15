@@ -22,7 +22,7 @@
         "tightenco/ziggy": "^2.3"
     },
     "require-dev": {
-        "aaronfrancis/solo": "^0.1.2",
+        "soloterm/solo": "^0.5.0",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^2.0",
         "laravel/pint": "^1.18",
@@ -76,11 +76,5 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "repositories": {
-        "flux-pro": {
-            "type": "composer",
-            "url": "https://composer.fluxui.dev"
-        }
-    }
+    "prefer-stable": true
 }
